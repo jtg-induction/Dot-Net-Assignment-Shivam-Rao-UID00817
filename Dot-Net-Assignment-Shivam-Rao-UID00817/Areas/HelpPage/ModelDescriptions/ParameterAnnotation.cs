@@ -1,0 +1,11 @@
+using System;
+
+namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Areas.HelpPage.ModelDescriptions
+{
+    public class ParameterAnnotation
+    {
+        public Attribute AnnotationAttribute { get; set; }
+
+        public string Documentation { get; set; }
+    }
+}
