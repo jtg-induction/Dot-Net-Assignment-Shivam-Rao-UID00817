@@ -9,10 +9,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
     public class User_Address_Type
     {
+        [Key]
+        [Column(Order = 1)]
         public long user_id { get; set; }
         [ForeignKey("user_id")]
         public virtual Users Users { get; set; }
 
+        [Key]
+        [Column(Order = 2)]
         public long address_id { get; set; }
         [ForeignKey("address_id")]
         public virtual Addresses Addresses { get; set; }
