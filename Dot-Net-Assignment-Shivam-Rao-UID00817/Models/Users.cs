@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
@@ -17,7 +14,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
     {
         [Key]
         public long user_id { get; set; }
-        [Index("IX _User_Email", IsUnique =true)]
+        [Index("IX _User_Email", IsUnique = true)]
         [StringLength(255)]
         public string email { get; set; }
         [Index("IX _User_PhoneNumber", IsUnique = true)]

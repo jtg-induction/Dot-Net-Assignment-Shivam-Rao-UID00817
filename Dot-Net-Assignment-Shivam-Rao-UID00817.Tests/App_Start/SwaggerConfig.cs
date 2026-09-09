@@ -1,7 +1,7 @@
-using System.Web.Http;
-using WebActivatorEx;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Tests;
 using Swashbuckle.Application;
+using System.Web.Http;
+using WebActivatorEx;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -61,7 +61,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")
