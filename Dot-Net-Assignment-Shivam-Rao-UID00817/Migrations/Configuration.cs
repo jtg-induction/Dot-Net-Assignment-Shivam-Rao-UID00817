@@ -1,6 +1,9 @@
 ﻿namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Migrations
 {
+    using System;
+    using System.Data.Entity;
     using System.Data.Entity.Migrations;
+    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<Dot_Net_Assignment_Shivam_Rao_UID00817.Restaurant_ManagementContext>
     {

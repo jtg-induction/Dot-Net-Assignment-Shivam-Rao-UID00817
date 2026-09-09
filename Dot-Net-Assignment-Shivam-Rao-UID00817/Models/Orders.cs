@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
@@ -20,14 +23,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public string instructions { get; set; }
 
         public order_status status { get; set; } = order_status.Placed;
-
+       
         [Required]
-        public string address_line1 { get; set; }
-        public string address_line2 { get; set; }
+        public string address_line1 { get; set;  }
+        public string address_line2 { get; set;  }
         [Required]
-        public string city { get; set; }
+        public string city { get; set;  }
         [Required]
-        public string state { get; set; }
+        public string state { get; set;  }
         [Required]
         public long pincode { get; set; }
         [Required]
