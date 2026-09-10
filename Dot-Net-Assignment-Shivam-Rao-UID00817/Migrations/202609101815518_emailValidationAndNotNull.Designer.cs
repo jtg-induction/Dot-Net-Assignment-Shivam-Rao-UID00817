@@ -7,13 +7,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.2")]
-    public sealed partial class InitialCreate : IMigrationMetadata
+    public sealed partial class emailValidationAndNotNull : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(emailValidationAndNotNull));
         
         string IMigrationMetadata.Id
         {
-            get { return "202609091641539_InitialCreate"; }
+            get { return "202609101815518_emailValidationAndNotNull"; }
         }
         
         string IMigrationMetadata.Source

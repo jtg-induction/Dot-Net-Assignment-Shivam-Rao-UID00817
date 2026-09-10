@@ -130,9 +130,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202609091641539_InitialCreate.cs" />
-    <Compile Include="Migrations\202609091641539_InitialCreate.Designer.cs">
-      <DependentUpon>202609091641539_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202609101645205_InitialCreate.cs" />
+    <Compile Include="Migrations\202609101645205_InitialCreate.Designer.cs">
+      <DependentUpon>202609101645205_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202609101815518_emailValidationAndNotNull.cs" />
+    <Compile Include="Migrations\202609101815518_emailValidationAndNotNull.Designer.cs">
+      <DependentUpon>202609101815518_emailValidationAndNotNull.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
@@ -168,8 +172,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202609091641539_InitialCreate.resx">
-      <DependentUpon>202609091641539_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202609101645205_InitialCreate.resx">
+      <DependentUpon>202609101645205_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609101815518_emailValidationAndNotNull.resx">
+      <DependentUpon>202609101815518_emailValidationAndNotNull.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

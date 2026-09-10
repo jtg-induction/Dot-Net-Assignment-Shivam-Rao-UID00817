@@ -1,23 +1,33 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
+    [Table("Order_Items")]
     public class Order_Items
     {
         [Key]
-        [Column(Order = 1)]
-        public long order_id { get; set; }
-        [ForeignKey("order_id")]
+        [Column("order_id", Order = 1)]
+        public long OrderId { get; set; }
+
+        [ForeignKey(nameof(OrderId))]
         public virtual Orders Orders { get; set; }
 
         [Key]
-        [Column(Order = 2)]
-        public long item_id { get; set; }
-        [ForeignKey("item_id")]
+        [Column("item_id", Order = 2)]
+        public long ItemId { get; set; }
+
+        [ForeignKey(nameof(ItemId))]
         public virtual Items Items { get; set; }
 
-        public float item_price { get; set; }
-        public int quantity { get; set; }
+        [Required]
+        [Column("name")]
+        public string Name { get; set; }
+
+        [Column("item_price")]
+        public decimal ItemPrice { get; set; }
+
+        [Column("quantity")]
+        public int Quantity { get; set; }
     }
 }

@@ -1,22 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
+    [Table("User_Address_Type")]
     public class User_Address_Type
     {
         [Key]
-        [Column(Order = 1)]
-        public long user_id { get; set; }
-        [ForeignKey("user_id")]
+        [Column("user_id", Order = 1)]
+        public long UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
         public virtual Users Users { get; set; }
 
         [Key]
-        [Column(Order = 2)]
-        public long address_id { get; set; }
-        [ForeignKey("address_id")]
+        [Column("address_id", Order = 2)]
+        public long AddressId { get; set; }
+
+        [ForeignKey(nameof(AddressId))]
         public virtual Addresses Addresses { get; set; }
 
-        public string address_type { get; set; } = "Home";
+        [Required]
+        [Column("address_type")]
+        public string AddressType { get; set; } = "Home";
     }
 }
