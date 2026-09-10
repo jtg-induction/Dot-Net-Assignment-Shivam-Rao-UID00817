@@ -15,8 +15,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                name: "DefaultApi" ,
+                routeTemplate: "api/{controller}/{id}" ,
                 defaults: new { id = RouteParameter.Optional }
             );
         }
