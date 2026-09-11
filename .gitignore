@@ -13,6 +13,11 @@
 *.userosscache
 *.sln.docstates
 
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Mono auto generated files
+mono_crash.*
 
 # Build results
 [Dd]ebug/
@@ -60,6 +65,9 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 
+# Tye
+.tye/
+
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
@@ -98,6 +106,8 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# Chutzpah Test files
+_Chutzpah*
 
 # Visual C++ cache files
 ipch/
@@ -119,6 +129,9 @@ ipch/
 # Visual Studio Trace Files
 *.e2e
 
+# TFS 2012 Local Workspace
+$tf/
+
 # Guidance Automation Toolkit
 *.gpState
 
@@ -126,6 +139,34 @@ ipch/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
+
+# TeamCity is a build add-in
+_TeamCity*
+
+# DotCover is a Code Coverage Tool
+*.dotCover
+
+# AxoCover is a Code Coverage Tool
+.axoCover/*
+!.axoCover/settings.json
+
+# Coverlet is a free, cross platform Code Coverage Tool
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# Visual Studio code coverage results
+*.coverage
+*.coveragexml
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# MightyMoose
+*.mm.*
+AutoTest.Net/
 
 # Web workbench (sass)
 .sass-cache/
@@ -280,18 +321,47 @@ node_modules/
 **/*.Server/ModelManifest.xml
 _Pvt_Extensions
 
+# Paket dependency manager
+.paket/paket.exe
+paket-files/
 
 # FAKE - F# Make
 .fake/
 
+# CodeRush personal settings
+.cr/personal
+
+# Python Tools for Visual Studio (PTVS)
+__pycache__/
+*.pyc
+
+# Cake - Uncomment if you are using it
+# tools/**
+# !tools/packages.config
+
 # Tabs Studio
 *.tss
+
+# Telerik's JustMock configuration file
+*.jmconfig
+
+# BizTalk build output
+*.btp.cs
+*.btm.cs
+*.odx.cs
+*.xsd.cs
+
+# OpenCover UI analysis results
+OpenCover/
 
 # Azure Stream Analytics local run output
 ASALocalRun/
 
 # MSBuild Binary and Structured Log
 *.binlog
+
+# NVidia Nsight GPU debugger configuration file
+*.nvuser
 
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
@@ -302,6 +372,8 @@ ASALocalRun/
 # Visual Studio History (VSHistory) files
 .vshistory/
 
+# BeatPulse healthcheck temp database
+healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
@@ -330,6 +402,14 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# JetBrains Rider
+*.sln.iml
+.idea/
+
+##
+## Visual studio for Mac
+##
+
 
 # globs
 Makefile.in
@@ -357,6 +437,21 @@ Icon
 # Thumbnails
 ._*
 
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
 
 # content below from: https://github.com/github/gitignore/blob/main/Global/Windows.gitignore
 # Windows thumbnail cache files
@@ -370,6 +465,8 @@ ehthumbs_vista.db
 # Folder config file
 [Dd]esktop.ini
 
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
 
 # Windows Installer files
 *.cab
@@ -380,3 +477,6 @@ ehthumbs_vista.db
 
 # Windows shortcuts
 *.lnk
+
+# Vim temporary swap files
+*.swp

@@ -1,9 +1,9 @@
-using System.Web.Http;
-using WebActivatorEx;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Tests;
 using Swashbuckle.Application;
+using System.Web.Http;
+using WebActivatorEx;
 
-[assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
+[assembly: PreApplicationStartMethod(typeof(SwaggerConfig) , "Register")]
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests
 {
@@ -32,7 +32,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests
                         // hold additional metadata for an API. Version and title are required but you can also provide
                         // additional fields by chaining methods off SingleApiVersion.
                         //
-                        c.SingleApiVersion("v1", "Dot_Net_Assignment_Shivam_Rao_UID00817.Tests");
+                        c.SingleApiVersion("v1" , "Dot_Net_Assignment_Shivam_Rao_UID00817.Tests");
 
                         // If you want the output Swagger docs to be indented properly, enable the "PrettyPrint" option.
                         //
@@ -61,7 +61,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests
                         //c.BasicAuth("basic")
                         //    .Description("Basic HTTP Authentication");
                         //
-						// NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
                         //c.ApiKey("apiKey")
                         //    .Description("API Key Authentication")
                         //    .Name("apiKey")
