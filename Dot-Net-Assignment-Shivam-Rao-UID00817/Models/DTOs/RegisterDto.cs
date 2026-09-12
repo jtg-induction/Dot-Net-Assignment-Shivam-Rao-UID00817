@@ -15,10 +15,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         public string Email { get; set; }
 
         [Required]
+        [StringLength(15, MinimumLength = 8)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$", ErrorMessage = "Password must be between 8 - 15 characters in length and must contain atleast a digit, an uppercase letter, a lowercase letter and a special character")]
         public string Password { get; set; }
 
         [Required]
-        [StringLength(20, MinimumLength = 10)]
+        [StringLength(15, MinimumLength = 10)]
         public string PhoneNumber { get; set; }
 
         [Required]

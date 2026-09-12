@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -19,6 +20,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
                 routeTemplate: "api/{controller}/{id}" ,
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            var serviceProvider = DependencyInjectionConfig.RegisterServices();
+
+            config.DependencyResolver = new WebApiDependencyResolver(serviceProvider);
         }
     }
 }
