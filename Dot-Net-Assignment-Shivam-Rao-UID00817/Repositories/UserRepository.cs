@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -22,15 +23,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             return await _db.Users.AnyAsync(u => u.Email == email && u.PhoneNumber == phoneNumber);
         }
 
-        public void AddUser(Users user)
+        public async Task AddUserAsync(Users user)
         {
             _db.Users.Add(user);
-        }
 
-        public async Task SaveChangesAsync()
-        {
             await _db.SaveChangesAsync();
         }
-
     }
 }

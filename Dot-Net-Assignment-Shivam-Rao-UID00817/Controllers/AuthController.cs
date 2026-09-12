@@ -6,13 +6,13 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
 using System.Web.UI;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Net;
 using System.Web.Http.Description;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {       
@@ -31,14 +31,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         {
             if(!ModelState.IsValid) return BadRequest(ModelState);
 
-            bool registered = await _authService.RegisterAsync(model);
-
-            if (!registered)
+            try
             {
-                return BadRequest("Email / Phone Number already exists");
-            }
+                await _authService.RegisterAsync(model);
 
-            return Ok(new { message = "Registration Successful!" });
+                return Ok(new { message = "Registration successful!" });
+            }
+            catch (UserAlreadyExistsException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

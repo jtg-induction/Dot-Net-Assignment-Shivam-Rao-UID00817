@@ -5,14 +5,14 @@ using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
 {
-    public class PasswordHasher : IPasswordHasher
+    public class PasswordHasher
     {
-        public string HashPassword(string password)
+        public static string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
 
-        public bool VerifyPassword(string p , string hash)
+        public static bool VerifyPassword(string p , string hash)
         { 
             return BCrypt.Net.BCrypt.Verify(p , hash);
         }

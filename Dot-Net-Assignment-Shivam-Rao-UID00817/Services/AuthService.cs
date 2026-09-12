@@ -4,29 +4,27 @@ using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
     public class AuthService: IAuthService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IPasswordHasher _passwordHasher;
 
-        public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher)
+        //private readonly IPasswordHasher _passwordHasher;
+
+        public AuthService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _passwordHasher = passwordHasher;
         }
 
-        public async Task<bool> RegisterAsync(RegisterDto model)
+        public async Task RegisterAsync(RegisterDto model)
         {
-            if (model == null)
-            {
-                return false;
-            }
             string email = model.Email.Trim().ToLower();
             string phoneNumber = model.PhoneNumber.Trim();
 
@@ -34,7 +32,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             if (userExists)
             {
-                return false;
+                throw new UserAlreadyExistsException("Email / Phone Number already exists.");
             }
 
             DateTime currTime = DateTime.UtcNow;
@@ -42,7 +40,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             var newUser = new Users
             {
                 Email = email ,
-                Password = _passwordHasher.HashPassword(model.Password.Trim()),
+                Password = PasswordHasher.HashPassword(model.Password.Trim()),
                 PhoneNumber = phoneNumber ,
                 Name = model.Name.Trim() ,
                 Role = "Customer",
@@ -52,11 +50,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 IsActive = true
             };
 
-            _userRepository.AddUser(newUser);
-
-            await _userRepository.SaveChangesAsync();
-
-            return true;
+            await _userRepository.AddUserAsync(newUser);
         }
     }
 }

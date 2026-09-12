@@ -5,10 +5,10 @@ using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
 
-namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
+namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<bool> RegisterAsync(RegisterDto model);
+        Task RegisterAsync(RegisterDto model);
     }
 }

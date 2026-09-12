@@ -1,30 +1,36 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Microsoft.Extensions.DependencyInjection;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers;
+using System.Reflection;
+using System.Web.Http;
+using Autofac;
+using Autofac.Integration.WebApi;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
 {
     public static class DependencyInjectionConfig
     {
-        public static IServiceProvider RegisterServices()
+        public static void RegisterDependencies()
         {
-            var services = new ServiceCollection();
+            var builder = new ContainerBuilder();
 
-            services.AddScoped<Restaurant_ManagementContext>();
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-            services.AddScoped<IUserRepository , UserRepository>();
+            builder.RegisterType<Restaurant_ManagementContext>().InstancePerRequest();
 
-            services.AddScoped<IAuthService , AuthService>();
-            services.AddTransient<IPasswordHasher , PasswordHasher>();
-            services.AddTransient<AuthController>();
+            builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerRequest();
 
-            return services.BuildServiceProvider();
+            builder.RegisterType<AuthService>().As<IAuthService>().InstancePerRequest();
+
+            var container = builder.Build();
+
+            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
         }
     }
 }

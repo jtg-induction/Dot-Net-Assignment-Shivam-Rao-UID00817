@@ -21,9 +21,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            var serviceProvider = DependencyInjectionConfig.RegisterServices();
-
-            config.DependencyResolver = new WebApiDependencyResolver(serviceProvider);
+            DependencyInjectionConfig.RegisterDependencies();
         }
     }
 }
