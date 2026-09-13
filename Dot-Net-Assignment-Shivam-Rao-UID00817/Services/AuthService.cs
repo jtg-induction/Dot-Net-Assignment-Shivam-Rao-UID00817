@@ -16,8 +16,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
     {
         private readonly IUserRepository _userRepository;
 
-        //private readonly IPasswordHasher _passwordHasher;
-
         public AuthService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
