@@ -247,6 +247,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
+    <Compile Include="Models\DTOs\MessageResponseDto.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
     <Compile Include="Models\Items.cs" />
     <Compile Include="Models\Menus.cs" />

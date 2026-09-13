@@ -35,7 +35,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             {
                 await _authService.RegisterAsync(model);
 
-                return Ok(new { message = "Registration successful!" });
+                return Ok(new MessageResponseDto{ Message = "Registration successful!" });
             }
             catch (UserAlreadyExistsException ex)
             {
