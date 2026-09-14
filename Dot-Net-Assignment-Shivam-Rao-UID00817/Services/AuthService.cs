@@ -9,6 +9,9 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
+using Microsoft.Owin;
+using System.Web.Http.Results;
+using System.Net.Http;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
@@ -51,7 +54,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _userRepository.AddUserAsync(newUser);
         }
 
-        public async Task<LoginResponseDto> LoginAsync(LoginDto model)
+        public class TokenResult: ITokenResult
+        {
+            public string AccessToken { get; set; }
+            public string RefreshToken { get; set; }
+        }
+
+        public async Task<ITokenResult> LoginAsync(LoginRequestDto model)
         {
             string email = model.Email.Trim().ToLower();
             var user = (await _userRepository.GetUserByEmailAsync(email)) ?? throw new InvalidCredentialsException
@@ -68,16 +77,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 );
             }
 
-            string token = JwtTokenGenerator.GenerateToken(email , user.UserId , user.Role);
+            string accessToken = TokenGenerator.GenerateAccessToken(email , user.UserId , user.Role);
+            string refreshToken = TokenGenerator.GenerateRefreshToken();
 
-            return new LoginResponseDto
+
+            return new TokenResult
             {
-                Token = token
+                AccessToken =  accessToken ,
+                RefreshToken = refreshToken
             };
-
-
         }
-
-
     }
 }

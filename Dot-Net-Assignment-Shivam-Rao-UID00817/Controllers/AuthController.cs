@@ -14,6 +14,7 @@ using System.Net;
 using System.Web.Http.Description;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Microsoft.Owin.Security.Provider;
+using Microsoft.Owin;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {       
@@ -45,15 +46,30 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         }
 
         [HttpPost, Route("login")]
-        public async Task<IHttpActionResult> Login([FromBody] LoginDto model)
+        public async Task<IHttpActionResult> Login([FromBody] LoginRequestDto model)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
             {
-                var response = await _authService.LoginAsync(model);
+                var tokenResult = await _authService.LoginAsync(model);
 
-                return Ok(response);
+                IOwinContext owinContext = Request.GetOwinContext();
+
+                owinContext.Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken, new CookieOptions
+                {
+                    HttpOnly = true ,
+                    Secure = true ,
+                    SameSite = Microsoft.Owin.SameSiteMode.Lax ,
+                    Expires = DateTime.UtcNow.AddDays(10) ,
+                    Path = "/api/auth/refresh"
+                });
+
+                return Ok(new LoginResponseDto
+                {
+                    AccessToken = tokenResult.AccessToken ,
+                    ExpiresIn = 900
+                });
             }
             catch (InvalidCredentialsException)
             {

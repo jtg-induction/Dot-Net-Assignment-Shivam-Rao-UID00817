@@ -10,9 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
 {
-    public static class JwtTokenGenerator
+    public static class TokenGenerator
     {
-        public static string GenerateToken(string email , long userId , string role)
+        public static string GenerateAccessToken(string email , long userId , string role)
         {
             var secret = Environment.GetEnvironmentVariable("JWT_SECRET");
             var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
@@ -32,6 +32,17 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
                 expires: DateTime.UtcNow.AddSeconds(900) , signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public static string GenerateRefreshToken()
+        {
+            var randomNumber = new Byte[32];
+            using(var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(randomNumber);
+                string refreshToken = Convert.ToBase64String(randomNumber);
+                return refreshToken;
+            }
         }
     }
 }
