@@ -50,5 +50,34 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             await _userRepository.AddUserAsync(newUser);
         }
+
+        public async Task<LoginResponseDto> LoginAsync(LoginDto model)
+        {
+            string email = model.Email.Trim().ToLower();
+            var user = (await _userRepository.GetUserByEmailAsync(email)) ?? throw new InvalidCredentialsException
+                (
+                    "Email or Password is incorrect"
+                );
+
+            bool passwordValid = PasswordVerifier.VerifyPassword(model.Password , user.Password);
+
+            if (!passwordValid)
+            {
+                throw new InvalidCredentialsException(
+                    "Email or Password is incorrect"
+                );
+            }
+
+            string token = JwtTokenGenerator.GenerateToken(email , user.UserId , user.Role);
+
+            return new LoginResponseDto
+            {
+                Token = token
+            };
+
+
+        }
+
+
     }
 }

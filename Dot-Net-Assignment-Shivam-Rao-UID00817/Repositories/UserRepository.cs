@@ -6,6 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
+using System.Drawing;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -20,7 +23,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 
         public async Task<bool> UserExistsAsync(string email, string phoneNumber)
         {
-            return await _db.Users.AnyAsync(u => u.Email == email && u.PhoneNumber == phoneNumber);
+            return await _db.Users.AnyAsync(u => u.Email == email || u.PhoneNumber == phoneNumber);
         }
 
         public async Task AddUserAsync(Users user)
@@ -28,6 +31,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db.Users.Add(user);
 
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<Users> GetUserByEmailAsync(string email)
+        {
+            return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

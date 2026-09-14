@@ -30,7 +30,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
 
             var container = builder.Build();
 
-            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);  
         }
     }
 }

@@ -10,5 +10,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces
     public interface IAuthService
     {
         Task RegisterAsync(RegisterDto model);
+
+        Task<LoginResponseDto> LoginAsync(LoginDto model);
     }
 }

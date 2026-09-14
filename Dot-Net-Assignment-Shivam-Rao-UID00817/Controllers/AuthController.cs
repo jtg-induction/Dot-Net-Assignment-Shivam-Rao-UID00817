@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Net;
 using System.Web.Http.Description;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
+using Microsoft.Owin.Security.Provider;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {       
@@ -40,6 +41,23 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             catch (UserAlreadyExistsException ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost, Route("login")]
+        public async Task<IHttpActionResult> Login([FromBody] LoginDto model)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            try
+            {
+                var response = await _authService.LoginAsync(model);
+
+                return Ok(response);
+            }
+            catch (InvalidCredentialsException)
+            {
+                return Unauthorized();
             }
         }
     }

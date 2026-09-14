@@ -233,6 +233,7 @@
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Exceptions\InvalidCredentialsException.cs" />
     <Compile Include="Exceptions\UserAlreadyExistsException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -247,6 +248,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
+    <Compile Include="Models\DTOs\LoginDto.cs" />
+    <Compile Include="Models\DTOs\LoginResponseDto.cs" />
     <Compile Include="Models\DTOs\MessageResponseDto.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
     <Compile Include="Models\Items.cs" />
@@ -264,8 +267,10 @@
     <Compile Include="Restaurant_ManagementContext.cs" />
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\Interfaces\IAuthService.cs" />
+    <Compile Include="Utils\JwtTokenGenerator.cs" />
     <Compile Include="Utils\PasswordHasher.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\PasswordVerifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
