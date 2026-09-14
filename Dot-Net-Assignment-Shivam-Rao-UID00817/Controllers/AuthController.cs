@@ -76,5 +76,40 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
                 return Unauthorized();
             }
         }
+
+        [HttpPost, Route("refresh")]
+        public async Task<IHttpActionResult> Refresh()
+        {
+            HttpCookie cookie = HttpContext.Current.Request.Cookies["refresh_token"];
+
+            if (cookie == null) return Unauthorized();
+            try
+            {
+                var tokenResult = await _authService.RotateTokenAsync(HttpUtility.UrlDecode(cookie.Value));
+
+                if (tokenResult == null) return Unauthorized();
+
+                IOwinContext owinContext = Request.GetOwinContext();
+
+                owinContext.Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , new CookieOptions
+                {
+                    HttpOnly = true ,
+                    Secure = true ,
+                    SameSite = Microsoft.Owin.SameSiteMode.Lax ,
+                    Expires = DateTime.UtcNow.AddDays(10) ,
+                    Path = "/api/auth/refresh"
+                });
+
+                return Ok(new LoginResponseDto
+                {
+                    AccessToken = tokenResult.AccessToken ,
+                    ExpiresIn = 900
+                });
+            }
+            catch (InvalidCredentialsException)
+            {
+                return Unauthorized();
+            }
+        }
     }
 }

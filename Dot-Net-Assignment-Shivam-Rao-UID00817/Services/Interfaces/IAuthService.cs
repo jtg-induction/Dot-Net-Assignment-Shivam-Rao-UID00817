@@ -18,5 +18,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces
         Task RegisterAsync(RegisterDto model);
 
         Task<ITokenResult> LoginAsync(LoginRequestDto model);
+
+        Task<ITokenResult> RotateTokenAsync(string refreshToken);
+
     }
 }

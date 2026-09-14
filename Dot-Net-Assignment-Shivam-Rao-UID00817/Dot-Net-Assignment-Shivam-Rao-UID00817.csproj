@@ -252,11 +252,16 @@
     <Compile Include="Migrations\202609101815518_emailValidationAndNotNull.Designer.cs">
       <DependentUpon>202609101815518_emailValidationAndNotNull.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202609141208267_AddedRefreshTokenTable.cs" />
+    <Compile Include="Migrations\202609141208267_AddedRefreshTokenTable.Designer.cs">
+      <DependentUpon>202609141208267_AddedRefreshTokenTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
     <Compile Include="Models\DTOs\LoginRequestDto.cs" />
     <Compile Include="Models\DTOs\LoginResponseDto.cs" />
     <Compile Include="Models\DTOs\MessageResponseDto.cs" />
+    <Compile Include="Models\DTOs\RefreshRequestDto.cs" />
     <Compile Include="Models\DTOs\RefreshTokenDto.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
     <Compile Include="Models\Items.cs" />
@@ -265,11 +270,14 @@
     <Compile Include="Models\Orders.cs" />
     <Compile Include="Models\Order_Items.cs" />
     <Compile Include="Models\Owner_Manages_Restaurants.cs" />
+    <Compile Include="Models\Refresh_Tokens.cs" />
     <Compile Include="Models\Restaurants.cs" />
     <Compile Include="Models\Users.cs" />
     <Compile Include="Models\User_Address_Type.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Interfaces\IRefreshTokenRepository.cs" />
     <Compile Include="Repositories\Interfaces\IUserRepository.cs" />
+    <Compile Include="Repositories\RefreshTokenRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Restaurant_ManagementContext.cs" />
     <Compile Include="Services\AuthService.cs" />
@@ -306,6 +314,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202609101815518_emailValidationAndNotNull.resx">
       <DependentUpon>202609101815518_emailValidationAndNotNull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609141208267_AddedRefreshTokenTable.resx">
+      <DependentUpon>202609141208267_AddedRefreshTokenTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

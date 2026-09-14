@@ -52,5 +52,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public virtual ICollection<Orders> Orders { get; set; }
         public virtual ICollection<User_Address_Type> UserAddressTypes { get; set; }
         public virtual ICollection<Owner_Manages_Restaurants> OwnerManagesRestaurants { get; set; }
+        public virtual ICollection<Refresh_Tokens> RefreshTokens { get; set; }
     }
 }

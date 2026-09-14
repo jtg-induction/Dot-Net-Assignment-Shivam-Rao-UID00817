@@ -12,7 +12,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
     {
         Task<bool> UserExistsAsync(string email , string phoneNumber);
         Task AddUserAsync(Users user);
-
         Task<Users> GetUserByEmailAsync(string email);
+        Task<Users> GetUserByUserIdAsync(long userId);
     }
 }
