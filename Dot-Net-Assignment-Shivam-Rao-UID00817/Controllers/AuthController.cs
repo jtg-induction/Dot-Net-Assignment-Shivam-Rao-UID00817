@@ -37,9 +37,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             {
                 await _authService.RegisterAsync(model);
 
-                return Ok(new MessageResponseDto{ Message = "Registration successful!" });
+                return base.Ok(new MessageResponseDto { Message = "Registration successful!" });
             }
-            catch (UserAlreadyExistsException ex)
+            catch (Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -65,13 +65,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
                     Path = "/api/auth/refresh"
                 });
 
-                return Ok(new LoginResponseDto
+                return base.Ok(new LoginResponseDto
                 {
                     AccessToken = tokenResult.AccessToken ,
                     ExpiresIn = 900
                 });
             }
-            catch (InvalidCredentialsException)
+            catch (Exceptions.ValidationException)
             {
                 return Unauthorized();
             }
@@ -100,13 +100,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
                     Path = "/api/auth/refresh"
                 });
 
-                return Ok(new LoginResponseDto
+                return base.Ok(new LoginResponseDto
                 {
                     AccessToken = tokenResult.AccessToken ,
                     ExpiresIn = 900
                 });
             }
-            catch (InvalidCredentialsException)
+            catch (Exceptions.ValidationException)
             {
                 return Unauthorized();
             }

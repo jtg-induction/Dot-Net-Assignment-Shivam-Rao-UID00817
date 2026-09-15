@@ -36,23 +36,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             if (userExists)
             {
-                throw new UserAlreadyExistsException("Email / Phone Number already exists.");
+                throw new ValidationException(
+                    Constants.USER_ALREADY_EXISTS
+                );
             }
 
             DateTime currTime = DateTime.UtcNow;
 
-            var newUser = new Users
-            {
-                Email = email ,
-                Password = PasswordHasher.HashPassword(model.Password.Trim()),
-                PhoneNumber = phoneNumber ,
-                Name = model.Name.Trim() ,
-                Role = "Customer",
-                CreatedAt = currTime,
-                UpdatedAt = currTime,
-                WalletBalance = 1000m,
-                IsActive = true
-            };
+            var newUser = new Users(email , phoneNumber , model.Password , model.Name);
 
             await _userRepository.AddUserAsync(newUser);
         }
@@ -66,17 +57,17 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         public async Task<ITokenResult> LoginAsync(LoginRequestDto model)
         {
             string email = model.Email.Trim().ToLower();
-            var user = (await _userRepository.GetUserByEmailAsync(email)) ?? throw new InvalidCredentialsException
+            var user = (await _userRepository.GetUserByEmailAsync(email)) ?? throw new ValidationException
                 (
-                    "Email or Password is incorrect"
+                    Constants.INVALID_CREDENTIALS
                 );
 
             bool passwordValid = PasswordVerifier.VerifyPassword(model.Password , user.Password);
 
             if (!passwordValid)
             {
-                throw new InvalidCredentialsException(
-                    "Email or Password is incorrect"
+                throw new ValidationException(
+                    Constants.INVALID_CREDENTIALS
                 );
             }
 
@@ -85,13 +76,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             DateTime currtime = DateTime.UtcNow;
 
-            await _refreshTokenRepository.AddTokenAsync(new Refresh_Tokens
-            {
-                RefreshToken = refreshToken ,
-                UserId = user.UserId ,
-                CreatedAt = currtime ,
-                ExpiresAt = currtime.AddDays(10)
-            });
+            await _refreshTokenRepository.AddTokenAsync(new Refresh_Tokens(user.UserId , refreshToken));
 
             return new TokenResult
             {
@@ -118,15 +103,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             var newRefreshToken = TokenGenerator.GenerateRefreshToken();
 
-            var currentTime = DateTime.UtcNow;
-
-            await _refreshTokenRepository.AddTokenAsync(new Refresh_Tokens
-            {
-                RefreshToken = newRefreshToken ,
-                UserId = user.UserId ,
-                CreatedAt = currentTime ,
-                ExpiresAt = currentTime.AddDays(10)
-            });
+            await _refreshTokenRepository.AddTokenAsync(new Refresh_Tokens(user.UserId , newRefreshToken));
 
             return new TokenResult
             {

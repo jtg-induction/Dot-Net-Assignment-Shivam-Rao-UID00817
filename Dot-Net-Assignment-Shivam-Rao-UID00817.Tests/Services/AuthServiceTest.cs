@@ -177,7 +177,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
         }
 
         [Test]
-        public async Task LoginAsync_InvalidEmail_ThrowsInvalidCredentialsException()
+        public async Task LoginAsync_InvalidEmail_ThrowsValidationException()
         {
             var model = new LoginRequestDto
             {
@@ -189,13 +189,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 x => x.GetUserByEmailAsync("janedoe@example.com"))
                 .ReturnsAsync((Users)null);
 
-            Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.InvalidCredentialsException>(
+            Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.
+                >(
                 async () => await _authService.LoginAsync(model)
             );
         }
 
         [Test]
-        public async Task LoginAsync_InvalidPassword_ThrowsInvalidCredentialsException()
+        public async Task LoginAsync_InvalidPassword_ThrowsValidationException()
         {
             var user = new Users
             {
@@ -215,7 +216,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 x => x.GetUserByEmailAsync(user.Email))
                 .ReturnsAsync(user);
 
-            Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.InvalidCredentialsException>(
+            Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException>(
                 async () => await _authService.LoginAsync(model)
             );
         }

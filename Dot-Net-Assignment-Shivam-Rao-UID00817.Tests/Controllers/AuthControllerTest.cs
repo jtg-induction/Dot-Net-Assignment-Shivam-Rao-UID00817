@@ -60,7 +60,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
         [Test]
 
-        public async Task Register_DuplicateUser_ReturnsUserAlreadyExistsException()
+        public async Task Register_DuplicateUser_ReturnsValidationException()
         {
             var model = new RegisterDto { 
                 Email = "ab10@example.com" , 
@@ -71,8 +71,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             _mockAuthService.Setup(
                 s => s.RegisterAsync(model))
-                .ThrowsAsync(new UserAlreadyExistsException(
-                    "Email / Phone Number already exists."
+                .ThrowsAsync(new ValidationException(
+                    Dot_Net_Assignment_Shivam_Rao_UID00817.Constants.USER_ALREADY_EXISTS
                 ));
 
             var result = await _controller.Register(model);

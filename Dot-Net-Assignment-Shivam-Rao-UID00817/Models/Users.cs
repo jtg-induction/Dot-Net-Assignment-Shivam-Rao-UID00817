@@ -1,3 +1,4 @@
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -53,5 +54,23 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public virtual ICollection<User_Address_Type> UserAddressTypes { get; set; }
         public virtual ICollection<Owner_Manages_Restaurants> OwnerManagesRestaurants { get; set; }
         public virtual ICollection<Refresh_Tokens> RefreshTokens { get; set; }
+    public Users(string email, string phoneNumber, string password, string name)
+        {
+            DateTime CurrentTime = DateTime.UtcNow;
+            this.Email = email;
+            this.Password = PasswordHasher.HashPassword(password.Trim());
+            this.PhoneNumber = phoneNumber;
+            this.Name = name;
+            this.CreatedAt = CurrentTime;
+            this.UpdatedAt = CurrentTime;
+            this.WalletBalance = 1000m;
+            this.IsActive = true;
+            this.Role = "Customer";
+        }
+    public Users()
+        {
+
+        }
     }
+
 }
