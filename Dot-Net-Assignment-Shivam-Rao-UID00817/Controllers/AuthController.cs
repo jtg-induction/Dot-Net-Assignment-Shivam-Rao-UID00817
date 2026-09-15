@@ -44,11 +44,25 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             CookieHelper.CreateHttpOnlySecureCookie("/api/auth/refresh" , tokenResult , Request);
 
-            return base.Ok(new LoginResponseDto
+            owinContext.Response.Cookies.Append("refresh_token", tokenResult.RefreshToken, new CookieOptions
             {
-                AccessToken = tokenResult.AccessToken ,
-                ExpiresIn = NUMBER_CONSTANTS.JWT_EXPIRES_IN_SECONDS
+                HttpOnly = true,
+                Secure = true,
+                SameSite = Microsoft.Owin.SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddDays(NUMBER_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN_DAYS),
+                Path = "/api/auth/logout"
             });
+
+            return base.Ok(new LoginResponseDto
+                {
+                    AccessToken = tokenResult.AccessToken ,
+                    ExpiresIn = NUMBER_CONSTANTS.JWT_EXPIRES_IN_SECONDS
+            });
+            }
+            catch (Exceptions.ValidationException)
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpPost, Route("refresh")]
@@ -62,11 +76,33 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             CookieHelper.CreateHttpOnlySecureCookie("/api/auth/refresh" , tokenResult , Request);
 
-            return base.Ok(new LoginResponseDto
+            owinContext.Response.Cookies.Append("refresh_token", tokenResult.RefreshToken, new CookieOptions
             {
-                AccessToken = tokenResult.AccessToken ,
-                ExpiresIn = NUMBER_CONSTANTS.JWT_EXPIRES_IN_SECONDS
+                HttpOnly = true,
+                Secure = true,
+                SameSite = Microsoft.Owin.SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddDays(NUMBER_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN_DAYS),
+                Path = "/api/auth/logout"
             });
+
+            return base.Ok(new LoginResponseDto
+                {
+                    AccessToken = tokenResult.AccessToken ,
+                    ExpiresIn = NUMBER_CONSTANTS.JWT_EXPIRES_IN_SECONDS
+            });
+            }
+        }
+        [Authorize]
+        [HttpPost, Route("logout")]
+        public async Task<IHttpActionResult> Logout()
+        {
+            HttpCookie cookie = HttpContext.Current.Request.Cookies["refresh_token"];
+
+            if (cookie == null) return Unauthorized();
+
+            if (await _authService.LogoutAsync(HttpUtility.UrlDecode(cookie.Value))) return Ok();
+
+            return Unauthorized();
         }
     }
 }

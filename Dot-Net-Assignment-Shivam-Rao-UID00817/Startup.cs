@@ -1,13 +1,14 @@
-﻿using System;
-using System.Configuration;
-using System.Text;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Owin;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Text;
 using System.Web;
 
 [assembly: OwinStartup(typeof(Dot_Net_Assignment_Shivam_Rao_UID00817.Startup))]
@@ -33,6 +34,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 }
             });
+
+            app.Use(typeof(AccessTokenValidationMiddleware));
+
         }
     }
 }

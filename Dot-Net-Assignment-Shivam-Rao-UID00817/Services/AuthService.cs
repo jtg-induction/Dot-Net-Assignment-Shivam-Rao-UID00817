@@ -14,6 +14,7 @@ using System.Web.Http.Results;
 using System.Net.Http;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using System.Net;
+using Microsoft.Owin.Security;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
@@ -124,6 +125,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 AccessToken = accessToken ,
                 RefreshToken = newRefreshToken
             };
+        }
+
+        public async Task<bool> LogoutAsync(string refreshToken)
+        {
+            return await _refreshTokenRepository.RemoveTokenAsync(refreshToken);
         }
     }
 }

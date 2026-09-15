@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -32,6 +33,19 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         public void DeleteRefreshToken(Refresh_Tokens TokenRecord)
         {
             _db.Refresh_Tokens.Remove(TokenRecord);
+        }
+
+        public async Task<bool> RemoveTokenAsync(string token)
+        {
+            var TokenRecord = await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);
+
+            if (token == null) return false;
+
+            _db.Refresh_Tokens.Remove(TokenRecord);
+
+            await _db.SaveChangesAsync();
+
+            return true;
         }
     }
 }

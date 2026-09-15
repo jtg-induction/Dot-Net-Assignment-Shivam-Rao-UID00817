@@ -271,6 +271,7 @@
     <Compile Include="Models\DTOs\MessageResponseDto.cs" />
     <Compile Include="Models\DTOs\RefreshTokenDto.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
+    <Compile Include="Models\DTOs\TokenPayloadDto.cs" />
     <Compile Include="Models\Items.cs" />
     <Compile Include="Models\Menus.cs" />
     <Compile Include="Models\Menu_Items.cs" />
@@ -293,6 +294,8 @@
     <Compile Include="Services\Interfaces\IAuthService.cs" />
     <Compile Include="Utils\TokenGenerator.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\PasswordVerifier.cs" />
+    <Compile Include="Utils\TokenValidatorAndVerifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
