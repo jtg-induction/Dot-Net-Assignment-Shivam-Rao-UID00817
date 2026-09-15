@@ -189,8 +189,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 x => x.GetUserByEmailAsync("janedoe@example.com"))
                 .ReturnsAsync((Users)null);
 
-            Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.
-                >(
+            Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException>(
                 async () => await _authService.LoginAsync(model)
             );
         }
