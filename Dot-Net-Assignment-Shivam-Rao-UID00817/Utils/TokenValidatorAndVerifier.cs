@@ -10,6 +10,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Web;
 using System.Threading.Tasks;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
 {
@@ -36,36 +38,29 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
                 ValidateLifetime = true
             };
 
-            try 
+            var result = await tokenHandler.ValidateTokenAsync(token , validationParameters);
+
+            if (result.IsValid)
             {
-                var result = await tokenHandler.ValidateTokenAsync(token , validationParameters);
+                string role = result.ClaimsIdentity.FindFirst(ClaimTypes.Role)?.Value;
+                string email = result.ClaimsIdentity.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                string userIdStr = result.ClaimsIdentity.FindFirst("userId")?.Value;
+                long userId = !string.IsNullOrEmpty(userIdStr) ? Convert.ToInt64(userIdStr) : 0;
 
-                if (result.IsValid)
+                TokenPayloadDto payload = new TokenPayloadDto
                 {
-                    string role = result.ClaimsIdentity.FindFirst(ClaimTypes.Role)?.Value;
-                    string email = result.ClaimsIdentity.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-                    string userIdStr = result.ClaimsIdentity.FindFirst("userId")?.Value;
-                    long userId = !string.IsNullOrEmpty(userIdStr) ? Convert.ToInt64(userIdStr) : 0;
+                    Role = role ,
+                    Email = email ,
+                    UserId = userId
+                };
 
-                    TokenPayloadDto payload = new TokenPayloadDto
-                    {
-                        Role = role ,
-                        Email = email ,
-                        UserId = userId
-                    };
-
-                    return payload;
-                }
-                else
-                {
-                    throw new InvalidCredentialsException(
-                        "Email or Password is incorrect"
-                    );
-                }
+                return payload;
             }
-            catch (Exception ex)
+            else
             {
-                return null;
+                throw new ValidationException(
+                    EXCEPTION_MESSAGES.INVALID_ACCESS_TOKEN
+                );
             }
         }
     }

@@ -14,5 +14,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
         Task<Refresh_Tokens> CheckIfRefreshTokenExistsAsync(string token);
 
         void DeleteRefreshToken(Refresh_Tokens TokenRecord);
+
+        Task<bool> RemoveTokenAsync(string token);
     }
 }

@@ -129,7 +129,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task<bool> LogoutAsync(string refreshToken)
         {
-            return await _refreshTokenRepository.RemoveTokenAsync(refreshToken);
+            bool res = await _refreshTokenRepository.RemoveTokenAsync(refreshToken);
+            await _unitOfWork.SaveChangesAsync();
+
+            return res;
         }
     }
 }

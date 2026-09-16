@@ -43,8 +43,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 
             _db.Refresh_Tokens.Remove(TokenRecord);
 
-            await _db.SaveChangesAsync();
-
             return true;
         }
     }

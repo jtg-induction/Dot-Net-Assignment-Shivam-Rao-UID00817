@@ -58,11 +58,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
                     AccessToken = tokenResult.AccessToken ,
                     ExpiresIn = NUMBER_CONSTANTS.JWT_EXPIRES_IN_SECONDS
             });
-            }
-            catch (Exceptions.ValidationException)
-            {
-                return Unauthorized();
-            }
         }
 
         [HttpPost, Route("refresh")]
@@ -90,8 +85,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
                     AccessToken = tokenResult.AccessToken ,
                     ExpiresIn = NUMBER_CONSTANTS.JWT_EXPIRES_IN_SECONDS
             });
-            }
         }
+
         [Authorize]
         [HttpPost, Route("logout")]
         public async Task<IHttpActionResult> Logout()
