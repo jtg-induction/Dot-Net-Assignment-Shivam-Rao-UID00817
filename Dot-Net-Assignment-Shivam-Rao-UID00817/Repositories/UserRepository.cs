@@ -45,6 +45,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         {
             var user = await _db.Users.FindAsync(userId);
             user.IsActive = !user.IsActive;
+            user.UpdatedAt = DateTime.UtcNow;
         }
     }
 }

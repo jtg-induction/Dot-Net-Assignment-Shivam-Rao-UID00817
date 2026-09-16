@@ -302,17 +302,19 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
         }
 
         [Test]
-        public async Task RotateTokenAsync_InvalidRefreshToken_ReturnsNull()
+        public async Task RotateTokenAsync_InvalidRefreshToken_ThrowsValidationException()
         {
             var refreshToken = "invalid-token";
 
-            _mockRefreshTokenRepository.Setup(
-                x => x.CheckIfRefreshTokenExistsAsync(refreshToken))
+            _mockRefreshTokenRepository
+                .Setup(x => x.CheckIfRefreshTokenExistsAsync(refreshToken))
                 .ReturnsAsync((Refresh_Tokens)null);
 
-            var result = await _authService.RotateTokenAsync(refreshToken);
+            var ex = Assert.ThrowsAsync<ValidationException>(
+                async () => await _authService.RotateTokenAsync(refreshToken)
+            );
 
-            Assert.That(result , Is.Null);
+            Assert.That(ex.Message , Is.EqualTo("Refresh Token is Invalid."));
 
             _mockUserRepository.Verify(
                 x => x.GetUserByUserIdAsync(It.IsAny<long>()) ,
@@ -324,6 +326,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 Times.Never
             );
         }
+
 
 
         [Test]
@@ -339,22 +342,28 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 ExpiresAt = DateTime.UtcNow.AddDays(9)
             };
 
-            _mockRefreshTokenRepository.Setup(
-                x => x.CheckIfRefreshTokenExistsAsync(refreshToken))
+            _mockRefreshTokenRepository
+                .Setup(x => x.CheckIfRefreshTokenExistsAsync(refreshToken))
                 .ReturnsAsync(tokenRecord);
 
-            _mockUserRepository.Setup(
-                x => x.GetUserByUserIdAsync(999))
+            _mockUserRepository
+                .Setup(x => x.GetUserByUserIdAsync(999))
                 .ReturnsAsync((Users)null);
 
             var result = await _authService.RotateTokenAsync(refreshToken);
 
             Assert.That(result , Is.Null);
 
+            _mockUserRepository.Verify(
+                x => x.GetUserByUserIdAsync(999) ,
+                Times.Once
+            );
+
             _mockRefreshTokenRepository.Verify(
                 x => x.Add(It.IsAny<Refresh_Tokens>()) ,
                 Times.Never
             );
         }
+
     }
 }

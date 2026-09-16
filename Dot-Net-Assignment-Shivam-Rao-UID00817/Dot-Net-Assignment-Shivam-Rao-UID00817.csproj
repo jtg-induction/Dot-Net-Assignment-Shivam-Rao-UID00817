@@ -253,6 +253,7 @@
     </Compile>
     <Compile Include="Helpers\CookieHelper.cs" />
     <Compile Include="Helpers\HashingHelper.cs" />
+    <Compile Include="Middlewares\AccessTokenValidationMiddleware.cs" />
     <Compile Include="Migrations\202609101645205_InitialCreate.cs" />
     <Compile Include="Migrations\202609101645205_InitialCreate.Designer.cs">
       <DependentUpon>202609101645205_InitialCreate.cs</DependentUpon>
@@ -269,10 +270,9 @@
     <Compile Include="Models\Addresses.cs" />
     <Compile Include="Models\DTOs\LoginRequestDto.cs" />
     <Compile Include="Models\DTOs\LoginResponseDto.cs" />
-    <Compile Include="Models\DTOs\MessageResponseDto.cs" />
-    <Compile Include="Models\DTOs\RefreshTokenDto.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
     <Compile Include="Models\DTOs\TokenPayloadDto.cs" />
+    <Compile Include="Models\DTOs\UpdateAccountDto.cs" />
     <Compile Include="Models\Items.cs" />
     <Compile Include="Models\Menus.cs" />
     <Compile Include="Models\Menu_Items.cs" />
@@ -297,7 +297,6 @@
     <Compile Include="Services\Interfaces\IAuthService.cs" />
     <Compile Include="Utils\TokenGenerator.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utils\PasswordVerifier.cs" />
     <Compile Include="Utils\TokenValidatorAndVerifier.cs" />
   </ItemGroup>
   <ItemGroup>

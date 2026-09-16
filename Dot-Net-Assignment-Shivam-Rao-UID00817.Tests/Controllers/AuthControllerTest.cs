@@ -56,25 +56,32 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
         [Test]
         public async Task Register_DuplicateUser_ReturnsValidationException()
         {
-            var model = new RegisterDto { 
-                Email = "ab10@example.com" , 
-                Name = "Klena" , 
-                Password = "mH9)dS1t" , 
-                PhoneNumber = "823-452-3464" 
+            var model = new RegisterDto
+            {
+                Email = "ab10@example.com" ,
+                Name = "Klena" ,
+                Password = "mH9)dS1t" ,
+                PhoneNumber = "823-452-3464"
             };
 
-            _mockAuthService.Setup(
-                s => s.RegisterAsync(model))
-                .ThrowsAsync(new ConflictException(
-                    EXCEPTION_MESSAGES.USER_ALREADY_EXISTS
-                ));
+            _mockAuthService
+                .Setup(s => s.RegisterAsync(model))
+                .ThrowsAsync(
+                    new ConflictException(
+                        Constants.EXCEPTION_MESSAGES.USER_ALREADY_EXISTS
+                    )
+                );
 
-            await _controller.Register(model);
+            var exception = Assert.ThrowsAsync<ConflictException>(
+                async () => await _controller.Register(model)
+            );
 
-            var exception = Assert.Throws<ConflictException>(async () => await _controller.Register(model));
-
-            Assert.That(exception.Message , Is.EqualTo(Constants.EXCEPTION_MESSAGES.USER_ALREADY_EXISTS));
+            Assert.That(
+                exception.Message ,
+                Is.EqualTo(Constants.EXCEPTION_MESSAGES.USER_ALREADY_EXISTS)
+            );
         }
+
 
         [Test]
         public async Task Register_WhenModelStateIsInvalid_ReturnsBadRequest()
@@ -84,14 +91,25 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 Email = "invalidemail"
             };
 
-            var exception = Assert.Throws<ModelValidationException>(async () => await _controller.Register(model));
+            _controller.ModelState.AddModelError(
+                nameof(RegisterDto.Email) ,
+                Constants.EXCEPTION_MESSAGES.INVALID_EMAIL_FORMAT
+            );
 
-            Assert.That(exception.Message , Is.EqualTo(Constants.EXCEPTION_MESSAGES.INVALID_EMAIL_FORMAT));
+            var exception = Assert.ThrowsAsync<ModelValidationException>(
+                async () => await _controller.Register(model)
+            );
+
+            Assert.That(
+                exception.Message ,
+                Is.EqualTo(Constants.EXCEPTION_MESSAGES.INVALID_EMAIL_FORMAT)
+            );
 
             _mockAuthService.Verify(
-                s => s.RegisterAsync(It.IsAny<RegisterDto>()),
+                s => s.RegisterAsync(It.IsAny<RegisterDto>()) ,
                 Times.Never
             );
         }
+
     }
 }

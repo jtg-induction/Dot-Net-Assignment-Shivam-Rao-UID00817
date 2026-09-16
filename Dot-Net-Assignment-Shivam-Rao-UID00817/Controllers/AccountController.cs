@@ -22,7 +22,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             _accountService = accountService;
         }
 
-        [HttpPatch, Route("deactivate")]
+        [HttpPatch, Route("update/deactivate")]
         public async Task Deactivate()
         {
             var claimsPrincipal = User as ClaimsPrincipal;
@@ -31,5 +31,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             await _accountService.DeactivateAccountAsync(userId);
         }
+
+        [HttpPatch, Route("update")]
+        public async Task Update([FromBody] UpdateAccountDto model)
+        {
+            var claimsPrincipal = User as ClaimsPrincipal;
+
+            long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
+
+            await _accountService.UpdateAccountAsync(userId, model);
+        }
+
     }
 }
