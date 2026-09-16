@@ -46,15 +46,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 s => s.RegisterAsync(model))
                 .Returns(Task.CompletedTask);
 
-            var result = await _controller.Register(model);
-
-            var okResult = result as OkNegotiatedContentResult<MessageResponseDto>;
-
-            Assert.That(okResult , Is.Not.Null);
-
-            Assert.That(
-                okResult.Content.Message ,
-                Is.EqualTo("Registration successful!"));
+            await _controller.Register(model);
 
             _mockAuthService.Verify(
                 x => x.RegisterAsync(model) ,
@@ -77,13 +69,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                     EXCEPTION_MESSAGES.USER_ALREADY_EXISTS
                 ));
 
-            var result = await _controller.Register(model);
+            await _controller.Register(model);
 
-            Assert.That(
-                result , 
-                Is.TypeOf<BadRequestErrorMessageResult>()
-            );
+            var exception = Assert.Throws<ConflictException>(async () => await _controller.Register(model));
 
+            Assert.That(exception.Message , Is.EqualTo(Constants.EXCEPTION_MESSAGES.USER_ALREADY_EXISTS));
         }
 
         [Test]
@@ -94,17 +84,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 Email = "invalidemail"
             };
 
-            _controller.ModelState.AddModelError(
-                "Email" ,
-                "Invalid email address"
-            );
+            var exception = Assert.Throws<ModelValidationException>(async () => await _controller.Register(model));
 
-            var result = await _controller.Register(model);
-
-            Assert.That(
-                result ,
-                Is.TypeOf<InvalidModelStateResult>()
-             );
+            Assert.That(exception.Message , Is.EqualTo(Constants.EXCEPTION_MESSAGES.INVALID_EMAIL_FORMAT));
 
             _mockAuthService.Verify(
                 s => s.RegisterAsync(It.IsAny<RegisterDto>()),

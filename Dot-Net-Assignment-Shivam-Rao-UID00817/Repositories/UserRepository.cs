@@ -26,14 +26,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             return await _db.Users.AnyAsync(u => u.Email == email || u.PhoneNumber == phoneNumber);
         }
 
-        public async Task AddUserAsync(Users user)
+        public void Add(Users user)
         {
             _db.Users.Add(user);
         }
 
         public async Task<Users> GetUserByEmailAsync(string email)
         {
-            return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<Users> GetUserByUserIdAsync(long userId)

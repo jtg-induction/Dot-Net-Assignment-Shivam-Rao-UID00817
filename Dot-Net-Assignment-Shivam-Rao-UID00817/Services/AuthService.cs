@@ -14,6 +14,7 @@ using System.Web.Http.Results;
 using System.Net.Http;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using System.Net;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
@@ -49,7 +50,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             var newUser = new Users(email , phoneNumber , model.Password , model.Name);
 
-            await _userRepository.AddUserAsync(newUser);
+            _userRepository.Add(newUser);
 
             await _unitOfWork.SaveChangesAsync();
         }
@@ -68,7 +69,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                     EXCEPTION_MESSAGES.INVALID_CREDENTIALS
                 );
 
-            bool passwordValid = PasswordVerifier.VerifyPassword(model.Password , user.Password);
+            bool passwordValid = HashingHelper.VerifyPassword(model.Password , user.Password);
 
             if (!passwordValid)
             {
@@ -80,7 +81,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             string accessToken = TokenGenerator.GenerateAccessToken(email , user.UserId , user.Role);
             string refreshToken = TokenGenerator.GenerateRefreshToken();
 
-            await _refreshTokenRepository.AddTokenAsync(new Refresh_Tokens(user.UserId , refreshToken));
+            _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId , refreshToken));
 
             await _unitOfWork.SaveChangesAsync();
 
@@ -95,18 +96,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         {
             var existingToken = await _refreshTokenRepository.CheckIfRefreshTokenExistsAsync(refreshToken);
 
-            if (existingToken == null) return null;
+            if (existingToken == null) throw new Exceptions.ValidationException(EXCEPTION_MESSAGES.INVALID_REFRESH_TOKEN);
 
-            await _refreshTokenRepository.DeleteRefreshTokenAsync(existingToken);
+            _refreshTokenRepository.DeleteRefreshToken(existingToken);
 
             if(existingToken.ExpiresAt < DateTime.UtcNow)
             {
-                return null;
+                throw new Exceptions.ValidationException(EXCEPTION_MESSAGES.INVALID_REFRESH_TOKEN);
             }
 
             var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId);
-
-            if (user == null) return null;
 
             var accessToken = TokenGenerator.GenerateAccessToken(
                 user.Email ,
@@ -116,7 +115,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             var newRefreshToken = TokenGenerator.GenerateRefreshToken();
 
-            await _refreshTokenRepository.AddTokenAsync(new Refresh_Tokens(user.UserId , newRefreshToken));
+            _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId , newRefreshToken));
 
             await _unitOfWork.SaveChangesAsync();
 

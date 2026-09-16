@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Http.Results;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
@@ -65,8 +66,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.AddUserAsync(It.IsAny<Users>()))
-                .Returns(Task.CompletedTask);
+                x => x.Add(It.IsAny<Users>()));
 
             await _authService.RegisterAsync(model);
 
@@ -78,7 +78,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
 
             _mockUserRepository.Verify(
-                x => x.AddUserAsync(It.IsAny<Users>()) ,
+                x => x.Add(It.IsAny<Users>()) ,
                 Times.Once
             );
         }
@@ -100,12 +100,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             Users createdUser = null;
 
-            _mockUserRepository.Setup(x => x.AddUserAsync(It.IsAny<Users>()))
+            _mockUserRepository.Setup(x => x.Add(It.IsAny<Users>()))
                 .Callback<Users>(user =>
                 {
                     createdUser = user;
-                })
-                .Returns(Task.CompletedTask);
+                });
 
             await _authService.RegisterAsync(model);
 
@@ -149,7 +148,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             {
                 UserId = 1 ,
                 Email = "shivam@example.com" ,
-                Password = PasswordHasher.HashPassword("Pass@1234") ,
+                Password = HashingHelper.HashPassword("Pass@1234") ,
                 Role = "Customer"
             };
 
@@ -170,7 +169,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             Assert.That(result.RefreshToken , Is.Not.Null.And.Not.Empty);
 
             _mockRefreshTokenRepository.Verify(
-                x => x.AddTokenAsync(
+                x => x.Add(
                     It.Is<Refresh_Tokens>(t =>
                             t.UserId == user.UserId &&
                             t.RefreshToken == result.RefreshToken
@@ -204,7 +203,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             {
                 UserId = 1 ,
                 Email = "Shivam@example.com" ,
-                Password = PasswordHasher.HashPassword("Pass@1234") ,
+                Password = HashingHelper.HashPassword("Pass@1234") ,
                 Role = "Customer"
             };
 
@@ -293,7 +292,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             Assert.That(result , Is.Not.Null);
 
             _mockRefreshTokenRepository.Verify(
-                x => x.AddTokenAsync(
+                x => x.Add(
                     It.Is<Refresh_Tokens>(t =>
                         t.UserId == user.UserId &&
                         t.RefreshToken == result.RefreshToken
@@ -321,7 +320,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
 
             _mockRefreshTokenRepository.Verify(
-                x => x.AddTokenAsync(It.IsAny<Refresh_Tokens>()) ,
+                x => x.Add(It.IsAny<Refresh_Tokens>()) ,
                 Times.Never
             );
         }
@@ -353,7 +352,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             Assert.That(result , Is.Null);
 
             _mockRefreshTokenRepository.Verify(
-                x => x.AddTokenAsync(It.IsAny<Refresh_Tokens>()) ,
+                x => x.Add(It.IsAny<Refresh_Tokens>()) ,
                 Times.Never
             );
         }

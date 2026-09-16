@@ -11,7 +11,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
     public interface IUserRepository
     {
         Task<bool> UserExistsAsync(string email , string phoneNumber);
-        Task AddUserAsync(Users user);
+        void Add(Users user);
         Task<Users> GetUserByEmailAsync(string email);
         Task<Users> GetUserByUserIdAsync(long userId);
     }

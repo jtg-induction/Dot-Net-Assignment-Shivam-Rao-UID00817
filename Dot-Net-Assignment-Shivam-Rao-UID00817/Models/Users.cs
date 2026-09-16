@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
@@ -59,7 +60,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         {
             DateTime CurrentTime = DateTime.UtcNow;
             this.Email = email;
-            this.Password = PasswordHasher.HashPassword(password.Trim());
+            this.Password = HashingHelper.HashPassword(password.Trim());    
             this.PhoneNumber = phoneNumber;
             this.Name = name;
             this.CreatedAt = CurrentTime;

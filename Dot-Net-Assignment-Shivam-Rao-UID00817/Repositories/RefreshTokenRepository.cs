@@ -19,7 +19,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         {
             _db = db;
         }
-        public async Task AddTokenAsync(Refresh_Tokens RefreshToken)
+        public void Add(Refresh_Tokens RefreshToken)
         {
             _db.Refresh_Tokens.Add(RefreshToken);
         }
@@ -29,7 +29,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             return await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);
         }
 
-        public async Task DeleteRefreshTokenAsync(Refresh_Tokens TokenRecord)
+        public void DeleteRefreshToken(Refresh_Tokens TokenRecord)
         {
             _db.Refresh_Tokens.Remove(TokenRecord);
         }

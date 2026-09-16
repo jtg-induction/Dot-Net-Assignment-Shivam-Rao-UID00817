@@ -238,7 +238,6 @@
     <Compile Include="App_Start\DependencyInjectionConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Constants\ERROR_MESSAGES.cs" />
     <Compile Include="Constants\EXCEPTION_MESSAGES.cs" />
     <Compile Include="Constants\NUMBER_CONSTANTS.cs" />
     <Compile Include="Constants\REGEX.cs" />
@@ -251,6 +250,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CookieHelper.cs" />
+    <Compile Include="Helpers\HashingHelper.cs" />
     <Compile Include="Migrations\202609101645205_InitialCreate.cs" />
     <Compile Include="Migrations\202609101645205_InitialCreate.Designer.cs">
       <DependentUpon>202609101645205_InitialCreate.cs</DependentUpon>
@@ -291,9 +292,7 @@
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\Interfaces\IAuthService.cs" />
     <Compile Include="Utils\TokenGenerator.cs" />
-    <Compile Include="Utils\PasswordHasher.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utils\PasswordVerifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

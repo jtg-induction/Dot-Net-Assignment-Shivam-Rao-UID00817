@@ -29,11 +29,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
             }
             else if(context.Exception is ValidationException)
             {
-                statusCode = HttpStatusCode.Unauthorized;
+                statusCode = HttpStatusCode.BadRequest;
             }
             else
             {
-                statusCode = HttpStatusCode.BadRequest;
+                statusCode = HttpStatusCode.InternalServerError;
             }
 
             context.Result = new NegotiatedContentResult<List<string>>(
