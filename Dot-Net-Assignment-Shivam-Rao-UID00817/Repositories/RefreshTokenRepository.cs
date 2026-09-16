@@ -22,26 +22,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         public async Task AddTokenAsync(Refresh_Tokens RefreshToken)
         {
             _db.Refresh_Tokens.Add(RefreshToken);
-
-            await _db.SaveChangesAsync();
         }
 
-        public async Task<Refresh_Tokens> ValidateTokenAndGetDetails(string token)
+        public async Task<Refresh_Tokens> CheckIfRefreshTokenExistsAsync(string token)
         {
-            Refresh_Tokens TokenRecord = await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);
+            return await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);
+        }
 
-            if (TokenRecord == null) return null;
-
-            if (TokenRecord.ExpiresAt < DateTime.UtcNow)
-            {
-                return null;
-            }
-
+        public async Task DeleteRefreshTokenAsync(Refresh_Tokens TokenRecord)
+        {
             _db.Refresh_Tokens.Remove(TokenRecord);
-
-            await _db.SaveChangesAsync();
-
-            return TokenRecord;
         }
     }
 }

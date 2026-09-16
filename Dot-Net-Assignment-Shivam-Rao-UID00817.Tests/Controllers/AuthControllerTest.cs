@@ -12,6 +12,9 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
 using System.Web.Helpers;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using System.Web.Http;
+using System.Net;
 
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
@@ -59,7 +62,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
         }
 
         [Test]
-
         public async Task Register_DuplicateUser_ReturnsValidationException()
         {
             var model = new RegisterDto { 
@@ -71,8 +73,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             _mockAuthService.Setup(
                 s => s.RegisterAsync(model))
-                .ThrowsAsync(new ValidationException(
-                    Dot_Net_Assignment_Shivam_Rao_UID00817.Constants.USER_ALREADY_EXISTS
+                .ThrowsAsync(new ConflictException(
+                    EXCEPTION_MESSAGES.USER_ALREADY_EXISTS
                 ));
 
             var result = await _controller.Register(model);

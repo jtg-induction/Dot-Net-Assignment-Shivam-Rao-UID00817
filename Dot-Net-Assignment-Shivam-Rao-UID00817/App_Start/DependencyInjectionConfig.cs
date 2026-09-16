@@ -24,6 +24,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
 
             builder.RegisterType<Restaurant_ManagementContext>().InstancePerRequest();
 
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerRequest();
+
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerRequest();
 
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();

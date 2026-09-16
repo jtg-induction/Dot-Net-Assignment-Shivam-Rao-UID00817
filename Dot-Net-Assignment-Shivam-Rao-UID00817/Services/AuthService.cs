@@ -12,19 +12,25 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
 using Microsoft.Owin;
 using System.Web.Http.Results;
 using System.Net.Http;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using System.Net;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
     public class AuthService: IAuthService
     {
+
+        private readonly IUnitOfWork _unitOfWork;
+
         private readonly IUserRepository _userRepository;
 
         private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public AuthService(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository)
+        public AuthService(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task RegisterAsync(RegisterDto model)
@@ -36,16 +42,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             if (userExists)
             {
-                throw new ValidationException(
-                    Constants.USER_ALREADY_EXISTS
+                throw new ConflictException(
+                    EXCEPTION_MESSAGES.USER_ALREADY_EXISTS
                 );
             }
-
-            DateTime currTime = DateTime.UtcNow;
 
             var newUser = new Users(email , phoneNumber , model.Password , model.Name);
 
             await _userRepository.AddUserAsync(newUser);
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public class TokenResult: ITokenResult
@@ -59,7 +65,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             string email = model.Email.Trim().ToLower();
             var user = (await _userRepository.GetUserByEmailAsync(email)) ?? throw new ValidationException
                 (
-                    Constants.INVALID_CREDENTIALS
+                    EXCEPTION_MESSAGES.INVALID_CREDENTIALS
                 );
 
             bool passwordValid = PasswordVerifier.VerifyPassword(model.Password , user.Password);
@@ -67,16 +73,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             if (!passwordValid)
             {
                 throw new ValidationException(
-                    Constants.INVALID_CREDENTIALS
+                    EXCEPTION_MESSAGES.INVALID_CREDENTIALS
                 );
             }
 
             string accessToken = TokenGenerator.GenerateAccessToken(email , user.UserId , user.Role);
             string refreshToken = TokenGenerator.GenerateRefreshToken();
 
-            DateTime currtime = DateTime.UtcNow;
-
             await _refreshTokenRepository.AddTokenAsync(new Refresh_Tokens(user.UserId , refreshToken));
+
+            await _unitOfWork.SaveChangesAsync();
 
             return new TokenResult
             {
@@ -87,9 +93,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task<ITokenResult> RotateTokenAsync(string refreshToken)
         {
-            var existingToken = await _refreshTokenRepository.ValidateTokenAndGetDetails(refreshToken);
+            var existingToken = await _refreshTokenRepository.CheckIfRefreshTokenExistsAsync(refreshToken);
 
             if (existingToken == null) return null;
+
+            await _refreshTokenRepository.DeleteRefreshTokenAsync(existingToken);
+
+            if(existingToken.ExpiresAt < DateTime.UtcNow)
+            {
+                return null;
+            }
 
             var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId);
 
@@ -104,6 +117,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             var newRefreshToken = TokenGenerator.GenerateRefreshToken();
 
             await _refreshTokenRepository.AddTokenAsync(new Refresh_Tokens(user.UserId , newRefreshToken));
+
+            await _unitOfWork.SaveChangesAsync();
 
             return new TokenResult
             {

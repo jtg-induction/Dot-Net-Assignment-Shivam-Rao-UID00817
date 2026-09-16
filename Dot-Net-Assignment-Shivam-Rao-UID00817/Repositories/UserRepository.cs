@@ -29,8 +29,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         public async Task AddUserAsync(Users user)
         {
             _db.Users.Add(user);
-
-            await _db.SaveChangesAsync();
         }
 
         public async Task<Users> GetUserByEmailAsync(string email)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
@@ -39,7 +40,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public string Role { get; set; }
 
         [Column("wallet_balance")]
-        public decimal WalletBalance { get; set; } = 1000.0m;
+        public decimal WalletBalance { get; set; } = NUMBER_CONSTANTS.DEFAULT_ACCOUNT_BALANCE;
 
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
@@ -63,7 +64,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
             this.Name = name;
             this.CreatedAt = CurrentTime;
             this.UpdatedAt = CurrentTime;
-            this.WalletBalance = 1000m;
+            this.WalletBalance = NUMBER_CONSTANTS.DEFAULT_ACCOUNT_BALANCE;
             this.IsActive = true;
             this.Role = "Customer";
         }

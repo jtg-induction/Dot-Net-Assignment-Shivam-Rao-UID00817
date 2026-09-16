@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
 {
@@ -29,7 +30,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
             };
 
             var token = new JwtSecurityToken(issuer , audience , claims ,
-                expires: DateTime.UtcNow.AddSeconds(900) , signingCredentials: credentials);
+                expires: DateTime.UtcNow.AddSeconds(NUMBER_CONSTANTS.JWT_EXPIRES_IN_SECONDS) , signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

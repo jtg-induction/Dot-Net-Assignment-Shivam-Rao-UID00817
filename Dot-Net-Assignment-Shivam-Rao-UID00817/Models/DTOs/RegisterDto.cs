@@ -4,19 +4,20 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Policy;
 using System.Web;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Newtonsoft.Json.Serialization;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
     public class RegisterDto
     {
         [Required]
-        [EmailAddress]
-        [RegularExpression(Constants.EMAIL_REGEX , ErrorMessage = "Email must be a valid format (e.g., user@example.com).")]
+        [RegularExpression(REGEX.EMAIL_REGEX , ErrorMessage = ERROR_MESSAGES.INVALID_EMAIL_FORMAT)]
         public string Email { get; set; }
 
         [Required]
         [StringLength(15, MinimumLength = 8)]
-        [RegularExpression(Constants.PHONE_NUMBER_REGEX, ErrorMessage = "Password must be between 8 - 15 characters in length and must contain atleast a digit, an uppercase letter, a lowercase letter and a special character")]
+        [RegularExpression(REGEX.PASSWORD_REGEX, ErrorMessage = ERROR_MESSAGES.INVALID_PASSWORD_FORMAT)]
         public string Password { get; set; }
 
         [Required]

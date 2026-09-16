@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Filters;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817
 {
@@ -20,6 +23,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
                 routeTemplate: "api/{controller}/{id}" ,
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
+
+            config.Filters.Add(new ModelAttributeValidation()); 
 
             DependencyInjectionConfig.RegisterDependencies();
         }

@@ -11,6 +11,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
     {
         Task AddTokenAsync(Refresh_Tokens RefreshToken);
 
-        Task<Refresh_Tokens> ValidateTokenAndGetDetails(string token);
+        Task<Refresh_Tokens> CheckIfRefreshTokenExistsAsync(string token);
+
+        Task DeleteRefreshTokenAsync(Refresh_Tokens TokenRecord);
     }
 }

@@ -15,6 +15,7 @@ using System.Web.Http.Description;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Microsoft.Owin.Security.Provider;
 using Microsoft.Owin;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {       
@@ -31,50 +32,32 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPost, Route("register")]
         public async Task<IHttpActionResult> Register([FromBody] RegisterDto model)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
+            await _authService.RegisterAsync(model);
 
-            try
-            {
-                await _authService.RegisterAsync(model);
-
-                return base.Ok(new MessageResponseDto { Message = "Registration successful!" });
-            }
-            catch (Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return base.Ok(new MessageResponseDto { Message = "Registration successful!" });
         }
 
         [HttpPost, Route("login")]
         public async Task<IHttpActionResult> Login([FromBody] LoginRequestDto model)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var tokenResult = await _authService.LoginAsync(model);
 
-            try
+            IOwinContext owinContext = Request.GetOwinContext();
+
+            owinContext.Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken, new CookieOptions
             {
-                var tokenResult = await _authService.LoginAsync(model);
+                HttpOnly = true ,
+                Secure = true ,
+                SameSite = Microsoft.Owin.SameSiteMode.Lax ,
+                Expires = DateTime.UtcNow.AddDays(NUMBER_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN_DAYS) ,
+                Path = "/api/auth/refresh"
+            });
 
-                IOwinContext owinContext = Request.GetOwinContext();
-
-                owinContext.Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken, new CookieOptions
-                {
-                    HttpOnly = true ,
-                    Secure = true ,
-                    SameSite = Microsoft.Owin.SameSiteMode.Lax ,
-                    Expires = DateTime.UtcNow.AddDays(10) ,
-                    Path = "/api/auth/refresh"
-                });
-
-                return base.Ok(new LoginResponseDto
-                {
-                    AccessToken = tokenResult.AccessToken ,
-                    ExpiresIn = 900
-                });
-            }
-            catch (Exceptions.ValidationException)
+            return base.Ok(new LoginResponseDto
             {
-                return Unauthorized();
-            }
+                AccessToken = tokenResult.AccessToken ,
+                ExpiresIn = NUMBER_CONSTANTS.JWT_EXPIRES_IN_SECONDS
+            });
         }
 
         [HttpPost, Route("refresh")]
@@ -83,33 +66,27 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             HttpCookie cookie = HttpContext.Current.Request.Cookies["refresh_token"];
 
             if (cookie == null) return Unauthorized();
-            try
+
+            var tokenResult = await _authService.RotateTokenAsync(HttpUtility.UrlDecode(cookie.Value));
+
+            if (tokenResult == null) throw new Exceptions.ValidationException(EXCEPTION_MESSAGES.INVALID_REFRESH_TOKEN);
+
+            IOwinContext owinContext = Request.GetOwinContext();
+
+            owinContext.Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , new CookieOptions
             {
-                var tokenResult = await _authService.RotateTokenAsync(HttpUtility.UrlDecode(cookie.Value));
+                HttpOnly = true ,
+                Secure = true ,
+                SameSite = Microsoft.Owin.SameSiteMode.Lax ,
+                Expires = DateTime.UtcNow.AddDays(NUMBER_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN_DAYS) ,
+                Path = "/api/auth/refresh"
+            });
 
-                if (tokenResult == null) return Unauthorized();
-
-                IOwinContext owinContext = Request.GetOwinContext();
-
-                owinContext.Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , new CookieOptions
-                {
-                    HttpOnly = true ,
-                    Secure = true ,
-                    SameSite = Microsoft.Owin.SameSiteMode.Lax ,
-                    Expires = DateTime.UtcNow.AddDays(10) ,
-                    Path = "/api/auth/refresh"
-                });
-
-                return base.Ok(new LoginResponseDto
-                {
-                    AccessToken = tokenResult.AccessToken ,
-                    ExpiresIn = 900
-                });
-            }
-            catch (Exceptions.ValidationException)
+            return base.Ok(new LoginResponseDto
             {
-                return Unauthorized();
-            }
+                AccessToken = tokenResult.AccessToken ,
+                ExpiresIn = NUMBER_CONSTANTS.JWT_EXPIRES_IN_SECONDS
+            });
         }
     }
 }

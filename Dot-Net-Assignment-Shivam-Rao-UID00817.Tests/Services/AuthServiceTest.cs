@@ -25,6 +25,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
     {
         private Mock<IUserRepository> _mockUserRepository;
         private Mock<IRefreshTokenRepository> _mockRefreshTokenRepository;
+
+        private Mock<IUnitOfWork> _mockUnitOfWork;
         private AuthService _authService;
 
         [SetUp]
@@ -47,7 +49,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             _mockUserRepository = new Mock<IUserRepository>();
             _mockRefreshTokenRepository = new Mock<IRefreshTokenRepository>();
-            _authService = new AuthService(_mockUserRepository.Object , _mockRefreshTokenRepository.Object);
+            _mockUnitOfWork = new Mock<IUnitOfWork>();
+            _authService = new AuthService(_mockUserRepository.Object, _mockRefreshTokenRepository.Object, _mockUnitOfWork.Object);
         }
 
         [Test]
@@ -241,7 +244,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRefreshTokenRepository
-                .Setup(x => x.ValidateTokenAndGetDetails(oldRefreshToken))
+                .Setup(x => x.CheckIfRefreshTokenExistsAsync(oldRefreshToken))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository
@@ -278,7 +281,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRefreshTokenRepository.Setup(
-                x => x.ValidateTokenAndGetDetails(oldRefreshToken))
+                x => x.CheckIfRefreshTokenExistsAsync(oldRefreshToken))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository.Setup(
@@ -305,7 +308,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var refreshToken = "invalid-token";
 
             _mockRefreshTokenRepository.Setup(
-                x => x.ValidateTokenAndGetDetails(refreshToken))
+                x => x.CheckIfRefreshTokenExistsAsync(refreshToken))
                 .ReturnsAsync((Refresh_Tokens)null);
 
             var result = await _authService.RotateTokenAsync(refreshToken);
@@ -338,7 +341,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRefreshTokenRepository.Setup(
-                x => x.ValidateTokenAndGetDetails(refreshToken))
+                x => x.CheckIfRefreshTokenExistsAsync(refreshToken))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository.Setup(

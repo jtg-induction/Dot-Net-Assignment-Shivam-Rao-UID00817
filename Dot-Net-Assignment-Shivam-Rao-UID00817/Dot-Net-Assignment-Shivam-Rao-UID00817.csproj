@@ -238,9 +238,16 @@
     <Compile Include="App_Start\DependencyInjectionConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Constants\ERROR_MESSAGES.cs" />
+    <Compile Include="Constants\EXCEPTION_MESSAGES.cs" />
+    <Compile Include="Constants\NUMBER_CONSTANTS.cs" />
+    <Compile Include="Constants\REGEX.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Exceptions\ConflictException.cs" />
+    <Compile Include="Exceptions\ModelValidationException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Exception_Handlers\GlobalExceptionHandler.cs" />
+    <Compile Include="Filters\ModelAttributeValidation.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -261,7 +268,6 @@
     <Compile Include="Models\DTOs\LoginRequestDto.cs" />
     <Compile Include="Models\DTOs\LoginResponseDto.cs" />
     <Compile Include="Models\DTOs\MessageResponseDto.cs" />
-    <Compile Include="Models\DTOs\RefreshRequestDto.cs" />
     <Compile Include="Models\DTOs\RefreshTokenDto.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
     <Compile Include="Models\Items.cs" />
@@ -276,8 +282,10 @@
     <Compile Include="Models\User_Address_Type.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Interfaces\IRefreshTokenRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Repositories\Interfaces\IUserRepository.cs" />
     <Compile Include="Repositories\RefreshTokenRepository.cs" />
+    <Compile Include="Repositories\UnitOfWork.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Restaurant_ManagementContext.cs" />
     <Compile Include="Services\AuthService.cs" />
