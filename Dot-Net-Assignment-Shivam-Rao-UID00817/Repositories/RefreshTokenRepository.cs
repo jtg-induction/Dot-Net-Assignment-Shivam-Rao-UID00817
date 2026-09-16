@@ -45,5 +45,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 
             return true;
         }
+
+        public async Task RemoveAllTokensForUserIdAsync(long userId)
+        {
+            var TokenRecords = await _db.Refresh_Tokens.Where(u => u.UserId == userId).ToListAsync();
+
+            _db.Refresh_Tokens.RemoveRange(TokenRecords);
+        }
     }
 }

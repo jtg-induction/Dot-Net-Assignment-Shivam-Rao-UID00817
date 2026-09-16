@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
@@ -31,6 +30,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
 
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerRequest();
+
+            builder.RegisterType<AccountService>().As<IAccountService>().InstancePerRequest();
 
             var container = builder.Build();
 

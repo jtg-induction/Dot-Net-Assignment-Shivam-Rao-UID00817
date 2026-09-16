@@ -79,6 +79,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 );
             }
 
+            if(user.IsActive == false)
+            {
+                await _userRepository.SwitchUserIsActiveAsync(user.UserId);
+            }
+
             string accessToken = TokenGenerator.GenerateAccessToken(email , user.UserId , user.Role);
             string refreshToken = TokenGenerator.GenerateRefreshToken();
 
@@ -133,6 +138,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
 
             return res;
+        }
+
+        public async Task LogOutFromAllDevicesAsync(long userId)
+        {
+            await _refreshTokenRepository.RemoveAllTokensForUserIdAsync(userId);
         }
     }
 }

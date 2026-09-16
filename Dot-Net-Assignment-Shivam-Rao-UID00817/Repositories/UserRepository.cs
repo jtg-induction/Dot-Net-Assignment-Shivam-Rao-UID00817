@@ -40,5 +40,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         {
             return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
+
+        public async Task SwitchUserIsActiveAsync(long userId)
+        {
+            var user = await _db.Users.FindAsync(userId);
+            user.IsActive = !user.IsActive;
+        }
     }
 }

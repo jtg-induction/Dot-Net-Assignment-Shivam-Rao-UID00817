@@ -241,6 +241,7 @@
     <Compile Include="Constants\EXCEPTION_MESSAGES.cs" />
     <Compile Include="Constants\NUMBER_CONSTANTS.cs" />
     <Compile Include="Constants\REGEX.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Exceptions\ConflictException.cs" />
     <Compile Include="Exceptions\ModelValidationException.cs" />
@@ -290,7 +291,9 @@
     <Compile Include="Repositories\UnitOfWork.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Restaurant_ManagementContext.cs" />
+    <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\AuthService.cs" />
+    <Compile Include="Services\Interfaces\IAccountService.cs" />
     <Compile Include="Services\Interfaces\IAuthService.cs" />
     <Compile Include="Utils\TokenGenerator.cs" />
     <Compile Include="Startup.cs" />
