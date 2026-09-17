@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
     public class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly Restaurant_ManagementContext _db;
 
@@ -31,14 +32,20 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db.Users.Add(user);
         }
 
-        public async Task<Users> GetUserByEmailAsync(string email)
+        public async Task<Users> GetUserByEmailAsync(string email , bool AsNoTracking)
         {
-            return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
+            if (AsNoTracking)
+                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
+            else
+                return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<Users> GetUserByUserIdAsync(long userId)
+        public async Task<Users> GetUserByUserIdAsync(long userId , bool AsNoTracking)
         {
-            return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if (AsNoTracking)
+                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId);
+            else
+                return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
         public async Task ToggleUserIsActiveAsync(long userId)
