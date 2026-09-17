@@ -1,7 +1,10 @@
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
@@ -38,7 +41,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public string Role { get; set; }
 
         [Column("wallet_balance")]
-        public decimal WalletBalance { get; set; } = 1000.0m;
+        public decimal WalletBalance { get; set; } = NUMBER_CONSTANTS.DEFAULT_ACCOUNT_BALANCE;
 
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
@@ -52,5 +55,24 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public virtual ICollection<Orders> Orders { get; set; }
         public virtual ICollection<User_Address_Type> UserAddressTypes { get; set; }
         public virtual ICollection<Owner_Manages_Restaurants> OwnerManagesRestaurants { get; set; }
+        public virtual ICollection<Refresh_Tokens> RefreshTokens { get; set; }
+    public Users(string email, string phoneNumber, string password, string name)
+        {
+            DateTime CurrentTime = DateTime.UtcNow;
+            this.Email = email;
+            this.Password = HashingHelper.HashPassword(password.Trim());    
+            this.PhoneNumber = phoneNumber;
+            this.Name = name;
+            this.CreatedAt = CurrentTime;
+            this.UpdatedAt = CurrentTime;
+            this.WalletBalance = NUMBER_CONSTANTS.DEFAULT_ACCOUNT_BALANCE;
+            this.IsActive = true;
+            this.Role = "Customer";
+        }
+    public Users()
+        {
+
+        }
     }
+
 }

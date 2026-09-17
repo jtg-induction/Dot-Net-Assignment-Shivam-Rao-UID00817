@@ -7,14 +7,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
     public class User_Address_Type
     {
         [Key]
-        [Column("user_id", Order = 1)]
+        [Column("user_id" , Order = 1)]
         public long UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public virtual Users Users { get; set; }
 
         [Key]
-        [Column("address_id", Order = 2)]
+        [Column("address_id" , Order = 2)]
         public long AddressId { get; set; }
 
         [ForeignKey(nameof(AddressId))]
