@@ -21,8 +21,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
 
         public static bool IsPublicPath(string path)
         {
-            return !string.IsNullOrEmpty(path) &&
-                (PublicPrefixes.Contains(path) || PublicPrefixes.Any(prefix => prefix.StartsWith(prefix , StringComparison.OrdinalIgnoreCase)));
+            if (string.IsNullOrEmpty(path))
+                return false;
+
+            return PublicEndpoints.Contains(path)
+                || PublicPrefixes.Any(prefix =>
+                    path.StartsWith(prefix , StringComparison.OrdinalIgnoreCase));
         }
     }
 }

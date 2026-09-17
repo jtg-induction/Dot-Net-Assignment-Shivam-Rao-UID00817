@@ -1,17 +1,12 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Results;
-using System.Web.UI.WebControls;
 using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
@@ -37,27 +32,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
                 statusCode = HttpStatusCode.InternalServerError;
             }
 
-            context.Result = new NegotiatedContentResult<List<string>>(
+            context.Result = new NegotiatedContentResult<object>(
                 statusCode ,
-                messages ,
+                new {errors=messages},
                 context.RequestContext.Configuration.Services.GetContentNegotiator() ,
                 context.Request ,
                 context.RequestContext.Configuration.Formatters
             );
-        }
-        private class ErrorMessageResult : IHttpActionResult
-        {
-            private readonly HttpResponseMessage _httpResponseMessage;
-
-            public ErrorMessageResult(HttpResponseMessage httpResponseMessage)
-            {
-                _httpResponseMessage = httpResponseMessage;
-            }
-
-            public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
-            {
-                return Task.FromResult(_httpResponseMessage);
-            }
         }
     }
 }

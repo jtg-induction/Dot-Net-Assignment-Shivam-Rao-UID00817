@@ -297,9 +297,8 @@
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
     <Compile Include="Services\Interfaces\IAuthService.cs" />
-    <Compile Include="Utils\TokenGenerator.cs" />
+    <Compile Include="Utils\JWTUtil.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Utils\TokenValidatorAndVerifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

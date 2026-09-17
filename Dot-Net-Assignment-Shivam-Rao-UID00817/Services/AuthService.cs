@@ -3,23 +3,14 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
-using System;
-using System.Threading.Tasks;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
 using System;
 using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
-    public class AuthService : IAuthService
     public class AuthService : IAuthService
     {
 
@@ -29,7 +20,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public AuthService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork)
         public AuthService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
@@ -42,13 +32,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             string email = model.Email.Trim().ToLower();
             string phoneNumber = model.PhoneNumber.Trim();
 
-            bool phoneNumberExists = await _userRepository.DuplicatePhoneNumberExistsAsync(phoneNumber);
-            bool emailExists = await _userRepository.DuplicateEmailExistsAsync(email);
+            bool phoneNumberExists = await _userRepository.PhoneNumberExistsAsync(phoneNumber);
+            bool emailExists = await _userRepository.EmailExistsAsync(email);
 
 
-            if (phoneNumberExists && emailExists) throw new ConflictException(ExceptionMessages.USER_ALREADY_EXISTS);
+            if (emailExists) throw new ConflictException(ExceptionMessages.USER_ALREADY_EXISTS);
             else if (phoneNumberExists) throw new ConflictException(ExceptionMessages.DUPLICATE_PHONE_NUMBER);
-            else if (emailExists) throw new ConflictException(ExceptionMessages.DUPLICATE_EMAIL);
 
             var newUser = new Users(email , phoneNumber , model.Password , model.Name);
 
@@ -57,7 +46,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public class TokenResult : ITokenResult
         public class TokenResult : ITokenResult
         {
             public string AccessToken { get; set; }
@@ -83,11 +71,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             if (user.IsActive == false)
             {
-                await _userRepository.ToggleUserIsActiveAsync(user.UserId);
+                user.IsActive = true;
             }
 
-            string accessToken = TokenGenerator.GenerateAccessToken(email , user.UserId , user.Role);
-            string refreshToken = TokenGenerator.GenerateRefreshToken();
+            string accessToken = JWTUtil.GenerateAccessToken(email , user.UserId , user.Role);
+            string refreshToken = JWTUtil.GenerateRefreshToken();
 
             _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId , refreshToken));
 
@@ -95,7 +83,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             return new TokenResult
             {
-                AccessToken = accessToken ,
                 AccessToken = accessToken ,
                 RefreshToken = refreshToken
             };
@@ -117,13 +104,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId , true);
 
-            var accessToken = TokenGenerator.GenerateAccessToken(
+            var accessToken = JWTUtil.GenerateAccessToken(
                 user.Email ,
                 user.UserId ,
                 user.Role
             );
 
-            var newRefreshToken = TokenGenerator.GenerateRefreshToken();
+            var newRefreshToken = JWTUtil.GenerateRefreshToken();
 
             _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId , newRefreshToken));
 

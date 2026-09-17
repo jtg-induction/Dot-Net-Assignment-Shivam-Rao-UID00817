@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
     public class RefreshTokenRepository : IRefreshTokenRepository
-    public class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly Restaurant_ManagementContext _db;
 
@@ -20,9 +19,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db.Refresh_Tokens.Add(RefreshToken);
         }
 
-        public async Task<Refresh_Tokens> GetRefreshTokenExistsAsync(string token , bool AsNoTracking)
+        public async Task<Refresh_Tokens> GetRefreshTokenExistsAsync(string token , bool enableTracking)
         {
-            if (AsNoTracking)
+            if (enableTracking)
                 return await _db.Refresh_Tokens.AsNoTracking().FirstOrDefaultAsync(u => u.RefreshToken == token);
             else
                 return await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);

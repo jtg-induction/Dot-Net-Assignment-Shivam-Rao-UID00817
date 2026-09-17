@@ -30,7 +30,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task DeactivateAccountAsync(long userId)
         {
-            await _userRepository.ToggleUserIsActiveAsync(userId);
+            await _userRepository.DeactivateUserAsync(userId);
             await _authService.LogOutFromAllDevicesAsync(userId);
 
             await _unitOfWork.SaveChangesAsync();
@@ -42,14 +42,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             {
                 return;
             }
-            Users user = await _userRepository.GetUserByUserIdAsync(userId);
+            Users user = await _userRepository.GetUserByUserIdAsync(userId, true);
             if (!String.IsNullOrWhiteSpace(model.Name))
             {
                 user.Name = model.Name.Trim();
             }
             if (!String.IsNullOrWhiteSpace(model.PhoneNumber))
             {
-                if (await _userRepository.DuplicatePhoneNumberExistsAsync(model.PhoneNumber.Trim()))
+                if (await _userRepository.PhoneNumberExistsAsync(model.PhoneNumber.Trim()))
                     throw new ConflictException(ExceptionMessages.DUPLICATE_PHONE_NUMBER);
                 user.PhoneNumber = model.PhoneNumber.Trim();
             }

@@ -36,7 +36,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
 
             string token = authHeader.Substring("Bearer ".Length).Trim();
 
-            TokenPayloadDto payload = await TokenValidatorAndVerifier.ValidateToken(token);
+            TokenPayloadDto payload = await JWTUtil.ValidateTokenAndGetPayloadAsync(token);
 
             if (payload == null)
             {
