@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions
 {
-    public class ConflictException: Exception
+    public class ConflictException : Exception
     {
-        public ConflictException(string message):base(message)
+        public ConflictException(string message) : base(message)
         {
         }
     }

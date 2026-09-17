@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Configuration;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
 {
@@ -38,7 +34,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
         public static string GenerateRefreshToken()
         {
             var randomNumber = new Byte[32];
-            using(var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+            using (var rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
             {
                 rng.GetBytes(randomNumber);
                 string refreshToken = Convert.ToBase64String(randomNumber);

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Reflection;
-using System.Web.Http;
-using Autofac;
+﻿using Autofac;
 using Autofac.Integration.WebApi;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
+using System.Reflection;
+using System.Web.Http;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
 {
@@ -34,7 +29,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
 
             var container = builder.Build();
 
-            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);  
+            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
         }
     }
 }
