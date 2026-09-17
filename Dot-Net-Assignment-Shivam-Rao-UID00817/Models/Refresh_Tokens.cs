@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -33,7 +30,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Required]
         [Column("expires_at")]
         public DateTime ExpiresAt { get; set; }
-    public Refresh_Tokens(long userId, string refreshToken)
+        public Refresh_Tokens(long userId , string refreshToken)
         {
             DateTime CurrentTime = DateTime.UtcNow;
             this.UserId = userId;

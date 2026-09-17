@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using System.Threading.Tasks;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
 {
@@ -15,6 +10,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
         void Add(Users user);
         Task<Users> GetUserByEmailAsync(string email);
         Task<Users> GetUserByUserIdAsync(long userId);
-        Task SwitchUserIsActiveAsync(long userId);
+        Task ToggleUserIsActiveAsync(long userId);
     }
 }

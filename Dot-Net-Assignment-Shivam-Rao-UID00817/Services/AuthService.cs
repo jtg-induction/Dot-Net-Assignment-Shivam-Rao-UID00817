@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Threading.Tasks;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
-using Microsoft.Owin;
-using System.Web.Http.Results;
-using System.Net.Http;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
-using System.Net;
-using Microsoft.Owin.Security;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
+using System;
+using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
-    public class AuthService: IAuthService
+    public class AuthService : IAuthService
     {
 
         private readonly IUnitOfWork _unitOfWork;
@@ -28,7 +20,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public AuthService(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IUnitOfWork unitOfWork)
+        public AuthService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
@@ -55,7 +47,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public class TokenResult: ITokenResult
+        public class TokenResult : ITokenResult
         {
             public string AccessToken { get; set; }
             public string RefreshToken { get; set; }
@@ -78,9 +70,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 );
             }
 
-            if(user.IsActive == false)
+            if (user.IsActive == false)
             {
-                await _userRepository.SwitchUserIsActiveAsync(user.UserId);
+                await _userRepository.ToggleUserIsActiveAsync(user.UserId);
             }
 
             string accessToken = TokenGenerator.GenerateAccessToken(email , user.UserId , user.Role);
@@ -92,7 +84,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             return new TokenResult
             {
-                AccessToken =  accessToken ,
+                AccessToken = accessToken ,
                 RefreshToken = refreshToken
             };
         }
@@ -105,7 +97,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             _refreshTokenRepository.DeleteRefreshToken(existingToken);
 
-            if(existingToken.ExpiresAt < DateTime.UtcNow)
+            if (existingToken.ExpiresAt < DateTime.UtcNow)
             {
                 throw new Exceptions.ValidationException(ExceptionMessages.INVALID_REFRESH_TOKEN);
             }
@@ -133,7 +125,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task<bool> LogoutAsync(string refreshToken)
         {
-            bool res = await _refreshTokenRepository.RemoveTokenAsync(refreshToken);
+            bool res = await _refreshTokenRepository.RemoveIfTokenExistsAsync(refreshToken);
             await _unitOfWork.SaveChangesAsync();
 
             return res;

@@ -2,17 +2,15 @@
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
 using Microsoft.Owin;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
 {
-    public class AccessTokenValidationMiddleware: OwinMiddleware
+    public class AuthenticationMiddleware : OwinMiddleware
     {
-        public AccessTokenValidationMiddleware(OwinMiddleware next): base(next)
+        public AuthenticationMiddleware(OwinMiddleware next) : base(next)
         {
 
         }
@@ -31,7 +29,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
 
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer " , StringComparison.OrdinalIgnoreCase))
             {
-                context.Response.StatusCode = 401;
+                context.Response.StatusCode = (Int16)HttpStatusCode.Unauthorized;
                 await context.Response.WriteAsync("Authorization token is required");
                 return;
             }
@@ -40,9 +38,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
 
             TokenPayloadDto payload = await TokenValidatorAndVerifier.ValidateToken(token);
 
-            if(payload == null)
+            if (payload == null)
             {
-                context.Response.StatusCode = 401;
+                context.Response.StatusCode = (Int16)HttpStatusCode.Unauthorized;
                 await context.Response.WriteAsync("Authorization token is required");
                 return;
             }

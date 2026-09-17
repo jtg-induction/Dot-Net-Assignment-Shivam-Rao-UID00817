@@ -1,20 +1,13 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
-using System.Drawing;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
-using System.Diagnostics;
+using System;
+using System.Data.Entity;
+using System.Threading.Tasks;
 
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
-    public class UserRepository: IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly Restaurant_ManagementContext _db;
 
@@ -48,7 +41,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
         }
 
-        public async Task SwitchUserIsActiveAsync(long userId)
+        public async Task ToggleUserIsActiveAsync(long userId)
         {
             var user = await _db.Users.FindAsync(userId);
             user.IsActive = !user.IsActive;

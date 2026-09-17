@@ -1,19 +1,15 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
 
         private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +20,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         private readonly IAuthService _authService;
 
-        public UserService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork, IAuthService authService)
+        public UserService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork , IAuthService authService)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
@@ -34,24 +30,24 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task DeactivateAccountAsync(long userId)
         {
-            await _userRepository.SwitchUserIsActiveAsync(userId);
+            await _userRepository.ToggleUserIsActiveAsync(userId);
             await _authService.LogOutFromAllDevicesAsync(userId);
 
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAccountAsync(long userId, UpdateAccountDto model)
+        public async Task UpdateAccountAsync(long userId , UpdateAccountDto model)
         {
-            if(model is null)
+            if (model is null)
             {
                 return;
             }
             Users user = await _userRepository.GetUserByUserIdAsync(userId);
-            if(!String.IsNullOrWhiteSpace(model.Name))
+            if (!String.IsNullOrWhiteSpace(model.Name))
             {
                 user.Name = model.Name.Trim();
             }
-            if(!String.IsNullOrWhiteSpace(model.PhoneNumber))
+            if (!String.IsNullOrWhiteSpace(model.PhoneNumber))
             {
                 if (await _userRepository.DuplicatePhoneNumberExistsAsync(model.PhoneNumber.Trim()))
                     throw new ConflictException(ExceptionMessages.DUPLICATE_PHONE_NUMBER);

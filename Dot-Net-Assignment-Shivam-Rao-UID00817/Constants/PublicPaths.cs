@@ -1,8 +1,6 @@
-﻿using Microsoft.Owin.Security;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
 {
@@ -23,11 +21,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
 
         public static bool IsPublicPath(string path)
         {
-            if (string.IsNullOrEmpty(path)) return false;
-
-            if (PublicEndpoints.Contains(path)) return true;
-
-            return PublicPrefixes.Any(prefix => path.StartsWith(prefix , StringComparison.OrdinalIgnoreCase));
+            return !string.IsNullOrEmpty(path) &&
+                (PublicPrefixes.Contains(path) || PublicPrefixes.Any(prefix => prefix.StartsWith(prefix , StringComparison.OrdinalIgnoreCase)));
         }
     }
 }

@@ -1,18 +1,12 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
-using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
-    public class RefreshTokenRepository: IRefreshTokenRepository
+    public class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly Restaurant_ManagementContext _db;
 
@@ -35,7 +29,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db.Refresh_Tokens.Remove(TokenRecord);
         }
 
-        public async Task<bool> RemoveTokenAsync(string token)
+        public async Task<bool> RemoveIfTokenExistsAsync(string token)
         {
             var TokenRecord = await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);
 

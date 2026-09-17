@@ -1,17 +1,10 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Web;
 using System.Threading.Tasks;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
-using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
 {

@@ -1,29 +1,28 @@
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
     [Table("Users")]
-    public class Users: IAuditableEntity
+    public class Users : IAuditableEntity
     {
         [Key]
         [Column("user_id")]
         public long UserId { get; set; }
 
         [Required]
-        [Index("IX_User_Email", IsUnique = true)]
+        [Index("IX_User_Email" , IsUnique = true)]
         [StringLength(255)]
         [EmailAddress]
         [Column("email")]
         public string Email { get; set; }
 
         [Required]
-        [Index("IX_User_PhoneNumber", IsUnique = true)]
+        [Index("IX_User_PhoneNumber" , IsUnique = true)]
         [StringLength(50)]
         [Column("phone_number")]
         public string PhoneNumber { get; set; }
@@ -56,11 +55,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public virtual ICollection<User_Address_Type> UserAddressTypes { get; set; }
         public virtual ICollection<Owner_Manages_Restaurants> OwnerManagesRestaurants { get; set; }
         public virtual ICollection<Refresh_Tokens> RefreshTokens { get; set; }
-    public Users(string email, string phoneNumber, string password, string name)
+        public Users(string email , string phoneNumber , string password , string name)
         {
             DateTime CurrentTime = DateTime.UtcNow;
             this.Email = email;
-            this.Password = HashingHelper.HashPassword(password.Trim());    
+            this.Password = HashingHelper.HashPassword(password.Trim());
             this.PhoneNumber = phoneNumber;
             this.Name = name;
             this.CreatedAt = CurrentTime;
@@ -69,7 +68,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
             this.IsActive = true;
             this.Role = "Customer";
         }
-    public Users()
+        public Users()
         {
 
         }

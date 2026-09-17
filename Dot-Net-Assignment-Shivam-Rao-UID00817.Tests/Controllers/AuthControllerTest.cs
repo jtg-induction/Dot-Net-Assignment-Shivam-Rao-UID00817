@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http.Results;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
-using System.Web.Helpers;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
-using System.Web.Http;
-using System.Net;
+using System.Threading.Tasks;
 
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
@@ -35,11 +25,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
         [Test]
         public async Task Register_ValidUser_ReturnsOk()
         {
-            var model = new RegisterDto {
-                Email = "kwabersinked@blinklist.com" , 
-                Name = "Kenny Wabersinke" , 
-                Password = "mH9)dS1t" , 
-                PhoneNumber = "561-662-8099" 
+            var model = new RegisterDto
+            {
+                Email = "kwabersinked@blinklist.com" ,
+                Name = "Kenny Wabersinke" ,
+                Password = "mH9)dS1t" ,
+                PhoneNumber = "561-662-8099"
             };
 
             _mockAuthService.Setup(

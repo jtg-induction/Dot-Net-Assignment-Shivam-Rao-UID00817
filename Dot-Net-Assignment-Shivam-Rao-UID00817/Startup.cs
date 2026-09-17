@@ -5,11 +5,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Jwt;
 using Owin;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
 using System.Text;
-using System.Web;
 
 [assembly: OwinStartup(typeof(Dot_Net_Assignment_Shivam_Rao_UID00817.Startup))]
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817
@@ -29,13 +25,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
                     ValidateIssuer = true ,
                     ValidateAudience = true ,
                     ValidateIssuerSigningKey = true ,
-                    ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
-                    ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+                    ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ,
+                    ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ,
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 }
             });
 
-            app.Use(typeof(AccessTokenValidationMiddleware));
+            app.Use(typeof(AuthenticationMiddleware));
 
         }
     }

@@ -1,7 +1,5 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using Swashbuckle.Application;
 using System.Data.Entity;
-using System.Data.Entity.Hierarchy;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817
 {

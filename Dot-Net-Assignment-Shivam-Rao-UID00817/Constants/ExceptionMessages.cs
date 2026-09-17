@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
+﻿namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
 {
     public static class ExceptionMessages
     {
-        public const string USER_ALREADY_EXISTS = "Both Email and Phone Number already exists.";
+        public const string USER_ALREADY_EXISTS = "User Already Exists.";
 
         public const string INVALID_CREDENTIALS = "Invalid Credentials.";
 

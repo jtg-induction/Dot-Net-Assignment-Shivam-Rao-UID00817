@@ -1,19 +1,12 @@
-﻿using System;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http.ExceptionHandling;
-using System.Diagnostics;
-using System.Web.Configuration;
-using System.Net.Http;
-using System.Net;
-using System.Web.Http.Results;
 using System.Web.Http;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
+using System.Web.Http.ExceptionHandling;
+using System.Web.Http.Results;
 using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
@@ -23,11 +16,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
         public override void Handle(ExceptionHandlerContext context)
         {
             HttpStatusCode statusCode = 0;
-            if(context.Exception is ConflictException)
+            if (context.Exception is ConflictException)
             {
                 statusCode = HttpStatusCode.Conflict;
             }
-            else if(context.Exception is ValidationException)
+            else if (context.Exception is ValidationException)
             {
                 statusCode = HttpStatusCode.BadRequest;
             }

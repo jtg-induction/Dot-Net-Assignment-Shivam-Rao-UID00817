@@ -1,22 +1,13 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web.Helpers;
-using System.Web.Http.Results;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
@@ -51,7 +42,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             _mockUserRepository = new Mock<IUserRepository>();
             _mockRefreshTokenRepository = new Mock<IRefreshTokenRepository>();
             _mockUnitOfWork = new Mock<IUnitOfWork>();
-            _authService = new AuthService(_mockUserRepository.Object, _mockRefreshTokenRepository.Object, _mockUnitOfWork.Object);
+            _authService = new AuthService(_mockUserRepository.Object , _mockRefreshTokenRepository.Object , _mockUnitOfWork.Object);
         }
 
         [Test]
