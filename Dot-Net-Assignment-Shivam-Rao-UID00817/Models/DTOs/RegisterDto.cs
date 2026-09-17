@@ -13,7 +13,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         [RegularExpression(Regex.PASSWORD_REGEX , ErrorMessage = ExceptionMessages.INVALID_PASSWORD_FORMAT)]
         public string Password { get; set; }
 
-        [Required]
         [StringLength(15 , MinimumLength = 10)]
         public string PhoneNumber { get; set; }
 

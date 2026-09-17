@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Results;
+using System.Web.UI.WebControls;
 using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
@@ -15,13 +16,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
     {
         public override void Handle(ExceptionHandlerContext context)
         {
+            var messages = new List<string>();
             HttpStatusCode statusCode = 0;
-            if (context.Exception is ConflictException)
+            if (context.Exception is ConflictException conflictException)
             {
+                messages.Add(conflictException.Message);
                 statusCode = HttpStatusCode.Conflict;
             }
-            else if (context.Exception is ValidationException)
+            else if (context.Exception is ValidationException validationException)
             {
+                messages = validationException.ValidationMessages;
                 statusCode = HttpStatusCode.BadRequest;
             }
             else
@@ -31,13 +35,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
 
             context.Result = new NegotiatedContentResult<List<string>>(
                 statusCode ,
-                new List<string>(context.Exception.Message.Split('^')) ,
+                messages ,
                 context.RequestContext.Configuration.Services.GetContentNegotiator() ,
                 context.Request ,
                 context.RequestContext.Configuration.Formatters
             );
         }
-
         private class ErrorMessageResult : IHttpActionResult
         {
             private readonly HttpResponseMessage _httpResponseMessage;
