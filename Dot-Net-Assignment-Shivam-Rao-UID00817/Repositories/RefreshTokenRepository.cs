@@ -39,7 +39,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         {
             var TokenRecord = await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);
 
-            if (token == null) return false;
+            if (TokenRecord == null) return false;
 
             _db.Refresh_Tokens.Remove(TokenRecord);
 

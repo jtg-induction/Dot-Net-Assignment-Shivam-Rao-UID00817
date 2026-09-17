@@ -68,7 +68,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 .Setup(s => s.RegisterAsync(model))
                 .ThrowsAsync(
                     new ConflictException(
-                        Constants.EXCEPTION_MESSAGES.USER_ALREADY_EXISTS
+                        Constants.ExceptionMessages.USER_ALREADY_EXISTS
                     )
                 );
 
@@ -78,7 +78,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             Assert.That(
                 exception.Message ,
-                Is.EqualTo(Constants.EXCEPTION_MESSAGES.USER_ALREADY_EXISTS)
+                Is.EqualTo(Constants.ExceptionMessages.USER_ALREADY_EXISTS)
             );
         }
 
@@ -93,7 +93,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             _controller.ModelState.AddModelError(
                 nameof(RegisterDto.Email) ,
-                Constants.EXCEPTION_MESSAGES.INVALID_EMAIL_FORMAT
+                Constants.ExceptionMessages.INVALID_EMAIL_FORMAT
             );
 
             var exception = Assert.ThrowsAsync<ModelValidationException>(
@@ -102,7 +102,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             Assert.That(
                 exception.Message ,
-                Is.EqualTo(Constants.EXCEPTION_MESSAGES.INVALID_EMAIL_FORMAT)
+                Is.EqualTo(Constants.ExceptionMessages.INVALID_EMAIL_FORMAT)
             );
 
             _mockAuthService.Verify(

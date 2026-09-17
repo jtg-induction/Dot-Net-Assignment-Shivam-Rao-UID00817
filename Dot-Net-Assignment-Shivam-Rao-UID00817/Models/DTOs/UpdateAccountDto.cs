@@ -9,10 +9,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
     public class UpdateAccountDto
     {
-        [StringLength(15 , MinimumLength = 8)]
-        [RegularExpression(REGEX.PASSWORD_REGEX , ErrorMessage = EXCEPTION_MESSAGES.INVALID_PASSWORD_FORMAT)]
-        public string Password { get; set; }
-
         [StringLength(15 , MinimumLength = 10)]
         public string PhoneNumber { get; set; }
 

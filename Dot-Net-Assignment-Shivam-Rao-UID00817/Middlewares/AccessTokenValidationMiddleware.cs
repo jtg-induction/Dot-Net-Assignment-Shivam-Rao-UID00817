@@ -1,5 +1,4 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
 using Microsoft.Owin;
 using System;
@@ -22,11 +21,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
         {
             string path = context.Request.Path.Value;
 
-            if (path.Equals("/", StringComparison.OrdinalIgnoreCase) ||
-                path.Equals("/api/auth/login" , StringComparison.OrdinalIgnoreCase) ||
-                path.Equals("/api/auth/refresh" , StringComparison.OrdinalIgnoreCase) ||
-                path.Equals("/api/auth/register" , StringComparison.OrdinalIgnoreCase) ||
-                path.StartsWith("/swagger", StringComparison.OrdinalIgnoreCase))
+            if (Constants.PublicPaths.IsPublicPath(path))
             {
                 await Next.Invoke(context);
                 return;

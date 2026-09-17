@@ -8,10 +8,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
-    public class AccountService: IAccountService
+    public class UserService: IUserService
     {
 
         private readonly IUnitOfWork _unitOfWork;
@@ -22,7 +24,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         private readonly IAuthService _authService;
 
-        public AccountService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork, IAuthService authService)
+        public UserService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork, IAuthService authService)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
@@ -45,25 +47,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 return;
             }
             Users user = await _userRepository.GetUserByUserIdAsync(userId);
-            bool updated = false;
-            if(model.Name != null)
+            if(!String.IsNullOrWhiteSpace(model.Name))
             {
-                updated = true;
-                user.Name = model.Name;
+                user.Name = model.Name.Trim();
             }
-            if(model.Password != null)
+            if(!String.IsNullOrWhiteSpace(model.PhoneNumber))
             {
-                updated = true;
-                user.Password = HashingHelper.HashPassword(model.Password);
+                if (await _userRepository.DuplicatePhoneNumberExistsAsync(model.PhoneNumber.Trim()))
+                    throw new ConflictException(ExceptionMessages.DUPLICATE_PHONE_NUMBER);
+                user.PhoneNumber = model.PhoneNumber.Trim();
             }
-            if(model.PhoneNumber != null)
-            {
-                updated = true;
-                user.PhoneNumber = model.PhoneNumber;
-            }
-
-            if(updated) user.UpdatedAt = DateTime.UtcNow;
-
             await _unitOfWork.SaveChangesAsync();
         }
     }

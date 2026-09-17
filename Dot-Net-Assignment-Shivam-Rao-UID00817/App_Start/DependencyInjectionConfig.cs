@@ -31,7 +31,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
 
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerRequest();
 
-            builder.RegisterType<AccountService>().As<IAccountService>().InstancePerRequest();
+            builder.RegisterType<UserService>().As<IUserService>().InstancePerRequest();
 
             var container = builder.Build();
 

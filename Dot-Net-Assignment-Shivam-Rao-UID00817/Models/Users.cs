@@ -9,7 +9,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
     [Table("Users")]
-    public class Users
+    public class Users: IAuditableEntity
     {
         [Key]
         [Column("user_id")]
@@ -41,7 +41,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public string Role { get; set; }
 
         [Column("wallet_balance")]
-        public decimal WalletBalance { get; set; } = NUMBER_CONSTANTS.DEFAULT_ACCOUNT_BALANCE;
+        public decimal WalletBalance { get; set; } = NumberConstants.DEFAULT_ACCOUNT_BALANCE;
 
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
@@ -65,7 +65,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
             this.Name = name;
             this.CreatedAt = CurrentTime;
             this.UpdatedAt = CurrentTime;
-            this.WalletBalance = NUMBER_CONSTANTS.DEFAULT_ACCOUNT_BALANCE;
+            this.WalletBalance = NumberConstants.DEFAULT_ACCOUNT_BALANCE;
             this.IsActive = true;
             this.Role = "Customer";
         }

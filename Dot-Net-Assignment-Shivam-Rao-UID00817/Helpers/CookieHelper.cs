@@ -22,7 +22,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers
                 HttpOnly = true ,
                 Secure = true ,
                 SameSite = Microsoft.Owin.SameSiteMode.Lax ,
-                Expires = DateTime.UtcNow.AddDays(NUMBER_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN_DAYS) ,
+                Expires = DateTime.UtcNow.AddDays(NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS) ,
                 Path = path
             });
         }

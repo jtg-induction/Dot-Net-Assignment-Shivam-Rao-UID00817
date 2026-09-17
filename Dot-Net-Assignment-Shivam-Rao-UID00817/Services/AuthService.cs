@@ -40,14 +40,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             string email = model.Email.Trim().ToLower();
             string phoneNumber = model.PhoneNumber.Trim();
 
-            bool userExists = await _userRepository.UserExistsAsync(email, phoneNumber);
+            bool phoneNumberExists = await _userRepository.DuplicatePhoneNumberExistsAsync(phoneNumber);
+            bool emailExists = await _userRepository.DuplicateEmailExistsAsync(email);
 
-            if (userExists)
-            {
-                throw new ConflictException(
-                    EXCEPTION_MESSAGES.USER_ALREADY_EXISTS
-                );
-            }
+
+            if (phoneNumberExists && emailExists) throw new ConflictException(ExceptionMessages.USER_ALREADY_EXISTS);
+            else if (phoneNumberExists) throw new ConflictException(ExceptionMessages.DUPLICATE_PHONE_NUMBER);
+            else if (emailExists) throw new ConflictException(ExceptionMessages.DUPLICATE_EMAIL);
 
             var newUser = new Users(email , phoneNumber , model.Password , model.Name);
 
@@ -67,7 +66,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             string email = model.Email.Trim().ToLower();
             var user = (await _userRepository.GetUserByEmailAsync(email)) ?? throw new ValidationException
                 (
-                    EXCEPTION_MESSAGES.INVALID_CREDENTIALS
+                    ExceptionMessages.INVALID_CREDENTIALS
                 );
 
             bool passwordValid = HashingHelper.VerifyPassword(model.Password , user.Password);
@@ -75,7 +74,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             if (!passwordValid)
             {
                 throw new ValidationException(
-                    EXCEPTION_MESSAGES.INVALID_CREDENTIALS
+                    ExceptionMessages.INVALID_CREDENTIALS
                 );
             }
 
@@ -102,13 +101,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         {
             var existingToken = await _refreshTokenRepository.CheckIfRefreshTokenExistsAsync(refreshToken);
 
-            if (existingToken == null) throw new Exceptions.ValidationException(EXCEPTION_MESSAGES.INVALID_REFRESH_TOKEN);
+            if (existingToken == null) throw new Exceptions.ValidationException(ExceptionMessages.INVALID_REFRESH_TOKEN);
 
             _refreshTokenRepository.DeleteRefreshToken(existingToken);
 
             if(existingToken.ExpiresAt < DateTime.UtcNow)
             {
-                throw new Exceptions.ValidationException(EXCEPTION_MESSAGES.INVALID_REFRESH_TOKEN);
+                throw new Exceptions.ValidationException(ExceptionMessages.INVALID_REFRESH_TOKEN);
             }
 
             var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId);

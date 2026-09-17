@@ -9,6 +9,8 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
 using System.Drawing;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+using System.Diagnostics;
+
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -21,9 +23,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db = db;
         }
 
-        public async Task<bool> UserExistsAsync(string email, string phoneNumber)
+        public async Task<bool> DuplicateEmailExistsAsync(string email)
         {
-            return await _db.Users.AnyAsync(u => u.Email == email || u.PhoneNumber == phoneNumber);
+            return await _db.Users.AnyAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> DuplicatePhoneNumberExistsAsync(string phoneNumber)
+        {
+            return await _db.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
         }
 
         public void Add(Users user)

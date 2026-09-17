@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
 {
-    public static class NUMBER_CONSTANTS
+    public static class NumberConstants
     {
         public const decimal DEFAULT_ACCOUNT_BALANCE = 1000m;
 
