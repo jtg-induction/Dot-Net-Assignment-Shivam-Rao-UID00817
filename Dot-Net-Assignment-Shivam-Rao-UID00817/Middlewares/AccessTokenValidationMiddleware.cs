@@ -25,7 +25,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
             if (path.Equals("/", StringComparison.OrdinalIgnoreCase) ||
                 path.Equals("/api/auth/login" , StringComparison.OrdinalIgnoreCase) ||
                 path.Equals("/api/auth/refresh" , StringComparison.OrdinalIgnoreCase) ||
-                path.Equals("/api/auth/register" , StringComparison.OrdinalIgnoreCase))
+                path.Equals("/api/auth/register" , StringComparison.OrdinalIgnoreCase) ||
+                path.StartsWith("/swagger", StringComparison.OrdinalIgnoreCase))
             {
                 await Next.Invoke(context);
                 return;
