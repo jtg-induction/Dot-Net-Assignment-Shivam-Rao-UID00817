@@ -16,7 +16,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         public string Email { get; set; }
 
         [Required]
-        [StringLength(15, MinimumLength = 8)]
         [RegularExpression(Regex.PASSWORD_REGEX, ErrorMessage = ExceptionMessages.INVALID_PASSWORD_FORMAT)]
         public string Password { get; set; }
 

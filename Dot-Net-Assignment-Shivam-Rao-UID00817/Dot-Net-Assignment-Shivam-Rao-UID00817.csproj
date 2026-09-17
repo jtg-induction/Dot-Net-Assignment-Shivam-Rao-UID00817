@@ -269,6 +269,11 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
+    <Compile Include="Models\DTOs\dtos\LoginRequestDto.cs" />
+    <Compile Include="Models\DTOs\dtos\LoginResponseDto.cs" />
+    <Compile Include="Models\DTOs\dtos\RegisterDto.cs" />
+    <Compile Include="Models\DTOs\dtos\TokenPayloadDto.cs" />
+    <Compile Include="Models\DTOs\dtos\UpdateAccountDto.cs" />
     <Compile Include="Models\DTOs\LoginRequestDto.cs" />
     <Compile Include="Models\DTOs\LoginResponseDto.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
