@@ -32,9 +32,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
                 statusCode = HttpStatusCode.InternalServerError;
             }
 
-            context.Result = new NegotiatedContentResult<List<string>>(
+            context.Result = new NegotiatedContentResult<ErrorResponse>(
                 statusCode ,
-                errorResponse.errors,
+                errorResponse ,
                 context.RequestContext.Configuration.Services.GetContentNegotiator() ,
                 context.Request ,
                 context.RequestContext.Configuration.Formatters
