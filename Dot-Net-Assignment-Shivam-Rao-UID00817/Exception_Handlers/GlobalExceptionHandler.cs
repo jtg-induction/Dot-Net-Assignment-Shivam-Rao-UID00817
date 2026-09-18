@@ -19,12 +19,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
             HttpStatusCode statusCode;
             if (context.Exception is ConflictException conflictException)
             {
-                errorResponse.errors.Add(conflictException.Message);
+                errorResponse.Errors.Add(conflictException.Message);
                 statusCode = HttpStatusCode.Conflict;
             }
             else if (context.Exception is ValidationException validationException)
             {
-                errorResponse.errors = validationException.ValidationMessages;
+                errorResponse.Errors = validationException.ValidationMessages;
                 statusCode = HttpStatusCode.BadRequest;
             }
             else

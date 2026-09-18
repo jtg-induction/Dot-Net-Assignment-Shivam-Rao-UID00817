@@ -7,6 +7,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
 {
     public class ErrorResponse
     {
-        public List<string> errors {  get; set; }
+        public List<string> Errors {  get; set; }
     }
 }
