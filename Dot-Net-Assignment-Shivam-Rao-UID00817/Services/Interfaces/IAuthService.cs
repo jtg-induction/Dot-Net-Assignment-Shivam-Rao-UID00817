@@ -17,5 +17,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces
 
         Task<ITokenResult> RotateTokenAsync(string refreshToken);
 
+        Task<bool> LogoutAsync(string refreshToken);
+
+        Task LogOutFromAllDevicesAsync(long userId);
+
     }
 }

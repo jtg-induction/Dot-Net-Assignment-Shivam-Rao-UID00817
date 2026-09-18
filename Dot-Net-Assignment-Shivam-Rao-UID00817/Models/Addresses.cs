@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
     [Table("Addresses")]
-    public class Addresses
+    public class Addresses : IAuditableEntity
     {
         [Key]
         [Column("address_id")]

@@ -10,9 +10,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-
-            // Web API routes
             config.MapHttpAttributeRoutes();
 
             config.Services.Replace(typeof(IExceptionHandler) , new GlobalExceptionHandler());

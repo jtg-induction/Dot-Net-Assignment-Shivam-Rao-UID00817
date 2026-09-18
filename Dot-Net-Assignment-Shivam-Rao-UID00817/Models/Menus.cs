@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 {
     [Table("Menus")]
-    public class Menus
+    public class Menus : IAuditableEntity
     {
         [Key]
         [Column("menu_id")]

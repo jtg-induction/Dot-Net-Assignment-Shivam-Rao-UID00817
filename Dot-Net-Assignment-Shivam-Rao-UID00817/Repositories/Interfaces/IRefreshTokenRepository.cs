@@ -10,5 +10,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
         Task<Refresh_Tokens> GetRefreshTokenExistsAsync(string token , bool AsNoTracking);
 
         void DeleteRefreshToken(Refresh_Tokens TokenRecord);
+
+        Task<bool> RemoveIfTokenExistsAsync(string token);
+
+        Task RemoveAllTokensForUserIdAsync(long userId);
     }
 }
