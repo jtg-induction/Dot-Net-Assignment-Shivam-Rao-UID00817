@@ -36,8 +36,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             bool emailExists = await _userRepository.EmailExistsAsync(email);
 
 
-            if (emailExists) throw new ConflictException(ExceptionMessages.USER_ALREADY_EXISTS);
-            else if (phoneNumberExists) throw new ConflictException(ExceptionMessages.DUPLICATE_PHONE_NUMBER);
+            if (emailExists) throw new ConflictException(ErrorMessages.USER_ALREADY_EXISTS);
+            else if (phoneNumberExists) throw new ConflictException(ErrorMessages.DUPLICATE_PHONE_NUMBER);
 
             var newUser = new Users(email , phoneNumber , model.Password , model.Name);
 
@@ -57,7 +57,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             string email = model.Email.Trim().ToLower();
             var user = (await _userRepository.GetUserByEmailAsync(email , true)) ?? throw new ValidationException
                 (
-                    ExceptionMessages.INVALID_CREDENTIALS
+                    ErrorMessages.INVALID_CREDENTIALS
                 );
 
             bool passwordValid = HashingHelper.VerifyPassword(model.Password , user.Password);
@@ -65,7 +65,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             if (!passwordValid)
             {
                 throw new ValidationException(
-                    ExceptionMessages.INVALID_CREDENTIALS
+                    ErrorMessages.INVALID_CREDENTIALS
                 );
             }
 
@@ -92,14 +92,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         {
             var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken , false);
 
-            if (existingToken == null) throw new Exceptions.ValidationException(ExceptionMessages.INVALID_REFRESH_TOKEN);
+            if (existingToken == null) throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
 
             _refreshTokenRepository.DeleteRefreshToken(existingToken);
 
             if (existingToken.ExpiresAt < DateTime.UtcNow)
             if (existingToken.ExpiresAt < DateTime.UtcNow)
             {
-                throw new Exceptions.ValidationException(ExceptionMessages.INVALID_REFRESH_TOKEN);
+                throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
             }
 
             var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId , true);

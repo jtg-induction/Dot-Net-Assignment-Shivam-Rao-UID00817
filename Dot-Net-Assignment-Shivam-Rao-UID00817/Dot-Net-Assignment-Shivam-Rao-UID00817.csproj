@@ -238,7 +238,7 @@
     <Compile Include="App_Start\DependencyInjectionConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Constants\ExceptionMessages.cs" />
+    <Compile Include="Constants\ErrorMessages.cs" />
     <Compile Include="Constants\NumberConstants.cs" />
     <Compile Include="Constants\PublicPaths.cs" />
     <Compile Include="Constants\Regex.cs" />
@@ -247,6 +247,7 @@
     <Compile Include="Exceptions\ConflictException.cs" />
     <Compile Include="Exceptions\ModelValidationException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Exception_Handlers\ErrorResponse.cs" />
     <Compile Include="Exception_Handlers\GlobalExceptionHandler.cs" />
     <Compile Include="Filters\ModelAttributeValidation.cs" />
     <Compile Include="Global.asax.cs">

@@ -32,7 +32,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPatch]
         public async Task Update([FromBody] UpdateAccountDto model)
         {
-            if (model is null) throw new ValidationException(Constants.ExceptionMessages.MODEL_WAS_NULL);
+            if (model is null) throw new ValidationException(Constants.ErrorMessages.MODEL_WAS_NULL);
             var claimsPrincipal = User as ClaimsPrincipal;
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);

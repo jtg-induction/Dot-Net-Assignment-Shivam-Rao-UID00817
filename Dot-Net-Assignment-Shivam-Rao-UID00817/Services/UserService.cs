@@ -50,7 +50,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             if (!String.IsNullOrWhiteSpace(model.PhoneNumber))
             {
                 if (await _userRepository.PhoneNumberExistsAsync(model.PhoneNumber.Trim()))
-                    throw new ConflictException(ExceptionMessages.DUPLICATE_PHONE_NUMBER);
+                    throw new ConflictException(ErrorMessages.DUPLICATE_PHONE_NUMBER);
                 user.PhoneNumber = model.PhoneNumber.Trim();
             }
             await _unitOfWork.SaveChangesAsync();

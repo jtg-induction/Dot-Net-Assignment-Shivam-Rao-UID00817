@@ -30,7 +30,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer " , StringComparison.OrdinalIgnoreCase))
             {
                 context.Response.StatusCode = (Int16)HttpStatusCode.Unauthorized;
-                await context.Response.WriteAsync("Authorization token is required");
+                await context.Response.WriteAsync(Constants.ErrorMessages.NO_AUTH_TOKEN);
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
             if (payload == null)
             {
                 context.Response.StatusCode = (Int16)HttpStatusCode.Unauthorized;
-                await context.Response.WriteAsync("Authorization token is required");
+                await context.Response.WriteAsync(Constants.ErrorMessages.NO_AUTH_TOKEN);
                 return;
             }
 

@@ -1,6 +1,6 @@
 ﻿namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
 {
-    public static class ExceptionMessages
+    public static class ErrorMessages
     {
         public const string USER_ALREADY_EXISTS = "User Already Exists.";
 
@@ -17,5 +17,7 @@
         public const string DUPLICATE_EMAIL = "Email already exists.";
 
         public const string DUPLICATE_PHONE_NUMBER = "Phone Number already exists.";
+
+        public const string NO_AUTH_TOKEN = "Authorization token is required";
     }
 }
