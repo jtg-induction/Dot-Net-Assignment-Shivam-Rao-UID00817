@@ -42,7 +42,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             return base.Ok(new LoginResponseDto
             {
                 AccessToken = tokenResult.AccessToken ,
-                ExpiresIn = NumberConstants.JWT_EXPIRES_IN_SECONDS
+                ExpiresInSeconds = NumberConstants.JWT_EXPIRES_IN_SECONDS
             });
         }
 
@@ -61,7 +61,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             return base.Ok(new LoginResponseDto
             {
                 AccessToken = tokenResult.AccessToken ,
-                ExpiresIn = NumberConstants.JWT_EXPIRES_IN_SECONDS
+                ExpiresInSeconds = NumberConstants.JWT_EXPIRES_IN_SECONDS
             });
         }
 

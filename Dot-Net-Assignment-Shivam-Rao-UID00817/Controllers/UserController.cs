@@ -29,7 +29,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             await _userService.DeactivateAccountAsync(userId);
         }
 
-        [HttpPatch]
+        [HttpPatch, Route("")]
         public async Task Update([FromBody] UpdateAccountDto model)
         {
             if (model is null) throw new ValidationException(Constants.ErrorMessages.MODEL_WAS_NULL);
