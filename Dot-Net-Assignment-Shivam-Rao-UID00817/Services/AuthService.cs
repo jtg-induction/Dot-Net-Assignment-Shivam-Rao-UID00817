@@ -46,13 +46,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public class TokenResult : ITokenResult
-        {
-            public string AccessToken { get; set; }
-            public string RefreshToken { get; set; }
-        }
-
-        public async Task<ITokenResult> LoginAsync(LoginRequestDto model)
+        public async Task<TokenResultDto> LoginAsync(LoginRequestDto model)
         {
             string email = model.Email.Trim().ToLower();
             var user = (await _userRepository.GetUserByEmailAsync(email , true)) ?? throw new ValidationException
@@ -81,16 +75,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new TokenResult
-            {
-                AccessToken = accessToken ,
-                RefreshToken = refreshToken
-            };
+            return new TokenResultDto(accessToken , refreshToken);
         }
 
-        public async Task<ITokenResult> RotateTokenAsync(string refreshToken)
+        public async Task<TokenResultDto> RotateTokenAsync(string refreshToken)
         {
-            var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken , false);
+            var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken, false);
 
             if (existingToken == null) throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
 
@@ -116,11 +106,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new TokenResult
-            {
-                AccessToken = accessToken ,
-                RefreshToken = newRefreshToken
-            };
+            return new TokenResultDto(accessToken , refreshToken);
         }
 
         public async Task<bool> LogoutAsync(string refreshToken)

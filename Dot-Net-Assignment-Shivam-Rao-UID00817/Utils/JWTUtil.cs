@@ -21,7 +21,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
         private readonly static string audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
         private readonly static SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
-        public static string GenerateAccessToken(string email , long userId , string role)
+        public static string GenerateAccessToken(string email , long userId , Constants.Enums.Roles role)
         {
             var credentials = new SigningCredentials(key , SecurityAlgorithms.HmacSha256);
 
@@ -30,7 +30,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, email) ,
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("userId", userId.ToString()),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role.ToString())
             };
 
             var token = new JwtSecurityToken(issuer , audience , claims ,

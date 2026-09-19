@@ -35,10 +35,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Column("name")]
         public string Name { get; set; }
 
-        [Required]
-        [Column("role")]
-        public string Role { get; set; }
-
         [Column("wallet_balance")]
         public decimal WalletBalance { get; set; } = NumberConstants.DEFAULT_ACCOUNT_BALANCE;
 
@@ -50,6 +46,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
+
+        [Column("role")]
+        public Constants.Enums.Roles Role { get; set; }
 
         public virtual ICollection<Orders> Orders { get; set; }
         public virtual ICollection<User_Address_Type> UserAddressTypes { get; set; }
@@ -66,7 +65,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
             this.UpdatedAt = CurrentTime;
             this.WalletBalance = NumberConstants.DEFAULT_ACCOUNT_BALANCE;
             this.IsActive = true;
-            this.Role = "Customer";
+            this.Role = Constants.Enums.Roles.Customer;
         }
         public Users()
         {

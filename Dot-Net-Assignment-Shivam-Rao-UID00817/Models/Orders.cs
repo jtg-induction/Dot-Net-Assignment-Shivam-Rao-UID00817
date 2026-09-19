@@ -17,7 +17,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 
         [Required]
         [Column("status")]
-        public string Status { get; set; }
+        public Constants.Enums.OrderStatus Status { get; set; }
 
         [Required]
         [Column("address_line1")]
