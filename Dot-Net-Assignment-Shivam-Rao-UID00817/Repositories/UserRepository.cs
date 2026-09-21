@@ -1,7 +1,9 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -29,6 +31,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         public void Add(Users user)
         {
             _db.Users.Add(user);
+        }
+
+        public async Task<List<Users>> GetUsersByEmails(List<string> emails)
+        {
+            return await _db.Users.Where(x => emails.Contains(x.Email) && x.IsActive).ToListAsync();
         }
 
         public async Task<Users> GetUserByEmailAsync(string email , bool enableTracking = false)

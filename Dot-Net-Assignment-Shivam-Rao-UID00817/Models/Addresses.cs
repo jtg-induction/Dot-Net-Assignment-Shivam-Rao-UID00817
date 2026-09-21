@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,6 +10,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Key]
         [Column("address_id")]
         public long AddressId { get; set; }
+
+        [Column("user_id")]
+        public long UserId { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public virtual Users Users { get; set; }
 
         [Required]
         [Column("address_line1")]
@@ -29,7 +33,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 
         [Required]
         [Column("pincode")]
-        [MaxLength(6), MinLength(6)]
+        [MaxLength(12), MinLength(3)]
         public string Pincode { get; set; }
 
         [Required]
@@ -42,7 +46,24 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
 
-        public virtual ICollection<Restaurants> Restaurants { get; set; }
-        public virtual ICollection<User_Address_Type> UserAddressTypes { get; set; }
+        public Addresses(string addressLine1 , string addressLine2 , string city , string state , string pincode , string country)
+        {
+            DateTime currentTime = DateTime.UtcNow;
+            this.AddressLine1 = addressLine1;
+            this.AddressLine2 = addressLine2;
+            this.City = city;
+            this.State = state;
+            this.Pincode = pincode;
+            this.Country = country;
+            this.CreatedAt = currentTime;
+            this.UpdatedAt = currentTime;
+        }
+
+        public Addresses()
+        {
+
+        }
     }
+
+
 }

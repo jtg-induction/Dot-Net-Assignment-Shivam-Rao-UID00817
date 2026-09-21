@@ -36,7 +36,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 
         [Required]
         [Column("pincode")]
-        [MaxLength(6), MinLength(6)]
+        [MaxLength(12), MinLength(3)]
         public string Pincode { get; set; }
 
         [Required]

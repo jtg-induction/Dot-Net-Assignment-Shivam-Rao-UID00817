@@ -51,9 +51,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public Constants.Enums.Roles Role { get; set; }
 
         public virtual ICollection<Orders> Orders { get; set; }
-        public virtual ICollection<User_Address_Type> UserAddressTypes { get; set; }
         public virtual ICollection<Owner_Manages_Restaurants> OwnerManagesRestaurants { get; set; }
         public virtual ICollection<Refresh_Tokens> RefreshTokens { get; set; }
+        public virtual ICollection<Addresses> Addresss { get; set; }
         public Users(string email , string phoneNumber , string password , string name)
         {
             DateTime CurrentTime = DateTime.UtcNow;

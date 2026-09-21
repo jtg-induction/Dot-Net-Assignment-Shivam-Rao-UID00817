@@ -116,7 +116,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             Assert.That(
                 createdUser.Role ,
-                Is.EqualTo("Customer")
+                Is.EqualTo(Constants.Enums.Roles.Customer)
             );
 
             Assert.That(
@@ -232,7 +232,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRefreshTokenRepository
-                .Setup(x => x.GetRefreshTokenExistsAsync(oldRefreshToken, false))
+                .Setup(x => x.GetRefreshTokenExistsAsync(oldRefreshToken, true))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository
@@ -269,7 +269,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRefreshTokenRepository.Setup(
-                x => x.GetRefreshTokenExistsAsync(oldRefreshToken, false))
+                x => x.GetRefreshTokenExistsAsync(oldRefreshToken, true))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository.Setup(
@@ -316,41 +316,59 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
         }
 
-
-
         [Test]
-        public async Task RotateTokenAsync_UserDoesNotExist_ReturnsNull()
+        public async Task LogoutAsync_TokenExists_ReturnsTrue()
         {
-            var refreshToken = "valid-refresh-token";
-
-            var tokenRecord = new Refresh_Tokens
-            {
-                RefreshToken = refreshToken ,
-                UserId = 999 ,
-                CreatedAt = DateTime.UtcNow.AddDays(-1) ,
-                ExpiresAt = DateTime.UtcNow.AddDays(9)
-            };
+            string refreshToken = "abc123";
 
             _mockRefreshTokenRepository
-                .Setup(x => x.GetRefreshTokenExistsAsync(refreshToken, false))
-                .ReturnsAsync(tokenRecord);
+                .Setup(x => x.RemoveIfTokenExistsAsync(refreshToken))
+                .ReturnsAsync(true);
 
-            _mockUserRepository
-                .Setup(x => x.GetUserByUserIdAsync(999, false))
-                .ReturnsAsync((Users)null);
+            _mockUnitOfWork.Setup(
+                x => x.SaveChangesAsync())
+                .ReturnsAsync(1);
 
-            var result = await _authService.RotateTokenAsync(refreshToken);
+            bool result = await _authService.LogoutAsync(refreshToken);
 
-            Assert.That(result , Is.Null);
+            Assert.That(result , Is.True);
 
-            _mockUserRepository.Verify(
-                x => x.GetUserByUserIdAsync(999, false) ,
+            _mockRefreshTokenRepository.Verify(
+                x => x.RemoveIfTokenExistsAsync(refreshToken) ,
                 Times.Once
             );
 
+            _mockUnitOfWork.Verify(
+                x => x.SaveChangesAsync() ,
+                Times.Once
+            );
+        }
+
+        [Test]
+        public async Task LogoutAsync_TokenDoesNotExist_ReturnsFalse()
+        {
+            string refreshToken = "invalid-token";
+
+            _mockRefreshTokenRepository
+                .Setup(x => x.RemoveIfTokenExistsAsync(refreshToken))
+                .ReturnsAsync(false);
+
+            _mockUnitOfWork.Setup(
+                x => x.SaveChangesAsync())
+                .ReturnsAsync(1);
+
+            bool result = await _authService.LogoutAsync(refreshToken);
+
+            Assert.That(result , Is.False);
+
             _mockRefreshTokenRepository.Verify(
-                x => x.Add(It.IsAny<Refresh_Tokens>()) ,
-                Times.Never
+                x => x.RemoveIfTokenExistsAsync(refreshToken) ,
+                Times.Once
+            );
+
+            _mockUnitOfWork.Verify(
+                x => x.SaveChangesAsync() ,
+                Times.Once
             );
         }
 

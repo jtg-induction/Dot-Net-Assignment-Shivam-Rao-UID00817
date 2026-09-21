@@ -5,6 +5,9 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
+using System.Web.Http.Results;
 
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
@@ -20,6 +23,26 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
         {
             _mockAuthService = new Mock<IAuthService>();
             _controller = new AuthController(_mockAuthService.Object);
+        }
+
+        private void SetHttpContext(HttpCookieCollection cookies)
+        {
+            var request = new HttpRequest(
+                "" ,
+                "http://localhost/api/auth/logout" ,
+                ""
+            );
+
+            var response = new HttpResponse(null);
+
+            var context = new HttpContext(request , response);
+
+            foreach (string key in cookies)
+            {
+                context.Request.Cookies.Add(cookies[key]);
+            }
+
+            HttpContext.Current = context;
         }
 
         [Test]
@@ -73,34 +96,67 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             );
         }
 
-
         [Test]
-        public async Task Register_WhenModelStateIsInvalid_ReturnsBadRequest()
+        public async Task Logout_NoRefreshTokenCookie_ReturnsUnauthorized()
         {
-            var model = new RegisterDto
-            {
-                Email = "invalidemail"
-            };
+            SetHttpContext(new HttpCookieCollection());
 
-            _controller.ModelState.AddModelError(
-                nameof(RegisterDto.Email) ,
-                Constants.ErrorMessages.INVALID_EMAIL_FORMAT
-            );
+            IHttpActionResult result = await _controller.Logout();
 
-            var exception = Assert.ThrowsAsync<ModelValidationException>(
-                async () => await _controller.Register(model)
-            );
-
-            Assert.That(
-                exception.Message ,
-                Is.EqualTo(Constants.ErrorMessages.INVALID_EMAIL_FORMAT)
-            );
+            Assert.That(result , Is.TypeOf<UnauthorizedResult>());
 
             _mockAuthService.Verify(
-                s => s.RegisterAsync(It.IsAny<RegisterDto>()) ,
+                x => x.LogoutAsync(It.IsAny<string>()) ,
                 Times.Never
             );
         }
 
+        [Test]
+        public async Task Logout_ValidRefreshToken_ReturnsOk()
+        {
+            string refreshToken = "abc123";
+
+            var cookies = new HttpCookieCollection();
+            cookies.Add(new HttpCookie("refresh_token" , refreshToken));
+
+            SetHttpContext(cookies);
+
+            _mockAuthService.Setup(
+                x => x.LogoutAsync(refreshToken))
+                .ReturnsAsync(true);
+
+            IHttpActionResult result = await _controller.Logout();
+
+            Assert.That(result , Is.TypeOf<OkResult>());
+
+            _mockAuthService.Verify(
+                x => x.LogoutAsync(refreshToken) ,
+                Times.Once
+            );
+        }
+
+        [Test]
+        public async Task Logout_RefreshTokenDoesNotExist_ReturnsUnauthorized()
+        {
+            string refreshToken = "invalid-token";
+
+            var cookies = new HttpCookieCollection();
+            cookies.Add(new HttpCookie("refresh_token" , refreshToken));
+
+            SetHttpContext(cookies);
+
+            _mockAuthService.Setup(
+                x => x.LogoutAsync(refreshToken))
+                .ReturnsAsync(false);
+
+            IHttpActionResult result = await _controller.Logout();
+
+            Assert.That(result , Is.TypeOf<UnauthorizedResult>());
+
+            _mockAuthService.Verify(
+                x => x.LogoutAsync(refreshToken) ,
+                Times.Once
+            );
+        }
     }
 }

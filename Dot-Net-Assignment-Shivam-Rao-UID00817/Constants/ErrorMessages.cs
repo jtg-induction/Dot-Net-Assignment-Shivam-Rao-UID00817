@@ -19,5 +19,19 @@
         public const string DUPLICATE_PHONE_NUMBER = "Phone Number already exists.";
 
         public const string NO_AUTH_TOKEN = "Authorization token is required";
+
+        public const string RESTAURANT_ALREADY_EXISTS = "Restaurant with same name aleady exists";
+
+        public const string USER_DOESNOT_EXIST = "User with the provided Email does not exist";
+
+        public const string RESTAURANT_DOESNOT_EXIST = "Restaurant with the provided name does not exist";
+
+        public const string USER_ALREADY_ONBOARDED = "The user with the email is already onboarded to the restaurant.";
+
+        public const string NO_VALID_EMAILS = "Valid owner emails were not provided.";
+
+        public const string USER_NOT_ACTIVE = "Account with given email is not active";
+
+        public const string CANNOT_ASSIGN_OWNER_TO_RESTAURANT_THAT_IS_NOT_ACTIVE = "Cannot Assign owners to restaurant that is not active.";
     }
 }
