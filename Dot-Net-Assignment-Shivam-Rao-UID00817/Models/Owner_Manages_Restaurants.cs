@@ -23,5 +23,17 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
+
+        public Owner_Manages_Restaurants(long userId, long restaurantsId)
+        {
+            UserId = userId;
+            RestaurantId = restaurantsId;
+            CreatedAt = DateTime.UtcNow;
+        }
+
+        public Owner_Manages_Restaurants()
+        {
+
+        }
     }
 }

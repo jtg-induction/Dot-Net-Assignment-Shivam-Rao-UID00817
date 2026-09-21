@@ -25,9 +25,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
 
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
 
+            builder.RegisterType<RestaurantRepository>().As<IRestaurantRepository>().InstancePerRequest();
+
+            builder.RegisterType<OwnerManagesRestaurantsRepository>().As<IOwnerManagesRestaurantsRepository>().InstancePerRequest();
+
             builder.RegisterType<AuthService>().As<IAuthService>().InstancePerRequest();
 
             builder.RegisterType<UserService>().As<IUserService>().InstancePerRequest();
+
+            builder.RegisterType<AdminRestaurantService>().As<IAdminRestaurantService>().InstancePerRequest();
 
             var container = builder.Build();
 
