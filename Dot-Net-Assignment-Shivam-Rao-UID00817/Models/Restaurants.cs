@@ -40,9 +40,35 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Column("country")]
         public string Country { get; set; }
 
+        [Required]
+        [Column("address_line1")]
+        public string AddressLine1 { get; set; }
+
+        [Column("address_line2")]
+        public string AddressLine2 { get; set; }
+
+        [Required]
+        [Column("city")]
+        public string City { get; set; }
+
+        [Required]
+        [Column("state")]
+        public string State { get; set; }
+
+        [Required]
+        [Column("pincode")]
+        [MaxLength(12), MinLength(3)]
+        public string Pincode { get; set; }
+
+        [Required]
+        [Column("country")]
+        public string Country { get; set; }
+
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 
+        [Column("updated_at")]
+        public DateTime UpdatedAt { get; set; }
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
 
