@@ -55,6 +55,33 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [ForeignKey(nameof(UserId))]
         public virtual Users Users { get; set; }
 
+
+        public Decimal TotalAmount  { get; set; }
+
+        [Index("IX_Restaurant_Id")]
+        [Column("restaurant_id")]
+        public long RestaurantId { get; set; }
+
+        [ForeignKey(nameof(RestaurantId))]
+        public virtual Restaurants Restaurants { get; set; }
+
         public virtual ICollection<Order_Items> OrderItems { get; set; }
+
+        public Orders(long userId, long restaurantId, decimal totalAmount, string addressLine1 , string city , string state , string pincode , string country, string addressLine2 = "", string instructions = "")
+        {
+            this.Instructions = instructions;
+            this.RestaurantId = restaurantId;
+            this.UserId = userId;
+            this.AddressLine1 = addressLine1;
+            this.AddressLine2 = addressLine2;
+            this.City = city;
+            this.State = state;
+            this.Pincode = pincode;
+            this.Country = country;
+            this.Status = Constants.Enums.OrderStatus.Placed;
+            this.CreatedAt = DateTime.UtcNow;
+            this.UpdatedAt = DateTime.UtcNow;
+            this.TotalAmount = totalAmount;
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Column("address_id")]
         public long AddressId { get; set; }
 
+        [Index("IX_User_Id")]
         [Column("user_id")]
         public long UserId { get; set; }
         [ForeignKey(nameof(UserId))]

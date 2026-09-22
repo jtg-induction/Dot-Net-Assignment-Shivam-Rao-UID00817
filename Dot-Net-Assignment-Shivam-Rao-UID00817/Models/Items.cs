@@ -17,6 +17,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public string Name { get; set; }
 
         [Required]
+        [Index("IX_Restaurant_Id")]
+        [Column("restaurant_id")]
+        public long RestaurantId { get; set; }
+
+        [ForeignKey(nameof(RestaurantId))]
+        public virtual Restaurants Restaurants { get; set; }
+
+        [Required]
         [Column("price")]
         public decimal Price { get; set; }
 
@@ -29,7 +37,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 
-        public virtual ICollection<Menu_Items> MenuItems { get; set; }
         public virtual ICollection<Order_Items> OrderItems { get; set; }
     }
 }

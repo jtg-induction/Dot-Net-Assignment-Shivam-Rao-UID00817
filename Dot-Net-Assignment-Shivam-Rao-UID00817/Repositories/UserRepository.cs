@@ -58,5 +58,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         {
             (await _db.Users.FindAsync(userId)).IsActive = false;
         }
+
+        public async Task<int> DeductWalletBalanceIfSufficientAsync(long userId, decimal amount)
+        {
+            return await _db.Database.ExecuteSqlCommandAsync(
+                @"
+                    UPDATE Users
+                    SET wallet_balance = wallet_balance - @p0
+                    WHERE user_id = @p1
+                        AND wallet_balance >= @p0" ,
+                amount , userId);
+        }
     }
 }
