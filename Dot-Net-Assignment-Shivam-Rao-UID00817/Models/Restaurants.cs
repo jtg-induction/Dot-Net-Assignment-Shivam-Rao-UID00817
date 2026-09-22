@@ -49,8 +49,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
 
-        public virtual ICollection<Menus> Menus { get; set; }
         public virtual ICollection<Owner_Manages_Restaurants> OwnerManagesRestaurants { get; set; }
+
+        public virtual ICollection<Orders>  Orders { get; set; }    
+
+        public virtual ICollection<Items> Items { get; set; }
 
         public Restaurants(string name, string addressLine1, string city, string state, string pincode, string country, string addressLine2 = "")
         {

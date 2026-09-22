@@ -244,6 +244,8 @@
     <Compile Include="Constants\PublicPaths.cs" />
     <Compile Include="Constants\Regex.cs" />
     <Compile Include="Controllers\AdminRestaurantController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Exceptions\ConflictException.cs" />
@@ -286,11 +288,27 @@
     <Compile Include="Migrations\202609191210227_RemovedUserAddressThroughTableAndAddedAddressDetailsToRestaurant.Designer.cs">
       <DependentUpon>202609191210227_RemovedUserAddressThroughTableAndAddedAddressDetailsToRestaurant.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202609220636250_RemovedMenusAndMenuItems.cs" />
+    <Compile Include="Migrations\202609220636250_RemovedMenusAndMenuItems.Designer.cs">
+      <DependentUpon>202609220636250_RemovedMenusAndMenuItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202609221106288_AddedRestaurantIdToOrderesAndIndexes.cs" />
+    <Compile Include="Migrations\202609221106288_AddedRestaurantIdToOrderesAndIndexes.Designer.cs">
+      <DependentUpon>202609221106288_AddedRestaurantIdToOrderesAndIndexes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202609221818451_AddedTotalAmountToOrders.cs" />
+    <Compile Include="Migrations\202609221818451_AddedTotalAmountToOrders.Designer.cs">
+      <DependentUpon>202609221818451_AddedTotalAmountToOrders.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
+    <Compile Include="Models\DTOs\BrowseMenuResponseDto.cs" />
+    <Compile Include="Models\DTOs\BrowseRestaurantsResponseDto.cs" />
     <Compile Include="Models\DTOs\LoginRequestDto.cs" />
     <Compile Include="Models\DTOs\LoginResponseDto.cs" />
     <Compile Include="Models\DTOs\OnboardOwnersIdDto.cs" />
+    <Compile Include="Models\DTOs\OrderRequestDto.cs" />
+    <Compile Include="Models\DTOs\OrderResponseDto.cs" />
     <Compile Include="Models\DTOs\OwnerOnboardRequestDto.cs" />
     <Compile Include="Models\DTOs\OwnerOnboardResponseDto.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
@@ -303,8 +321,6 @@
     <Compile Include="Models\DTOs\UpdateAccountDto.cs" />
     <Compile Include="Models\IAuditableEntity.cs" />
     <Compile Include="Models\Items.cs" />
-    <Compile Include="Models\Menus.cs" />
-    <Compile Include="Models\Menu_Items.cs" />
     <Compile Include="Models\Orders.cs" />
     <Compile Include="Models\Order_Items.cs" />
     <Compile Include="Models\Owner_Manages_Restaurants.cs" />
@@ -314,11 +330,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AddressRepository.cs" />
     <Compile Include="Repositories\Interfaces\IAddressRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IItemsRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IOrderRepository.cs" />
     <Compile Include="Repositories\Interfaces\IOwnerManagesRestaurantsRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRefreshTokenRepository.cs" />
     <Compile Include="Repositories\Interfaces\IRestaurantRepository.cs" />
     <Compile Include="Repositories\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Repositories\Interfaces\IUserRepository.cs" />
+    <Compile Include="Repositories\ItemRepository.cs" />
+    <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\OwnerManagesRestaurantsRepository.cs" />
     <Compile Include="Repositories\RefreshTokenRepository.cs" />
     <Compile Include="Repositories\RestaurantRepository.cs" />
@@ -326,7 +346,12 @@
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Restaurant_ManagementContext.cs" />
     <Compile Include="Services\AdminRestaurantService.cs" />
+    <Compile Include="Services\BrowseService.cs" />
     <Compile Include="Services\Interfaces\IAdminRestaurantService.cs" />
+    <Compile Include="Services\Interfaces\IBrowseService.cs" />
+    <Compile Include="Services\Interfaces\IOrderService.cs" />
+    <Compile Include="Services\Interfaces\IOwnerMenuService.cs" />
+    <Compile Include="Services\OrderService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\Interfaces\IUserService.cs" />
@@ -376,6 +401,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202609191210227_RemovedUserAddressThroughTableAndAddedAddressDetailsToRestaurant.resx">
       <DependentUpon>202609191210227_RemovedUserAddressThroughTableAndAddedAddressDetailsToRestaurant.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609220636250_RemovedMenusAndMenuItems.resx">
+      <DependentUpon>202609220636250_RemovedMenusAndMenuItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609221106288_AddedRestaurantIdToOrderesAndIndexes.resx">
+      <DependentUpon>202609221106288_AddedRestaurantIdToOrderesAndIndexes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609221818451_AddedTotalAmountToOrders.resx">
+      <DependentUpon>202609221818451_AddedTotalAmountToOrders.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

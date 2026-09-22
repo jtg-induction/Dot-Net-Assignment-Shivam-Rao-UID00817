@@ -13,6 +13,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
 
         Task<Owner_Manages_Restaurants> GetOwnerIfExistsAsync(long userId , long restaurantId , bool enableTracking);
 
-        Task RemoveAsync(Owner_Manages_Restaurants Entry);
+        void Remove(Owner_Manages_Restaurants Entry);
     }
 }
