@@ -29,5 +29,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 
         [Column("quantity")]
         public int Quantity { get; set; }
+
+        public Order_Items()
+        {
+
+        }
     }
 }
