@@ -234,5 +234,123 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 Times.Once
             );
         }
+
+
+
+        [Test]
+        public async Task AssignOwnerToRestaurantAsync_ValidRequest_OnboardsUsers()
+        {
+            var model = new OwnerOnboardRequestDto
+            {
+                Name = "Test Restaurant" ,
+                Emails = new List<string>{"owner@test.com"}
+            };
+
+            var user = new Users
+            {
+                UserId = 1 ,
+                Email = "owner@test.com"
+            };
+
+            var restaurant = new Restaurants(
+                "Test Restaurant" ,
+                "Address" ,
+                "Delhi" ,
+                "Delhi" ,
+                "110001" ,
+                "India" ,
+                ""
+            )
+            {
+                RestaurantId = 10 ,
+                IsActive = true
+            };
+
+            _mockUserRepository.Setup(
+                x => x.GetUsersByEmails(
+                    It.IsAny<List<string>>()))
+                .ReturnsAsync(new List<Users> { user });
+
+            _mockRestaurantRepository.Setup(
+                x => x.GetRestaurantAsync(
+                    "Test Restaurant" ,
+                    false))
+                .ReturnsAsync(restaurant);
+
+            _mockUnitOfWork.Setup(
+                x => x.SaveChangesAsync())
+                .ReturnsAsync(1);
+
+            var result =
+                await _service.AssignOwnerToRestaurantAsync(model);
+
+            Assert.That(result , Is.Not.Null);
+            Assert.That(result.EmailStatus.Count , Is.EqualTo(1));
+
+            Assert.That(user.Role , Is.EqualTo(Enums.Roles.Owner));
+
+            _mockOwnerRepository.Verify(
+                x => x.Add(
+                    It.Is<List<Owner_Manages_Restaurants>>(
+                        list => list.Count == 1
+                    )
+                ) ,
+                Times.Once
+            );
+
+            _mockUnitOfWork.Verify(
+                x => x.SaveChangesAsync() ,
+                Times.Once
+            );
+        }
+
+
+        [Test]
+        public void AssignOwnerToRestaurantAsync_RestaurantDoesNotExist_ThrowsValidationException()
+        {
+            var model = new OwnerOnboardRequestDto
+            {
+                Name = "Missing Restaurant" ,
+                Emails = new List<string>{"owner@test.com"}
+            };
+
+            var user = new Users
+            {
+                UserId = 1 ,
+                Email = "owner@test.com"
+            };
+
+            _mockUserRepository.Setup(
+                x => x.GetUsersByEmails(It.IsAny<List<string>>()))
+                .ReturnsAsync(new List<Users> { user });
+
+            _mockRestaurantRepository.Setup(
+                x => x.GetRestaurantAsync(
+                    "Missing Restaurant" ,
+                    false))
+                .ReturnsAsync((Restaurants)null);
+
+            var exception = Assert.ThrowsAsync<ValidationException>(
+                async () =>
+                    await _service.AssignOwnerToRestaurantAsync(model)
+            );
+
+            Assert.That(
+                exception.Message ,
+                Is.EqualTo(ErrorMessages.RESTAURANT_DOES_NOT_EXIST)
+            );
+
+            _mockOwnerRepository.Verify(
+                x => x.Add(It.IsAny<List<Owner_Manages_Restaurants>>()) ,
+                Times.Never
+            );
+
+            _mockUnitOfWork.Verify(
+                x => x.SaveChangesAsync() ,
+                Times.Never
+            );
+        }
+
+
     }
 }
