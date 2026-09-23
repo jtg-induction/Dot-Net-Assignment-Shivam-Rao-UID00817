@@ -12,6 +12,7 @@ using System.Web.Http;
 using System.Threading.Tasks;
 using System.Net;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using System.Web.Security;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {
@@ -35,6 +36,32 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             var response = await _orderService.PlaceOrderAsync(userId , model);
 
             return Request.CreateResponse(HttpStatusCode.Created, response);
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpGet, Route("")]
+        public async Task<HttpResponseMessage> GetCustomerOrders(int pageNumber)
+        {
+            var claimsPrincipal = User as ClaimsPrincipal;
+
+            long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
+
+            var result = await _orderService.GetAllOrdersAsync(userId, pageNumber);
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+        [Authorize(Roles = "Customer")]
+        [HttpGet, Route("order/{orderId}")]
+        public async Task<HttpResponseMessage> GetOrderDetails(long orderId)
+        {
+            var claimsPrincipal = User as ClaimsPrincipal;
+
+            long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
+
+            var result = await _orderService.GetOrderDetailsAsync(userId, orderId);
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
         }
     }
 }

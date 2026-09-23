@@ -27,6 +27,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
                 errorResponse.Errors = validationException.ValidationMessages;
                 statusCode = HttpStatusCode.BadRequest;
             }
+            else if (context.Exception is UnauthorizedException unauthorizedException)
+            {
+                statusCode = HttpStatusCode.Unauthorized;
+            }
             else
             {
                 statusCode = HttpStatusCode.InternalServerError;

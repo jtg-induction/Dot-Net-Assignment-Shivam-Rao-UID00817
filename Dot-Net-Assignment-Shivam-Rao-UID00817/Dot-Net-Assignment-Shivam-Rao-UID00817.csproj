@@ -246,10 +246,12 @@
     <Compile Include="Controllers\AdminRestaurantController.cs" />
     <Compile Include="Controllers\RestaurantController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\RestaurantOwnerController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Exceptions\ConflictException.cs" />
     <Compile Include="Exceptions\ModelValidationException.cs" />
+    <Compile Include="Exceptions\UnauthorizedException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Exception_Handlers\ErrorResponse.cs" />
     <Compile Include="Exception_Handlers\GlobalExceptionHandler.cs" />
@@ -304,6 +306,8 @@
     <Compile Include="Models\Addresses.cs" />
     <Compile Include="Models\DTOs\BrowseMenuResponseDto.cs" />
     <Compile Include="Models\DTOs\BrowseRestaurantsResponseDto.cs" />
+    <Compile Include="Models\DTOs\GetOrderDetailsDto.cs" />
+    <Compile Include="Models\DTOs\GetOrdersDto.cs" />
     <Compile Include="Models\DTOs\LoginRequestDto.cs" />
     <Compile Include="Models\DTOs\LoginResponseDto.cs" />
     <Compile Include="Models\DTOs\OnboardOwnersIdDto.cs" />

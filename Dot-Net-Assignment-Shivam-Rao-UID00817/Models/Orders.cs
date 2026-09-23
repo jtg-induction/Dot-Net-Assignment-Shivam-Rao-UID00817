@@ -83,5 +83,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
             this.UpdatedAt = DateTime.UtcNow;
             this.TotalAmount = totalAmount;
         }
+
+        public Orders()
+        {
+
+        }
     }
 }

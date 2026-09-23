@@ -45,5 +45,7 @@
         public const string INSUFFICIENT_WALLET_BALANCE = "Insufficient Wallet Balance";
 
         public const string INVALID_ITEM_QUANTITY = "Item quantity invalid.";
+
+        public const string ORDER_DOES_NOT_EXIST = "Order with given order id does not exist";
     }
 }

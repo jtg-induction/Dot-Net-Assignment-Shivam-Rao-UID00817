@@ -11,5 +11,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
     {
         Orders CreateOrder(Orders order);
         void AddOrderItems(Order_Items orderItem);
+        IQueryable<Orders> GetOrdersByUserId(long userId);
+        IQueryable<Orders> GetOrdersByRestaurantId(long restaurantId);
+        Task<Orders> GetOrderById(long orderId , bool enableTracking);
+        Task<List<Order_Items>> GetOrderItems(long orderId);
     }
 }

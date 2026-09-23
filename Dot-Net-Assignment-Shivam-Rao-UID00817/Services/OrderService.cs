@@ -10,6 +10,7 @@ using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.Va
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using System.Data.Entity;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
@@ -21,9 +22,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IOwnerManagesRestaurantsRepository _ownerManagesRestaurantsRepository;
         private readonly Restaurant_ManagementContext _db;
 
-        public OrderService(IUserRepository userRepository, IItemsRepository itemsRepository, IAddressRepository addressRepository, IRestaurantRepository restaurantRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork, Restaurant_ManagementContext db)
+        public OrderService(IUserRepository userRepository, IItemsRepository itemsRepository, IAddressRepository addressRepository, IRestaurantRepository restaurantRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork, IOwnerManagesRestaurantsRepository ownerManagesRestaurantsRepository, Restaurant_ManagementContext db)
         {
             _addressRepository = addressRepository;
             _db = db;
@@ -32,6 +34,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _userRepository = userRepository;
             _restaurantRepository = restaurantRepository;
             _orderRepository = orderRepository;
+            _ownerManagesRestaurantsRepository = ownerManagesRestaurantsRepository;
         }
 
         public async Task<OrderResponseDto> PlaceOrderAsync(DbContextTransaction transaction,Users user, Addresses address, Restaurants restaurant, OrderRequestDto order)
@@ -146,6 +149,81 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                     throw e;
                 }
             }
+        }
+
+
+        public async Task<GetOrdersDto> GetAllOrdersAsync(long userId, int pageNumber)
+        {
+            var orders = await _orderRepository.GetOrdersByUserId(userId).OrderBy(x => x.OrderId).Skip((pageNumber - 1) * NumberConstants.PAGE_SIZE)
+                                                                                        .Take(NumberConstants.PAGE_SIZE)
+                                                                                        .ToListAsync();
+            var response = new GetOrdersDto();
+            foreach(var order in orders)
+            {
+                string restaurantName = (await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId , false)).Name;
+                response.Orders.Add(new OrderHistoryItems(order.OrderId, restaurantName, order.TotalAmount, order.Status, order.CreatedAt, order.UpdatedAt));
+            }
+
+            return response;
+        }
+
+        public async Task<GetOrderDetailsDto> GetOrderDetailsAsync(long userId , long orderId)
+        {
+            var order = await _orderRepository.GetOrderById(orderId , false) ?? throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
+            if (order.UserId != userId) throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
+
+            string restaurantName = (await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId , false)).Name;
+
+            var response = new GetOrderDetailsDto(orderId, restaurantName, order.Status, order.Instructions, order.TotalAmount, order.AddressLine1, order.City, order.State, order.Pincode, order.Country, order.CreatedAt, order.UpdatedAt, order.AddressLine2);
+            var Items = await _orderRepository.GetOrderItems(orderId);
+
+            foreach(var item in Items)
+            {
+                response.Items.Add(new OrderItem(item.Name , item.ItemPrice , item.Quantity));
+            }
+
+            return response;
+        }
+
+        public async Task<GetOrdersDto> GetAllOrdersAsync(long userId , long restaurantId , int pageNumber)
+        {
+            if(await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(userId, restaurantId, false)  == null)
+            {
+                throw new UnauthorizedException();
+            }
+            var orders = await _orderRepository.GetOrdersByRestaurantId(restaurantId).OrderBy(x => x.OrderId).Skip((pageNumber - 1) * NumberConstants.PAGE_SIZE)
+                                                                                        .Take(NumberConstants.PAGE_SIZE)
+                                                                                        .ToListAsync();
+            var response = new GetOrdersDto();
+            foreach (var order in orders)
+            {
+                string restaurantName = (await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId , false)).Name;
+                response.Orders.Add(new OrderHistoryItems(order.OrderId , restaurantName , order.TotalAmount , order.Status , order.CreatedAt , order.UpdatedAt));
+            }
+
+            return response;
+        }
+
+        public async Task<GetOrderDetailsDto> GetOrderDetailsAsync(long userId , long restaurantId , long orderId)
+        {
+            if (await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(userId , restaurantId , false) == null)
+            {
+                throw new UnauthorizedException();
+            }
+            var order = await _orderRepository.GetOrderById(orderId , false) ?? throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
+            if (order.RestaurantId != restaurantId) throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
+
+            string restaurantName = (await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId , false)).Name;
+
+            var response = new GetOrderDetailsDto(orderId , restaurantName , order.Status , order.Instructions , order.TotalAmount , order.AddressLine1 , order.City , order.State , order.Pincode , order.Country , order.CreatedAt , order.UpdatedAt , order.AddressLine2);
+            var Items = await _orderRepository.GetOrderItems(orderId);
+
+            foreach (var item in Items)
+            {
+                response.Items.Add(new OrderItem(item.Name , item.ItemPrice , item.Quantity));
+            }
+
+            return response;
         }
     }
 }
