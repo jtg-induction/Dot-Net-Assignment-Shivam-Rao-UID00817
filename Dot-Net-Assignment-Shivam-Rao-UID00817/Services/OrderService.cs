@@ -9,7 +9,6 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using Microsoft.Owin.Security;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
@@ -145,12 +144,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                         }).ToList()
                     };
                 }
-                catch
+                catch (ValidationException e)
                 {
                     transaction.Rollback();
+                    throw e;
+                }catch (Exception e)
+                {
+                    transaction.Rollback();
+                    throw e;
                 }
             }
-            return null;
         }
     }
 }

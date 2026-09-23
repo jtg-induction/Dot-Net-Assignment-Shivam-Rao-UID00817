@@ -33,11 +33,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
 
             var response = await _orderService.PlaceOrderAsync(userId , model);
-            
-            if(response is null)
-            {
-                Request.CreateResponse(HttpStatusCode.InternalServerError);
-            }
 
             return Request.CreateResponse(HttpStatusCode.Created, response);
         }
