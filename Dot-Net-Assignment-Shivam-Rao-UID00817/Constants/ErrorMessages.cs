@@ -22,9 +22,9 @@
 
         public const string RESTAURANT_ALREADY_EXISTS = "Restaurant with same name aleady exists";
 
-        public const string USER_DOESNOT_EXIST = "User with the provided Email does not exist";
+        public const string USER_DOES_NOT_EXIST = "User with the provided Email does not exist";
 
-        public const string RESTAURANT_DOESNOT_EXIST = "Restaurant does not exist";
+        public const string RESTAURANT_DOES_NOT_EXIST = "Restaurant does not exist";
 
         public const string USER_ALREADY_ONBOARDED = "The user with the email is already onboarded to the restaurant.";
 
@@ -34,9 +34,9 @@
 
         public const string CANNOT_ASSIGN_OWNER_TO_RESTAURANT_THAT_IS_NOT_ACTIVE = "Cannot Assign owners to restaurant that is not active.";
 
-        public const string ADDRESS_DOESNOT_EXIST = "Address doesn't exist";
+        public const string ADDRESS_DOES_NOT_EXIST = "Address doesn't exist";
 
-        public const string NO_ITEMS_FOUND = "No items were added";
+        public const string ATLEAST_ONE_ITEM_REQUIRED = "Atleast one item is required to place order.";
 
         public const string INVALID_ITEMS = "One or more Items were not valid";
 

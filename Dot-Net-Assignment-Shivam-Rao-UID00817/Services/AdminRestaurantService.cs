@@ -106,7 +106,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task AssignOwnerToRestaurantAsync(string Name, List<Users> ValidUsers, List<EmailAndStatus> Status)
         {
-            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(Name, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOESNOT_EXIST);
+            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(Name , false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             if (restaurant.IsActive == false)
             {
                 throw new ValidationException(ErrorMessages.CANNOT_ASSIGN_OWNER_TO_RESTAURANT_THAT_IS_NOT_ACTIVE);
@@ -151,7 +151,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             {
                 if (!Status.Exists(x => x.Email == email))
                 {
-                    Status.Add(new EmailAndStatus(email, ErrorMessages.USER_DOESNOT_EXIST));
+                    Status.Add(new EmailAndStatus(email , false , ErrorMessages.USER_DOES_NOT_EXIST));
                 }
             }
 
@@ -160,7 +160,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task DeactivateRestaurant(string name)
         {
-            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim(), true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOESNOT_EXIST);
+            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim() , true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             if (restaurant.IsActive == false)
             {
                 return;
@@ -171,7 +171,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task ActivateRestaurant(string name)
         {
-            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim(), true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOESNOT_EXIST);
+            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim() , true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             if (restaurant.IsActive == true)
             {
                 return;

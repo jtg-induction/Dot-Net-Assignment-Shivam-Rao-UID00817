@@ -23,9 +23,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db.Restaurants.Add(restaurant);
         }
 
-        public async Task<List<Restaurants>> GetActiveRestaurantsAsync()
+        public IQueryable<Restaurants> GetActiveRestaurants()
         {
-            return await _db.Restaurants.Where(r => r.IsActive).ToListAsync();
+            return _db.Restaurants.Where(r => r.IsActive);
         }
 
         public async Task<Restaurants> GetRestaurantAsync(string restaurantName , bool enableTracking)

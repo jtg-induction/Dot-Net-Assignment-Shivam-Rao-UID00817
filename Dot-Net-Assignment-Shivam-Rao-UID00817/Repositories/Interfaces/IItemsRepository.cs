@@ -10,10 +10,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
 {
     public interface IItemsRepository
     {
-        Task<List<Items>> GetItemsAsync(long restaurantId);
+        IQueryable<Items> GetItems(long restaurantId);
 
         Task<List<Items>> GetItemsAsync(List<long> items, long restaurantId);
 
-        Task<int> DecreaseQuantityIfAvailableAsync(long itemId , long restaurantId , int quantity);
+        Task<List<Items>> GetItemsWithUpdateLockAsync(List<long> itemIds, long restaurantId);
     }
 }
