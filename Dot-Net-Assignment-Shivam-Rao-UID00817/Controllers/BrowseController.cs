@@ -13,11 +13,11 @@ using System.Web.Security;
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {
     [RoutePrefix("api/restaurants")]
-    public class CustomerController: ApiController
+    public class BrowseController: ApiController
     {
         private readonly IBrowseService _browseService;
 
-        public CustomerController(IBrowseService browseService)
+        public BrowseController(IBrowseService browseService)
         {
             _browseService = browseService;
         }

@@ -244,7 +244,7 @@
     <Compile Include="Constants\PublicPaths.cs" />
     <Compile Include="Constants\Regex.cs" />
     <Compile Include="Controllers\AdminRestaurantController.cs" />
-    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\BrowseController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
