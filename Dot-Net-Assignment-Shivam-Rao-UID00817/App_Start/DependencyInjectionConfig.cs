@@ -41,7 +41,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
 
             builder.RegisterType<AdminRestaurantService>().As<IAdminRestaurantService>().InstancePerRequest();
 
-            builder.RegisterType<BrowseService>().As<IBrowseService>().InstancePerRequest();
+            builder.RegisterType<RestaurantService>().As<IRestaurantService>().InstancePerRequest();
 
             builder.RegisterType<OrderService>().As<IOrderService>().InstancePerRequest();
 

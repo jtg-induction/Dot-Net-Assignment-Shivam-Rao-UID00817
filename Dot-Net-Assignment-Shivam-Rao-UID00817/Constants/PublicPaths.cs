@@ -17,7 +17,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
         private static readonly string[] PublicPrefixes = new[]
         {
             "/swagger",
-            "/api/restaurants"
+            "/api/public"
         };
 
         public static bool IsPublicPath(string path)

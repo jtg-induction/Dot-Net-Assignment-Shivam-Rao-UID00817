@@ -13,6 +13,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
         Task<Users> GetUserByUserIdAsync(long userId , bool enableTracking);
         Task<List<Users>> GetUsersByEmails(List<string> emails);
         Task DeactivateUserAsync(long userId);
-        Task<int> DeductWalletBalanceIfSufficientAsync(long userId , decimal amount);
+        Task<Users> GetUserWithUpdateLockAsync(long userId);
     }
 }

@@ -8,10 +8,10 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces
 {
-    public interface IBrowseService
+    public interface IRestaurantService
     {
-        Task<List<BrowseRestaurantsResponseDto>> GetRestaurantsAsync();
+        Task<List<BrowseRestaurantsResponseDto>> GetRestaurantsAsync(int pageNumber);
 
-        Task<BrowseMenuResponseDto> GetItemsAsync(long restaurant_id);
+        Task<BrowseMenuResponseDto> GetItemsAsync(int pageNumber, long restaurant_id);
     }
 }

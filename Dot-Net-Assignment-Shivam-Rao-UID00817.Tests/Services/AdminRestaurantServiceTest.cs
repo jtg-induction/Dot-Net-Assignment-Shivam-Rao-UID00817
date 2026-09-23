@@ -332,7 +332,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             Assert.That(
                 exception.Message ,
-                Is.EqualTo(ErrorMessages.RESTAURANT_DOESNOT_EXIST)
+                Is.EqualTo(ErrorMessages.RESTAURANT_DOES_NOT_EXIST)
             );
 
             _mockOwnerRepository.Verify(

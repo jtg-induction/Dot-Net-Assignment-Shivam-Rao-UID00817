@@ -244,7 +244,7 @@
     <Compile Include="Constants\PublicPaths.cs" />
     <Compile Include="Constants\Regex.cs" />
     <Compile Include="Controllers\AdminRestaurantController.cs" />
-    <Compile Include="Controllers\BrowseController.cs" />
+    <Compile Include="Controllers\RestaurantController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
@@ -346,9 +346,9 @@
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Restaurant_ManagementContext.cs" />
     <Compile Include="Services\AdminRestaurantService.cs" />
-    <Compile Include="Services\BrowseService.cs" />
+    <Compile Include="Services\RestaurantService.cs" />
     <Compile Include="Services\Interfaces\IAdminRestaurantService.cs" />
-    <Compile Include="Services\Interfaces\IBrowseService.cs" />
+    <Compile Include="Services\Interfaces\IRestaurantService.cs" />
     <Compile Include="Services\Interfaces\IOrderService.cs" />
     <Compile Include="Services\Interfaces\IOwnerMenuService.cs" />
     <Compile Include="Services\OrderService.cs" />
