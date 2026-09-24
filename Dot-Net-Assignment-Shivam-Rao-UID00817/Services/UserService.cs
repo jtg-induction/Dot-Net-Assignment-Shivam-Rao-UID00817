@@ -5,6 +5,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
@@ -28,7 +29,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _authService = authService;
         }
 
-        public async Task DeactivateAccountAsync(long userId)
+        public async Task DeactivateAccountAsync(long userId, CancellationToken cancellationToken = default)
         {
             await _userRepository.DeactivateUserAsync(userId);
             await _authService.LogOutFromAllDevicesAsync(userId);
@@ -36,7 +37,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAccountAsync(long userId , UpdateAccountDto model)
+        public async Task UpdateAccountAsync(long userId , UpdateAccountDto model, CancellationToken cancellationToken = default)
         {
             if (model is null)
             {

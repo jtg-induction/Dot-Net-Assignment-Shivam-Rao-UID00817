@@ -7,6 +7,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Utils;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
@@ -27,7 +28,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task RegisterAsync(RegisterDto model)
+        public async Task RegisterAsync(RegisterDto model, CancellationToken cancellationToken = default)
         {
             string email = model.Email.Trim().ToLower();
             string phoneNumber = model.PhoneNumber.Trim();
@@ -46,7 +47,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<TokenResultDto> LoginAsync(LoginRequestDto model)
+        public async Task<TokenResultDto> LoginAsync(LoginRequestDto model, CancellationToken cancellationToken = default)
         {
             string email = model.Email.Trim().ToLower();
             var user = (await _userRepository.GetUserByEmailAsync(email , false)) ?? throw new ValidationException
@@ -78,7 +79,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return new TokenResultDto(accessToken , refreshToken);
         }
 
-        public async Task<TokenResultDto> RotateTokenAsync(string refreshToken)
+        public async Task<TokenResultDto> RotateTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
             var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken , true);
 
@@ -108,7 +109,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return new TokenResultDto(accessToken , newRefreshToken);
         }
 
-        public async Task<bool> LogoutAsync(string refreshToken)
+        public async Task<bool> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
             bool res = await _refreshTokenRepository.RemoveIfTokenExistsAsync(refreshToken);
             await _unitOfWork.SaveChangesAsync();
@@ -116,7 +117,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return res;
         }
 
-        public async Task LogOutFromAllDevicesAsync(long userId)
+        public async Task LogOutFromAllDevicesAsync(long userId, CancellationToken cancellationToken = default)
         {
             await _refreshTokenRepository.RemoveAllTokensForUserIdAsync(userId);
         }

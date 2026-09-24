@@ -26,6 +26,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             _orderService = orderService;
         }
 
+
         [HttpPost, Route("")]
         public async Task<HttpResponseMessage> PlaceOrder([FromBody] OrderRequestDto model)
         {
@@ -38,9 +39,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             return Request.CreateResponse(HttpStatusCode.Created, response);
         }
 
-        [Authorize(Roles = "Customer")]
         [HttpGet, Route("")]
-        public async Task<HttpResponseMessage> GetCustomerOrders(int pageNumber)
+        public async Task<HttpResponseMessage> GetCustomerOrders(int pageNumber = 1)
         {
             var claimsPrincipal = User as ClaimsPrincipal;
 
@@ -51,7 +51,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
-        [Authorize(Roles = "Customer")]
         [HttpGet, Route("order/{orderId}")]
         public async Task<HttpResponseMessage> GetOrderDetails(long orderId)
         {
@@ -62,6 +61,18 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             var result = await _orderService.GetOrderDetailsAsync(userId, orderId);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+        [HttpPatch, Route("order/{orderId}")]
+        public async Task<HttpResponseMessage> CancelOrder(long orderId)
+        {
+            var claimsPrincipal = User as ClaimsPrincipal;
+
+            long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
+            
+            await _orderService.CancelOrderAsync(userId, orderId);
+
+            return Request.CreateResponse(HttpStatusCode.NoContent);
         }
     }
 }

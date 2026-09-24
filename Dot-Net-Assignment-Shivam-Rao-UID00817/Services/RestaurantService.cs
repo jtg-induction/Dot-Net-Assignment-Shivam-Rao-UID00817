@@ -3,14 +3,15 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
-using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Razor.Parser;
-using System.Data.Entity;
+using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
@@ -26,12 +27,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         }
 
 
-        public async Task<List<BrowseRestaurantsResponseDto>> GetRestaurantsAsync(int pageNumber)
+        public async Task<List<BrowseRestaurantsResponseDto>> GetRestaurantsAsync(int pageNumber, CancellationToken cancellationToken = default)
         {
-            List<Restaurants> activeRestaurants = await _restaurantRepository.GetActiveRestaurants().OrderBy(x => x.RestaurantId)
-                                                                                               .Skip((pageNumber - 1) * NumberConstants.PAGE_SIZE)
-                                                                                               .Take(NumberConstants.PAGE_SIZE)
-                                                                                               .ToListAsync();
+            List<Restaurants> activeRestaurants = await _restaurantRepository.GetActiveRestaurants(pageNumber);
 
             List<BrowseRestaurantsResponseDto> response = new List<BrowseRestaurantsResponseDto>();
 
@@ -49,7 +47,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return response;
         }
 
-        public async Task<BrowseMenuResponseDto> GetItemsAsync(int pageNumber, long restaurant_id)
+        public async Task<BrowseMenuResponseDto> GetItemsAsync(int pageNumber, long restaurant_id, CancellationToken cancellationToken = default)
         {
             Restaurants restaurant = await _restaurantRepository.GetRestaurantByIdAsync(restaurant_id, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
 
@@ -58,10 +56,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             }
 
-            List<Items> activeItems = await _itemsRepository.GetItems(restaurant_id).OrderBy(x => x.ItemId)
-                                                                                .Skip((pageNumber - 1) * NumberConstants.PAGE_SIZE)
-                                                                                .Take(NumberConstants.PAGE_SIZE)
-                                                                                .ToListAsync();
+            List<Items> activeItems = await _itemsRepository.GetItems(restaurant_id , pageNumber);
 
             List<ItemAndPrice> items = new List<ItemAndPrice>();
 

@@ -47,5 +47,9 @@
         public const string INVALID_ITEM_QUANTITY = "Item quantity invalid.";
 
         public const string ORDER_DOES_NOT_EXIST = "Order with given order id does not exist";
+
+        public const string CANNOT_CANCEL_ORDER_AFTER_IT_HAS_BEEN_ACCEPTED = "Cannot cancel an order after it has been accepted.";
+
+        public const string INVALID_OPERATION = "Operation is invalid";
     }
 }
