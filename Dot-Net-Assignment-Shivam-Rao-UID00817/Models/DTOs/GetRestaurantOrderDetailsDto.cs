@@ -1,15 +1,16 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
-    public class GetOrderDetailsDto
+    public class GetRestaurantOrderDetailsDto
     {
         public long OrderId { get; set; }
+        public string CustomerName { get; set; }
+        public string PhoneNumber { get; set; }
         public string RestaurantName { get; set; }
         public string Status { get; set; }
         public string Instructions { get; set; }
@@ -22,11 +23,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         public string Country { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public List<OrderItem> Items { get; set; } = new List<OrderItem>();
+        public List<RestaurantOrderItem> Items { get; set; } = new List<RestaurantOrderItem>();
 
-        public GetOrderDetailsDto(long orderId, string restaurantName, Enums.OrderStatus status,string instructions,decimal totalAmount, string addressLine1, string city, string state, string pincode, string country, DateTime orderDate, DateTime updatedAt, string addressLine2 = "")
+        public GetRestaurantOrderDetailsDto(long orderId ,string customerName, string phoneNumber, string restaurantName , Enums.OrderStatus status , string instructions , decimal totalAmount , string addressLine1 , string city , string state , string pincode , string country , DateTime orderDate , DateTime updatedAt , string addressLine2 = "")
         {
             this.OrderId = orderId;
+            this.CustomerName = customerName;
+            this.PhoneNumber = phoneNumber;
             this.RestaurantName = restaurantName;
             this.Status = status.ToString();
             this.TotalAmount = totalAmount;
@@ -41,14 +44,19 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
             this.UpdatedAt = updatedAt;
         }
 
+        public GetRestaurantOrderDetailsDto()
+        {
+
+        }
+
     }
-    public class OrderItem
+    public class RestaurantOrderItem
     {
         public string ItemName { get; set; }
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
 
-        public OrderItem(string itemName, decimal unitPrice, int quantity)
+        public RestaurantOrderItem(string itemName , decimal unitPrice , int quantity)
         {
             this.ItemName = itemName;
             this.UnitPrice = unitPrice;

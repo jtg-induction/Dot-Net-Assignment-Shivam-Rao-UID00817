@@ -157,7 +157,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         }
 
 
-        public async Task<OwnerOnboardResponseDto> AssignOwnerToRestaurantAsync(OwnerOnboardRequestDto model)
+        public async Task<OwnerOnboardResponseDto> AssignOwnerToRestaurantAsync(OwnerOnboardRequestDto model, CancellationToken cancellationToken = default)
         {
             var status = new List<EmailAndStatus>();
 
@@ -195,7 +195,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             };
         }
 
-        public async Task DeactivateRestaurant(string name)
+        public async Task DeactivateRestaurant(string name, CancellationToken cancellationToken = default)
         {
             Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim(), true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             if (restaurant.IsActive == false)
@@ -206,7 +206,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task ActivateRestaurant(string name)
+        public async Task ActivateRestaurant(string name, CancellationToken cancellationToken = default)
         {
             Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim(), true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             if (restaurant.IsActive == true)

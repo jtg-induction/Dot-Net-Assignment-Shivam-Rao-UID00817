@@ -6,6 +6,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
@@ -46,7 +47,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
             }
         }
 
-        public static async Task<TokenPayloadDto> ValidateTokenAndGetPayloadAsync(string token)
+        public static async Task<TokenPayloadDto> ValidateTokenAndGetPayloadAsync(string token, CancellationToken cancellationToken = default)
         {
             var tokenHandler = new JsonWebTokenHandler();
 

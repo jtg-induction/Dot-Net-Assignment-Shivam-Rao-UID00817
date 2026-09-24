@@ -5,7 +5,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers
 {
     public class CookieHelper
     {
-        public static CookieOptions CreateCookieOptions(string path, int ExpiresInDays)
+        /// <summary>
+        /// Creates and returns cookie options with the specified path and expiration period.
+        /// </summary>
+        /// <param name="path">The path where the cookie is valid.</param>
+        /// <param name="ExpiresInDays">The number of days until the cookie expires.</param>
+        /// <returns>Configured cookie options.</returns>
+        public static CookieOptions GetCookieOptions(string path, int ExpiresInDays)
         {
             return new CookieOptions
             {
