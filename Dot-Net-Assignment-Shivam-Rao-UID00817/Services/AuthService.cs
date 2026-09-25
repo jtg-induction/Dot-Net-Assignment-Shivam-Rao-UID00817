@@ -28,6 +28,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Registers the user with given details.
+        /// </summary>
+        /// <param name="model">The information of the user to be registered.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task RegisterAsync(RegisterDto model, CancellationToken cancellationToken = default)
         {
             string email = model.Email.Trim().ToLower();
@@ -46,7 +51,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             await _unitOfWork.SaveChangesAsync();
         }
-
+        
+        /// <summary>
+        /// Logs in the user with the credentials.
+        /// </summary>
+        /// <param name="model">The credentials for logging in.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>An object with the access token and the Expiry time.</returns>
         public async Task<TokenResultDto> LoginAsync(LoginRequestDto model, CancellationToken cancellationToken = default)
         {
             string email = model.Email.Trim().ToLower();
@@ -79,6 +90,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return new TokenResultDto(accessToken , refreshToken);
         }
 
+        /// <summary>
+        /// Uses the refresh token to generate a new access token, while rotating the refresh token.
+        /// </summary>
+        /// <param name="refreshToken">The refresh token stored in HttpOnly Cookie.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>An object with the access token and the Expiry time.</returns>
         public async Task<TokenResultDto> RotateTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
             var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken , true);
@@ -109,6 +126,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return new TokenResultDto(accessToken , newRefreshToken);
         }
 
+        /// <summary>
+        /// Logs the user out, deleting the refresh token from the db.
+        /// </summary>
+        /// <param name="refreshToken">The refresh token stored in the HttpOnly Cookie.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>True when the refresh token was valid and the user was logged out successfully; Otherwise, false.</returns>
         public async Task<bool> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
             bool res = await _refreshTokenRepository.RemoveIfTokenExistsAsync(refreshToken);
@@ -117,6 +140,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return res;
         }
 
+        /// <summary>
+        /// Removes all the refresh tokens associated to the userId from the db.
+        /// </summary>
+        /// <param name="userId">The User Id of the use to be logged out of all devices.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation. </param>
         public async Task LogOutFromAllDevicesAsync(long userId, CancellationToken cancellationToken = default)
         {
             await _refreshTokenRepository.RemoveAllTokensForUserIdAsync(userId);

@@ -10,6 +10,8 @@ using System.Net;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories;
 using Swashbuckle.Swagger;
 using System.Net.Http;
+using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {
@@ -27,6 +29,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPost, Route("")]
         public async Task<HttpResponseMessage> Restaurant([FromBody] RestaurantOnboardDto model)
         {
+            if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
             var result = await _adminService.OnboardRestaurantAsync(model);
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
@@ -34,6 +37,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPost, Route("onboarding")]
         public async Task<HttpResponseMessage> Onboard([FromBody] OwnerOnboardRequestDto model)
         {
+            if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
             var result = await _adminService.AssignOwnerToRestaurantAsync(model);
             return Request.CreateResponse(HttpStatusCode.OK , result);
         }
@@ -41,6 +45,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPatch, Route("deactivate")]
         public async Task<IHttpActionResult> Deactivate([FromBody] RestaurantActivateDeactivateDto model)
         {
+            if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
             await _adminService.DeactivateRestaurant(model.Name);
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -48,6 +53,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPatch, Route("activate")]
         public async Task<IHttpActionResult> Activate([FromBody] RestaurantActivateDeactivateDto model)
         {
+            if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
             await _adminService.ActivateRestaurant(model.Name);
             return StatusCode(HttpStatusCode.NoContent);
         }

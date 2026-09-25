@@ -38,6 +38,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _ownerManagesRestaurantsRepository = ownerManagesRestaurantsRepository;
         }
 
+        /// <summary>
+        /// Creates a new order into the orders table for the user. While Validating all the details.
+        /// </summary>
+        /// <param name="transaction">The transaction object of the current ongoing transaction.</param>
+        /// <param name="user">Details of the user for whom the order is to be created.</param>
+        /// <param name="address">Address Details of the user.</param>
+        /// <param name="restaurant">Restaurant Details from where the order is to be placed.</param>
+        /// <param name="order">The Order details (Items and quantity, address id, restaurant id, instructions(optional))</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>An object with the details of the placed order i.e. Order Id, address, items etc.</returns>
         public async Task<OrderResponseDto> PlaceOrderAsync(DbContextTransaction transaction,Users user, Addresses address, Restaurants restaurant, OrderRequestDto order, CancellationToken cancellationToken = default)
         {
             long userId = user.UserId;
@@ -124,6 +134,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             };
         }
 
+        /// <summary>
+        /// Places the order with given details and items.
+        /// </summary>
+        /// <param name="userId">The User Id of the requesting user.</param>
+        /// <param name="order">Order details with which the order is to be placed (items, address, restaurant)</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>An object with the details of the placed order i.e. Order Id, address, items etc.</returns>
         public async Task<OrderResponseDto> PlaceOrderAsync(long userId , OrderRequestDto order, CancellationToken cancellationToken = default)
         {
             var restaurant = await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId , false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
@@ -152,7 +169,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             }
         }
 
-
+        /// <summary>
+        /// Retrieve list of all the orders for the requesting user.
+        /// </summary>
+        /// <param name="userId">The User Id of the user whose orders are to be retrieved.</param>
+        /// <param name="pageNumber">The Page Number.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>A list of all the orders of the customer.</returns>
         public async Task<GetCustomerOrdersDto> GetAllOrdersAsync(long userId, int pageNumber, CancellationToken cancellationToken = default)
         {
             var orders = await _orderRepository.GetOrdersByUserId(userId , pageNumber);
@@ -166,6 +189,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return response;
         }
 
+        /// <summary>
+        /// Retrieve the details of a specific order.
+        /// </summary>
+        /// <param name="userId">The user Id of the requesting user.</param>
+        /// <param name="orderId">The order id whose details are to be retrieved.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>An object with all the details of a specific order.</returns>
         public async Task<GetCustomerOrderDetailsDto> GetOrderDetailsAsync(long userId , long orderId, CancellationToken cancellationToken = default)
         {
             var order = await _orderRepository.GetOrderById(orderId , false) ?? throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
@@ -184,6 +214,18 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return response;
         }
 
+        /// <summary>
+        /// Retirieves all the orders that belong to the restaurant.
+        /// </summary>
+        /// <param name="userId">The user id of the requesting user.</param>
+        /// <param name="restaurantId">The restaurant id of the restaurant whose orders are to be fetched.</param>
+        /// <param name="pageNumber">The page number</param>
+        /// <param name="search">The string which is needed to be searched.</param>
+        /// <param name="sortBy">The parameter to sort the orders.</param>
+        /// <param name="filterBy">The parameter to filter the orders.</param>
+        /// <param name="filterByCity">The parameter to filter the orders by the city.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>A list of all the orders belonging to the restaurant based on the searching, sorting and filteing parameters.</returns>
         public async Task<GetRestaurantOrdersDto> GetAllOrdersAsync(long userId , long restaurantId , int pageNumber, string search, Enums.SortBy sortBy, Enums.FilterBy filterBy, string filterByCity = "", CancellationToken cancellationToken = default)
         {
             if(await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(userId, restaurantId, false)  == null)
@@ -214,6 +256,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return response;
         }
 
+        /// <summary>
+        /// Retrieves the order details of a specific order for the restaursnt id.
+        /// </summary>
+        /// <param name="userId">The user id of the requesting user.</param>
+        /// <param name="restaurantId">The restaurant id to which to order was placed.</param>
+        /// <param name="orderId">The order id of the order of which the details are to be retrieved.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>An object with all the details of the requested order.</returns>
         public async Task<GetRestaurantOrderDetailsDto> GetOrderDetailsAsync(long userId , long restaurantId , long orderId, CancellationToken cancellationToken = default)
         {
             if (await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(userId , restaurantId , false) == null)
@@ -238,6 +288,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return response;
         }
 
+
+        /// <summary>
+        /// Cancels the orders given that its current status is placed and refunds the amount to the users wallet.
+        /// </summary>
+        /// <param name="userId">The user id of the requesting user.</param>
+        /// <param name="orderId">The order id of the order to be cancelled.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task CancelOrderAsync(long userId , long orderId, CancellationToken cancellationToken = default)
         {
             var order = await _orderRepository.GetOrderWithUpdateLockAsync(orderId);
@@ -255,6 +312,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             else throw new ValidationException(ErrorMessages.CANNOT_CANCEL_ORDER_AFTER_IT_HAS_BEEN_ACCEPTED);
         }
 
+        /// <summary>
+        /// Changes the order status of the order with the given order given that the new status is a valid one and refunds the amount to the users wallet.
+        /// </summary>
+        /// <param name="restaurantId">The restaurant id to which the order was placed.</param>
+        /// <param name="ownerId">The owner id of the requesting owner.</param>
+        /// <param name="orderId">The orderd id of which the status is to be changed/</param>
+        /// <param name="model">The new status of the order.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task ManageOrderAsync(long restaurantId, long ownerId , long orderId , OrderManagementRequestDto model, CancellationToken cancellationToken = default)
         {
             if (await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(ownerId , restaurantId , false) == null)

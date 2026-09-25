@@ -29,6 +29,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _authService = authService;
         }
 
+        /// <summary>
+        /// Deactivate the account of the given user id, logs out of all the devices (revokes all the refresh token for the user id).
+        /// </summary>
+        /// <param name="userId">The user id of the user whose account is to be deactiated.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task DeactivateAccountAsync(long userId, CancellationToken cancellationToken = default)
         {
             await _userRepository.DeactivateUserAsync(userId);
@@ -37,6 +42,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Update the account details of the requesting user (name, phone number)
+        /// </summary>
+        /// <param name="userId">The user id of the user whose whose details are to be updated.</param>
+        /// <param name="model">The updated details.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task UpdateAccountAsync(long userId , UpdateAccountDto model, CancellationToken cancellationToken = default)
         {
             if (model is null)

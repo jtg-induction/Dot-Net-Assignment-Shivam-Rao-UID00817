@@ -1,6 +1,8 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
@@ -17,6 +19,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
     public class RestaurantOwnerControllerTest
     {
         private Mock<IOrderService> _mockOrderService;
+        private Mock<IOwnerManagesRestaurantsRepository> _mockOwnerManagesRestaurantsRepository;
         private RestaurantOwnerController _controller;
 
         [SetUp]

@@ -27,6 +27,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         }
 
 
+        /// <summary>
+        /// Retireves the list of the available restaurants.
+        /// </summary>
+        /// <param name="pageNumber">The page number.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>A list of all the active restaurants.</returns>
         public async Task<List<BrowseRestaurantsResponseDto>> GetRestaurantsAsync(int pageNumber, CancellationToken cancellationToken = default)
         {
             List<Restaurants> activeRestaurants = await _restaurantRepository.GetActiveRestaurants(pageNumber);
@@ -47,6 +53,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return response;
         }
 
+        /// <summary>
+        /// Retrieves the list of all the available items for the requested restaurant.
+        /// </summary>
+        /// <param name="pageNumber">The page number.</param>
+        /// <param name="restaurant_id">The restaurant id of the restaurant whose menu is to be retrieved.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>List of all the available items for the restaurant.</returns>
         public async Task<BrowseMenuResponseDto> GetItemsAsync(int pageNumber, long restaurant_id, CancellationToken cancellationToken = default)
         {
             Restaurants restaurant = await _restaurantRepository.GetRestaurantByIdAsync(restaurant_id, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
