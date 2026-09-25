@@ -1,16 +1,12 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
-using Microsoft.Owin.Security.Provider;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Threading.Tasks;
-using System.Net;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
-using System.Web.Security;
 using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
@@ -69,7 +65,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             var claimsPrincipal = User as ClaimsPrincipal;
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
-            
+
             await _orderService.CancelOrderAsync(userId, orderId);
 
             return Request.CreateResponse(HttpStatusCode.NoContent);

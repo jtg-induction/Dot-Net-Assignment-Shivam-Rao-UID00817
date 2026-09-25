@@ -70,7 +70,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The user if found; otherwise, null.</returns>
-        public async Task<Users> GetUserByEmailAsync(string email , bool enableTracking = false, CancellationToken cancellationToken = default)
+        public async Task<Users> GetUserByEmailAsync(string email, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -85,7 +85,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The user if found; otherwise, null.</returns>
-        public async Task<Users> GetUserByUserIdAsync(long userId , bool enableTracking = false, CancellationToken cancellationToken = default)
+        public async Task<Users> GetUserByUserIdAsync(long userId, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);

@@ -25,7 +25,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
         /// <param name="userId">The user id for which the token is to be generated.</param>
         /// <param name="role">The role to be set within the token.</param>
         /// <returns>The generated access token string.</returns>
-        public static string GenerateAccessToken(string email , long userId , Constants.Enums.Roles role)
+        public static string GenerateAccessToken(string email, long userId, Constants.Enums.Roles role)
         {
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

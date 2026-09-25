@@ -56,8 +56,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             var result = await _controller.Restaurant(model);
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result.StatusCode , Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result.StatusCode ,Is.EqualTo(HttpStatusCode.OK));
 
             _mockAdminService.Verify(
                 x => x.OnboardRestaurantAsync(model) ,
@@ -86,8 +86,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             var result = await _controller.Onboard(model);
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result.StatusCode , Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result.StatusCode ,Is.EqualTo(HttpStatusCode.OK));
 
             _mockAdminService.Verify(
                 x => x.AssignOwnerToRestaurantAsync(model) ,
@@ -110,7 +110,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             var result = await _controller.Deactivate(model);
 
-            Assert.That(result , Is.TypeOf<StatusCodeResult>());
+            Assert.That(result ,Is.TypeOf<StatusCodeResult>());
 
             var statusResult = (StatusCodeResult)result;
 
@@ -140,7 +140,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             var result = await _controller.Activate(model);
 
-            Assert.That(result , Is.TypeOf<StatusCodeResult>());
+            Assert.That(result ,Is.TypeOf<StatusCodeResult>());
 
             var statusResult = (StatusCodeResult)result;
 

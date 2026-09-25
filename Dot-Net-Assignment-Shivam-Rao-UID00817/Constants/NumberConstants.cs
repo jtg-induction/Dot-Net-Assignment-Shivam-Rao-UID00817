@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-
-namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
+﻿namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
 {
     public static class NumberConstants
     {

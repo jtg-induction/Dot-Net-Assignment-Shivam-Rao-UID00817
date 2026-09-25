@@ -1,15 +1,12 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -29,7 +26,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="pageNumber">The page number to retrieve.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of available items.</returns>
-        public async Task<List<Items>> GetItems(long restaurantId, int pageNumber = 1, CancellationToken cancellationToken = default)
+        public async Task<List<Items>> GetItems(long restaurantId, int pageNumber = 1, bool includeInactive = false, CancellationToken cancellationToken = default)
         {
             return await _db.Items.Where(x => (x.RestaurantId == restaurantId && x.IsActive && x.AvailableQuantity > 0)).OrderBy(x => x.RestaurantId)
                                                                                                                         .Skip((pageNumber - 1) * NumberConstants.PAGE_SIZE)
@@ -44,9 +41,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="restaurantId">The ID of the restaurant.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of matching items.</returns>
-        public async Task<List<Items>> GetItemsAsync(List<long> itemIds, long restaurantId, CancellationToken cancellationToken = default)
+        public async Task<List<Items>> GetItemsAsync(List<long> itemIds, long restaurantId, bool includeInactive = false, CancellationToken cancellationToken = default)
         {
-            return await _db.Items.Where(x => (x.RestaurantId == restaurantId && x.IsActive && itemIds.Contains(x.ItemId))).ToListAsync();
+            if(includeInactive) 
+                return await _db.Items.Where(x => (x.RestaurantId == restaurantId && itemIds.Contains(x.ItemId))).ToListAsync();
+            else
+                return await _db.Items.Where(x => (x.RestaurantId == restaurantId && x.IsActive && itemIds.Contains(x.ItemId))).ToListAsync();
         }
 
         /// <summary>

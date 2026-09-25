@@ -1,8 +1,6 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
@@ -25,7 +23,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         public DateTime UpdatedAt { get; set; }
         public List<RestaurantOrderItem> Items { get; set; } = new List<RestaurantOrderItem>();
 
-        public GetRestaurantOrderDetailsDto(long orderId ,string customerName, string phoneNumber, string restaurantName , Enums.OrderStatus status , string instructions , decimal totalAmount , string addressLine1 , string city , string state , string pincode , string country , DateTime orderDate , DateTime updatedAt , string addressLine2 = "")
+        public GetRestaurantOrderDetailsDto(long orderId, string customerName, string phoneNumber, string restaurantName, Enums.OrderStatus status, string instructions, decimal totalAmount, string addressLine1, string city, string state, string pincode, string country, DateTime orderDate, DateTime updatedAt, string addressLine2 = "")
         {
             this.OrderId = orderId;
             this.CustomerName = customerName;
@@ -56,7 +54,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
 
-        public RestaurantOrderItem(string itemName , decimal unitPrice , int quantity)
+        public RestaurantOrderItem(string itemName, decimal unitPrice, int quantity)
         {
             this.ItemName = itemName;
             this.UnitPrice = unitPrice;

@@ -51,7 +51,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             await _unitOfWork.SaveChangesAsync();
         }
-        
+
         /// <summary>
         /// Logs in the user with the credentials.
         /// </summary>

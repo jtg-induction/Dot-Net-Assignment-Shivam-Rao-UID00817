@@ -81,11 +81,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <returns>A list of all the emails and thir status, if they have been added or not, and if not added then the reason.</returns>
         public async Task<OwnerOnboardResponseDto> OnboardRestaurantAsync(RestaurantOnboardDto restaurant, CancellationToken cancellationToken = default)
         {
-            Restaurants existingRestaurant = await _restaurantRepository.GetRestaurantAsync(
-                    restaurant.Name.Trim(),
-                    false);
-
-            if (existingRestaurant != null)
+            if (!(await _restaurantRepository.GetRestaurantAsync(restaurant.Name.Trim(), false) is null))
             {
                 throw new ConflictException(
                     ErrorMessages.RESTAURANT_ALREADY_EXISTS);
@@ -95,7 +91,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             List<string> validEmails = await GetValidEmailsAsync(restaurant.Emails, status);
 
-            List<Users> validUsers = await _userRepository.GetUsersByEmails(validEmails);
 
             foreach (string email in validEmails)
             {
@@ -154,10 +149,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="ValidUsers">List of all the Valid Users after it has been filtered.</param>
         /// <param name="Status">List of emails requested to be added and their current status.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
-        public async Task AssignOwnerToRestaurantAsync(string Name , List<Users> ValidUsers , List<EmailAndStatus> Status, CancellationToken cancellationToken = default)
+        public async Task AssignOwnerToRestaurantAsync(string Name, List<Users> ValidUsers, List<EmailAndStatus> Status, CancellationToken cancellationToken = default)
         {
-            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(Name , false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
-            if (restaurant.IsActive == false)
+            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(Name, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
+            if (!restaurant.IsActive)
             {
                 throw new ValidationException(ErrorMessages.CANNOT_ASSIGN_OWNER_TO_RESTAURANT_THAT_IS_NOT_ACTIVE);
             }
@@ -196,7 +191,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             List<string> validEmails = await GetValidEmailsAsync(model.Emails, status);
 
-            List<Users> validUsers = await _userRepository.GetUsersByEmails(validEmails);
 
             foreach (string email in validEmails)
             {
@@ -236,7 +230,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         public async Task DeactivateRestaurant(string name, CancellationToken cancellationToken = default)
         {
             Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim(), true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
-            if (restaurant.IsActive == false)
+            if (!restaurant.IsActive)
             {
                 return;
             }
@@ -253,7 +247,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         public async Task ActivateRestaurant(string name, CancellationToken cancellationToken = default)
         {
             Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim(), true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
-            if (restaurant.IsActive == true)
+            if (restaurant.IsActive)
             {
                 return;
             }

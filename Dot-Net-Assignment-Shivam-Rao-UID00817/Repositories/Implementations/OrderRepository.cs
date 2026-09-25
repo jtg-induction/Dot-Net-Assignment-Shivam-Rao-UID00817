@@ -1,7 +1,6 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
@@ -157,7 +156,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                     query = query.Where(x => x.Status == Enums.OrderStatus.Delivered);
                     break;
             }
-            if(!string.IsNullOrWhiteSpace(filterByCity))    query = query.Where(x => x.City.ToLower().Contains(filterByCity.Trim().ToLower()));
+            if (!string.IsNullOrWhiteSpace(filterByCity)) query = query.Where(x => x.City.ToLower().Contains(filterByCity.Trim().ToLower()));
 
             return await query.OrderByDescending(x => x.UpdatedAt).Skip((pageNumber - 1) * NumberConstants.PAGE_SIZE)
                                                                                         .Take(NumberConstants.PAGE_SIZE)

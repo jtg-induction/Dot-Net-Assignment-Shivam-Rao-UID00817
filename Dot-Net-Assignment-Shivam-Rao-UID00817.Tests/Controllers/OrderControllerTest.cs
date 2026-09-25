@@ -63,7 +63,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             SetUser(userId);
 
             _mockOrderService
-                .Setup(x => x.PlaceOrderAsync(userId , model))
+                .Setup(x => x.PlaceOrderAsync(userId ,model))
                 .ReturnsAsync(serviceResponse);
 
             var response = await _controller.PlaceOrder(model);
@@ -74,7 +74,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             );
 
             _mockOrderService.Verify(
-                x => x.PlaceOrderAsync(userId , model) ,
+                x => x.PlaceOrderAsync(userId ,model) ,
                 Times.Once
             );
         }
@@ -88,7 +88,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             SetUser(userId);
 
             _mockOrderService
-                .Setup(x => x.GetAllOrdersAsync(userId , pageNumber))
+                .Setup(x => x.GetAllOrdersAsync(userId ,pageNumber))
                 .ReturnsAsync(new GetCustomerOrdersDto());
 
             var response =
@@ -100,7 +100,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             );
 
             _mockOrderService.Verify(
-                x => x.GetAllOrdersAsync(userId , pageNumber) ,
+                x => x.GetAllOrdersAsync(userId ,pageNumber) ,
                 Times.Once
             );
         }
@@ -114,7 +114,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             SetUser(userId);
 
             _mockOrderService
-                .Setup(x => x.GetOrderDetailsAsync(userId , orderId))
+                .Setup(x => x.GetOrderDetailsAsync(userId ,orderId))
                 .ReturnsAsync(new GetCustomerOrderDetailsDto());
 
             var response =
@@ -126,7 +126,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             );
 
             _mockOrderService.Verify(
-                x => x.GetOrderDetailsAsync(userId , orderId) ,
+                x => x.GetOrderDetailsAsync(userId ,orderId) ,
                 Times.Once
             );
         }
@@ -140,7 +140,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             SetUser(userId);
 
             _mockOrderService
-                .Setup(x => x.CancelOrderAsync(userId , orderId))
+                .Setup(x => x.CancelOrderAsync(userId ,orderId))
                 .Returns(Task.CompletedTask);
 
             var response =
@@ -152,7 +152,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             );
 
             _mockOrderService.Verify(
-                x => x.CancelOrderAsync(userId , orderId) ,
+                x => x.CancelOrderAsync(userId ,orderId) ,
                 Times.Once
             );
         }

@@ -32,7 +32,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The refresh token record if found; otherwise, null.</returns>
-        public async Task<Refresh_Tokens> GetRefreshTokenExistsAsync(string token , bool enableTracking = false, CancellationToken cancellationToken = default)
+        public async Task<Refresh_Tokens> GetRefreshTokenExistsAsync(string token, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
                 return await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);

@@ -47,7 +47,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="userId">The user id of the user whose whose details are to be updated.</param>
         /// <param name="model">The updated details.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
-        public async Task UpdateAccountAsync(long userId , UpdateAccountDto model, CancellationToken cancellationToken = default)
+        public async Task UpdateAccountAsync(long userId, UpdateAccountDto model, CancellationToken cancellationToken = default)
         {
             Users user = await _userRepository.GetUserByUserIdAsync(userId, true);
             if (!String.IsNullOrWhiteSpace(model.Name))
