@@ -42,7 +42,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             _mockUserRepository = new Mock<IUserRepository>();
             _mockRefreshTokenRepository = new Mock<IRefreshTokenRepository>();
             _mockUnitOfWork = new Mock<IUnitOfWork>();
-            _authService = new AuthService(_mockUserRepository.Object , _mockRefreshTokenRepository.Object , _mockUnitOfWork.Object);
+            _authService = new AuthService(_mockUserRepository.Object ,_mockRefreshTokenRepository.Object ,_mockUnitOfWork.Object);
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             await _authService.RegisterAsync(model);
 
-            Assert.That(createdUser , Is.Not.Null);
+            Assert.That(createdUser ,Is.Not.Null);
 
             Assert.That(
                 createdUser.Email ,
@@ -148,14 +148,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUserByEmailAsync("shivam@example.com", false))
+                x => x.GetUserByEmailAsync("shivam@example.com" ,false))
                 .ReturnsAsync(user);
 
             var result = await _authService.LoginAsync(model);
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result.AccessToken , Is.Not.Null.And.Not.Empty);
-            Assert.That(result.RefreshToken , Is.Not.Null.And.Not.Empty);
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result.AccessToken ,Is.Not.Null.And.Not.Empty);
+            Assert.That(result.RefreshToken ,Is.Not.Null.And.Not.Empty);
 
             _mockRefreshTokenRepository.Verify(
                 x => x.Add(
@@ -177,7 +177,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUserByEmailAsync("janedoe@example.com", false))
+                x => x.GetUserByEmailAsync("janedoe@example.com" ,false))
                 .ReturnsAsync((Users)null);
 
             Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException>(
@@ -203,7 +203,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUserByEmailAsync(user.Email,false))
+                x => x.GetUserByEmailAsync(user.Email ,false))
                 .ReturnsAsync(user);
 
             Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException>(
@@ -232,20 +232,20 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRefreshTokenRepository
-                .Setup(x => x.GetRefreshTokenExistsAsync(oldRefreshToken, true))
+                .Setup(x => x.GetRefreshTokenExistsAsync(oldRefreshToken ,true))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository
-                .Setup(x => x.GetUserByUserIdAsync(1, false))
+                .Setup(x => x.GetUserByUserIdAsync(1 ,false))
                 .ReturnsAsync(user);
 
             var result = await _authService.RotateTokenAsync(oldRefreshToken);
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result.AccessToken , Is.Not.Null.And.Not.Empty);
-            Assert.That(result.RefreshToken , Is.Not.Null.And.Not.Empty);
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result.AccessToken ,Is.Not.Null.And.Not.Empty);
+            Assert.That(result.RefreshToken ,Is.Not.Null.And.Not.Empty);
 
-            Assert.That(result.RefreshToken , Is.Not.EqualTo(oldRefreshToken));
+            Assert.That(result.RefreshToken ,Is.Not.EqualTo(oldRefreshToken));
         }
 
         [Test]
@@ -269,16 +269,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRefreshTokenRepository.Setup(
-                x => x.GetRefreshTokenExistsAsync(oldRefreshToken, true))
+                x => x.GetRefreshTokenExistsAsync(oldRefreshToken ,true))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository.Setup(
-                x => x.GetUserByUserIdAsync(1, false))
+                x => x.GetUserByUserIdAsync(1 ,false))
                 .ReturnsAsync(user);
 
             var result = await _authService.RotateTokenAsync(oldRefreshToken);
 
-            Assert.That(result , Is.Not.Null);
+            Assert.That(result ,Is.Not.Null);
 
             _mockRefreshTokenRepository.Verify(
                 x => x.Add(
@@ -296,17 +296,17 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var refreshToken = "invalid-token";
 
             _mockRefreshTokenRepository
-                .Setup(x => x.GetRefreshTokenExistsAsync(refreshToken, false))
+                .Setup(x => x.GetRefreshTokenExistsAsync(refreshToken ,false))
                 .ReturnsAsync((Refresh_Tokens)null);
 
             var ex = Assert.ThrowsAsync<ValidationException>(
                 async () => await _authService.RotateTokenAsync(refreshToken)
             );
 
-            Assert.That(ex.Message , Is.EqualTo("Refresh Token is Invalid."));
+            Assert.That(ex.Message ,Is.EqualTo("Refresh Token is Invalid."));
 
             _mockUserRepository.Verify(
-                x => x.GetUserByUserIdAsync(It.IsAny<long>(), false) ,
+                x => x.GetUserByUserIdAsync(It.IsAny<long>() ,false) ,
                 Times.Never
             );
 
@@ -331,7 +331,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             bool result = await _authService.LogoutAsync(refreshToken);
 
-            Assert.That(result , Is.True);
+            Assert.That(result ,Is.True);
 
             _mockRefreshTokenRepository.Verify(
                 x => x.RemoveIfTokenExistsAsync(refreshToken) ,
@@ -359,7 +359,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             bool result = await _authService.LogoutAsync(refreshToken);
 
-            Assert.That(result , Is.False);
+            Assert.That(result ,Is.False);
 
             _mockRefreshTokenRepository.Verify(
                 x => x.RemoveIfTokenExistsAsync(refreshToken) ,

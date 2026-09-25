@@ -1,9 +1,7 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
-using Microsoft.Owin;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -38,12 +36,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             TokenResultDto tokenResult = (TokenResultDto)await _authService.LoginAsync(model);
 
-            Request.GetOwinContext().Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , CookieHelper.GetCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
-            Request.GetOwinContext().Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , CookieHelper.GetCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+            Request.GetOwinContext().Response.Cookies.Append("refresh_token", tokenResult.RefreshToken, CookieHelper.GetCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+            Request.GetOwinContext().Response.Cookies.Append("refresh_token", tokenResult.RefreshToken, CookieHelper.GetCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
 
             return base.Ok(new LoginResponseDto
             {
-                AccessToken = tokenResult.AccessToken ,
+                AccessToken = tokenResult.AccessToken,
                 ExpiresInSeconds = NumberConstants.JWT_EXPIRES_IN_SECONDS
             });
         }
@@ -57,12 +55,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             TokenResultDto tokenResult = (TokenResultDto)await _authService.RotateTokenAsync(HttpUtility.UrlDecode(cookie.Value));
 
-            Request.GetOwinContext().Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , CookieHelper.GetCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
-            Request.GetOwinContext().Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , CookieHelper.GetCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+            Request.GetOwinContext().Response.Cookies.Append("refresh_token", tokenResult.RefreshToken, CookieHelper.GetCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+            Request.GetOwinContext().Response.Cookies.Append("refresh_token", tokenResult.RefreshToken, CookieHelper.GetCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
 
             return base.Ok(new LoginResponseDto
             {
-                AccessToken = tokenResult.AccessToken ,
+                AccessToken = tokenResult.AccessToken,
                 ExpiresInSeconds = NumberConstants.JWT_EXPIRES_IN_SECONDS
             });
         }

@@ -1,19 +1,14 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using Telerik.Reporting;
@@ -26,7 +21,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {
     [Authorize(Roles = "Owner")]
     [RoutePrefix("api/restaurants")]
-    public class RestaurantOwnerController: ApiController
+    public class RestaurantOwnerController : ApiController
     {
         private readonly IOrderService _orderService;
         private readonly IOwnerManagesRestaurantsRepository _ownerManagesRestaurantsRepository;
@@ -48,9 +43,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
 
-            var result = await _orderService.GetAllOrdersAsync(userId , restaurantId, pageNumber, search, sortBy, filterBy, filterByCity);
+            var result = await _orderService.GetAllOrdersAsync(userId, restaurantId, pageNumber, search, sortBy, filterBy, filterByCity);
 
-            return Request.CreateResponse(HttpStatusCode.OK , result);
+            return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
         [HttpGet, Route("{restaurantId}/orders/order/{orderId}")]
@@ -62,7 +57,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             var result = await _orderService.GetOrderDetailsAsync(userId, restaurantId, orderId);
 
-            return Request.CreateResponse(HttpStatusCode.OK , result);
+            return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
         [HttpPatch, Route("{restaurantId}/orders/order/{orderId}")]
@@ -71,7 +66,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
             var claimsPrincipal = User as ClaimsPrincipal;
             long ownerId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
-            await _orderService.ManageOrderAsync(restaurantId, ownerId , orderId , model);
+            await _orderService.ManageOrderAsync(restaurantId, ownerId, orderId, model);
             return Request.CreateResponse(HttpStatusCode.NoContent);
         }
 
@@ -114,16 +109,18 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             response.Content = new ByteArrayContent(result.DocumentBytes);
 
-            response.Content.Headers.ContentType =new MediaTypeHeaderValue("application/pdf");
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
 
-            response.Content.Headers.ContentDisposition =new ContentDispositionHeaderValue("attachment"){
-                                    FileName =$"Restaurant-{restaurantId}-Frequently-Bought-Together-Items.pdf"};
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = $"Restaurant-{restaurantId}-Frequently-Bought-Together-Items.pdf"
+            };
 
             return response;
         }
 
         [HttpGet, Route("{restaurantId}/reports/top-10-items")]
-        public async Task<HttpResponseMessage> GetTop10Items(long restaurantId,string excludeItemIds = "")
+        public async Task<HttpResponseMessage> GetTop10Items(long restaurantId, string excludeItemIds = "")
         {
             var claimsPrincipal = User as ClaimsPrincipal;
 
@@ -137,7 +134,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             if (string.IsNullOrEmpty(reportPath) || !System.IO.File.Exists(reportPath))
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound,"Report definition not found.");
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Report definition not found.");
             }
 
             var excludedIds = excludeItemIds ?? string.Empty;
@@ -164,7 +161,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             response.Content = new ByteArrayContent(result.DocumentBytes);
 
-            response.Content.Headers.ContentType =new MediaTypeHeaderValue("application/pdf");
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
 
             response.Content.Headers.ContentDisposition =
                 new ContentDispositionHeaderValue("attachment")

@@ -57,12 +57,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var result = await _restaurantService
                 .GetRestaurantsAsync(pageNumber);
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result.Count , Is.EqualTo(1));
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result.Count ,Is.EqualTo(1));
 
-            Assert.That(result[0].RestaurantId , Is.EqualTo(1));
-            Assert.That(result[0].RestaurantName , Is.EqualTo("Pizza Palace"));
-            Assert.That(result[0].City , Is.EqualTo("Gurgaon"));
+            Assert.That(result[0].RestaurantId ,Is.EqualTo(1));
+            Assert.That(result[0].RestaurantName ,Is.EqualTo("Pizza Palace"));
+            Assert.That(result[0].City ,Is.EqualTo("Gurgaon"));
 
             _mockRestaurantRepository.Verify(
                 x => x.GetActiveRestaurants(pageNumber) ,
@@ -82,8 +82,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var result = await _restaurantService
                 .GetRestaurantsAsync(pageNumber);
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result , Is.Empty);
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result ,Is.Empty);
         }
 
         [Test]
@@ -115,32 +115,32 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
         };
 
             _mockRestaurantRepository
-                .Setup(x => x.GetRestaurantByIdAsync(restaurantId , false))
+                .Setup(x => x.GetRestaurantByIdAsync(restaurantId ,false))
                 .ReturnsAsync(restaurant);
 
             _mockItemsRepository
-                .Setup(x => x.GetItems(restaurantId , pageNumber))
+                .Setup(x => x.GetItems(restaurantId ,pageNumber))
                 .ReturnsAsync(items);
 
             var result = await _restaurantService
-                .GetItemsAsync(pageNumber , restaurantId);
+                .GetItemsAsync(pageNumber ,restaurantId);
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result.Restaurant.RestaurantId , Is.EqualTo(restaurantId));
-            Assert.That(result.Restaurant.RestaurantName , Is.EqualTo("Pizza Palace"));
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result.Restaurant.RestaurantId ,Is.EqualTo(restaurantId));
+            Assert.That(result.Restaurant.RestaurantName ,Is.EqualTo("Pizza Palace"));
 
-            Assert.That(result.items.Count , Is.EqualTo(1));
-            Assert.That(result.items[0].ItemId , Is.EqualTo(101));
-            Assert.That(result.items[0].Name , Is.EqualTo("Margherita Pizza"));
-            Assert.That(result.items[0].Price , Is.EqualTo(299));
+            Assert.That(result.items.Count ,Is.EqualTo(1));
+            Assert.That(result.items[0].ItemId ,Is.EqualTo(101));
+            Assert.That(result.items[0].Name ,Is.EqualTo("Margherita Pizza"));
+            Assert.That(result.items[0].Price ,Is.EqualTo(299));
 
             _mockRestaurantRepository.Verify(
-                x => x.GetRestaurantByIdAsync(restaurantId , false) ,
+                x => x.GetRestaurantByIdAsync(restaurantId ,false) ,
                 Times.Once
             );
 
             _mockItemsRepository.Verify(
-                x => x.GetItems(restaurantId , pageNumber) ,
+                x => x.GetItems(restaurantId ,pageNumber) ,
                 Times.Once
             );
         }
@@ -152,13 +152,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             int pageNumber = 1;
 
             _mockRestaurantRepository
-                .Setup(x => x.GetRestaurantByIdAsync(restaurantId , false))
+                .Setup(x => x.GetRestaurantByIdAsync(restaurantId ,false))
                 .ReturnsAsync((Restaurants)null);
 
             var exception = Assert.ThrowsAsync<ValidationException>(
                 async () =>
                     await _restaurantService
-                        .GetItemsAsync(pageNumber , restaurantId)
+                        .GetItemsAsync(pageNumber ,restaurantId)
             );
 
             Assert.That(
@@ -167,7 +167,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
 
             _mockItemsRepository.Verify(
-                x => x.GetItems(It.IsAny<long>() , It.IsAny<int>()) ,
+                x => x.GetItems(It.IsAny<long>() ,It.IsAny<int>()) ,
                 Times.Never
             );
         }
@@ -185,13 +185,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRestaurantRepository
-                .Setup(x => x.GetRestaurantByIdAsync(restaurantId , false))
+                .Setup(x => x.GetRestaurantByIdAsync(restaurantId ,false))
                 .ReturnsAsync(restaurant);
 
             var exception = Assert.ThrowsAsync<ValidationException>(
                 async () =>
                     await _restaurantService
-                        .GetItemsAsync(pageNumber , restaurantId)
+                        .GetItemsAsync(pageNumber ,restaurantId)
             );
 
             Assert.That(
@@ -200,7 +200,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
 
             _mockItemsRepository.Verify(
-                x => x.GetItems(It.IsAny<long>() , It.IsAny<int>()) ,
+                x => x.GetItems(It.IsAny<long>() ,It.IsAny<int>()) ,
                 Times.Never
             );
         }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using System.Threading;
 using System.Threading.Tasks;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
 {

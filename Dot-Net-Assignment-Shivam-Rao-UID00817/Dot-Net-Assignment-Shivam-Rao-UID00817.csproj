@@ -325,8 +325,8 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
-    <Compile Include="Models\DTOs\BrowseMenuResponseDto.cs" />
-    <Compile Include="Models\DTOs\BrowseRestaurantsResponseDto.cs" />
+    <Compile Include="Models\DTOs\GetMenuResponseDto.cs" />
+    <Compile Include="Models\DTOs\GetRestaurantsResponseDto.cs" />
     <Compile Include="Models\DTOs\GetCustomerOrderDetailsDto.cs" />
     <Compile Include="Models\DTOs\GetCustomerOrdersDto.cs" />
     <Compile Include="Models\DTOs\GetRestaurantOrderDetailsDto.cs" />

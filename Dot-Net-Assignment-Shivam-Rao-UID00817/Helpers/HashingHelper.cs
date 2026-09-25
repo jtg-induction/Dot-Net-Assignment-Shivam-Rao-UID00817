@@ -18,9 +18,9 @@
         /// <param name="p">The plain-text password to verify.</param>
         /// <param name="hash">The stored password hash.</param>
         /// <returns>True if the password matches the hash; otherwise, false.</returns>
-        public static bool VerifyPassword(string p , string hash)
+        public static bool VerifyPassword(string p, string hash)
         {
-            return BCrypt.Net.BCrypt.Verify(p , hash);
+            return BCrypt.Net.BCrypt.Verify(p, hash);
         }
     }
 }

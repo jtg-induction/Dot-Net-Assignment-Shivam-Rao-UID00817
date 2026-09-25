@@ -1,8 +1,7 @@
 ﻿namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class AddedRestaurantIdToOrderesAndIndexes : DbMigration
     {
         public override void Up()
@@ -15,7 +14,7 @@
             CreateIndex("dbo.Items", "restaurant_id", name: "IX_Restaurant_Id");
             AddForeignKey("dbo.Orders", "restaurant_id", "dbo.Restaurants", "restaurant_id", cascadeDelete: true);
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.Orders", "restaurant_id", "dbo.Restaurants");

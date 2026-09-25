@@ -1,8 +1,6 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
@@ -20,7 +18,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         public string Status { get; set; }
         public DateTime LastUpdated { get; set; }
 
-        public OrderHistoryItems(long orderId, string restaurantName, decimal amount, Enums.OrderStatus status, DateTime orderDate, DateTime lastUpdated )
+        public OrderHistoryItems(long orderId, string restaurantName, decimal amount, Enums.OrderStatus status, DateTime orderDate, DateTime lastUpdated)
         {
             this.OrderId = orderId;
             this.RestaurantName = restaurantName;

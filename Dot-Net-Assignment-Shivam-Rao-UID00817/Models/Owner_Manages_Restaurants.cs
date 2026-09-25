@@ -8,14 +8,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
     public class Owner_Manages_Restaurants
     {
         [Key]
-        [Column("restaurant_id" , Order = 1)]
+        [Column("restaurant_id", Order = 1)]
         public long RestaurantId { get; set; }
 
         [ForeignKey(nameof(RestaurantId))]
         public virtual Restaurants Restaurants { get; set; }
 
         [Key]
-        [Column("user_id" , Order = 2)]
+        [Column("user_id", Order = 2)]
         public long UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]

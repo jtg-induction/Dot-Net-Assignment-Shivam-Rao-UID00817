@@ -3,12 +3,9 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -42,9 +39,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             int pageNumber = 1;
 
-            var expectedResult = new List<BrowseRestaurantsResponseDto>
+            var expectedResult = new List<GetRestaurantsResponseDto>
         {
-            new BrowseRestaurantsResponseDto(
+            new GetRestaurantsResponseDto(
                 1,
                 "Pizza Palace",
                 "123 Main Street",
@@ -67,7 +64,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 await _controller.Restaurant(pageNumber);
 
 
-            Assert.That(response , Is.Not.Null);
+            Assert.That(response ,Is.Not.Null);
             Assert.That(
                 response.StatusCode ,
                 Is.EqualTo(HttpStatusCode.OK)
@@ -75,13 +72,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             var result =
                 await response.Content
-                    .ReadAsAsync<List<BrowseRestaurantsResponseDto>>();
+                    .ReadAsAsync<List<GetRestaurantsResponseDto>>();
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result.Count , Is.EqualTo(1));
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result.Count ,Is.EqualTo(1));
 
-            Assert.That(result[0].RestaurantId , Is.EqualTo(1));
-            Assert.That(result[0].RestaurantName , Is.EqualTo("Pizza Palace"));
+            Assert.That(result[0].RestaurantId ,Is.EqualTo(1));
+            Assert.That(result[0].RestaurantName ,Is.EqualTo("Pizza Palace"));
 
             _mockRestaurantService.Verify(
                 x => x.GetRestaurantsAsync(
@@ -96,7 +93,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
         {
 
             var expectedResult =
-                new List<BrowseRestaurantsResponseDto>();
+                new List<GetRestaurantsResponseDto>();
 
             _mockRestaurantService
                 .Setup(x => x.GetRestaurantsAsync(
@@ -128,8 +125,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             long restaurantId = 1;
             int pageNumber = 1;
 
-            var expectedResult = new BrowseMenuResponseDto(
-                new BrowseRestaurantsResponseDto(
+            var expectedResult = new GetMenuResponseDto(
+                new GetRestaurantsResponseDto(
                     1 ,
                     "Pizza Palace" ,
                     "Gurgaon" ,
@@ -163,7 +160,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 );
 
 
-            Assert.That(response , Is.Not.Null);
+            Assert.That(response ,Is.Not.Null);
 
             Assert.That(
                 response.StatusCode ,
@@ -172,9 +169,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             var result =
                 await response.Content
-                    .ReadAsAsync<BrowseMenuResponseDto>();
+                    .ReadAsAsync<GetMenuResponseDto>();
 
-            Assert.That(result , Is.Not.Null);
+            Assert.That(result ,Is.Not.Null);
 
             Assert.That(
                 result.Restaurant.RestaurantId ,
@@ -221,8 +218,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             long restaurantId = 1;
 
-            var expectedResult = new BrowseMenuResponseDto(
-                new BrowseRestaurantsResponseDto(
+            var expectedResult = new GetMenuResponseDto(
+                new GetRestaurantsResponseDto(
                     1 ,
                     "Pizza Palace" ,
                     "Gurgaon" ,

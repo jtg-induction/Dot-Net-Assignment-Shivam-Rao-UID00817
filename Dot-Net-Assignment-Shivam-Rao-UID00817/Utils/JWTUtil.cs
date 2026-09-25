@@ -3,15 +3,12 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
 {
@@ -29,9 +26,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
         /// <param name="userId">The user id for which the token is to be generated.</param>
         /// <param name="role">The role to be set within the token.</param>
         /// <returns>The generated access token string.</returns>
-        public static string GenerateAccessToken(string email , long userId , Constants.Enums.Roles role)
+        public static string GenerateAccessToken(string email, long userId, Constants.Enums.Roles role)
         {
-            var credentials = new SigningCredentials(key , SecurityAlgorithms.HmacSha256);
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
@@ -41,8 +38,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
                 new Claim(ClaimTypes.Role, role.ToString())
             };
 
-            var token = new JwtSecurityToken(issuer , audience , claims ,
-                expires: DateTime.UtcNow.AddSeconds(NumberConstants.JWT_EXPIRES_IN_SECONDS) , signingCredentials: credentials);
+            var token = new JwtSecurityToken(issuer, audience, claims,
+                expires: DateTime.UtcNow.AddSeconds(NumberConstants.JWT_EXPIRES_IN_SECONDS), signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -74,16 +71,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
 
             var validationParameters = new TokenValidationParameters
             {
-                ValidateIssuer = true ,
-                ValidIssuer = issuer ,
-                ValidateAudience = true ,
-                ValidAudience = audience ,
-                ValidateIssuerSigningKey = true ,
-                IssuerSigningKey = key ,
+                ValidateIssuer = true,
+                ValidIssuer = issuer,
+                ValidateAudience = true,
+                ValidAudience = audience,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
                 ValidateLifetime = true
             };
 
-            var result = await tokenHandler.ValidateTokenAsync(token , validationParameters);
+            var result = await tokenHandler.ValidateTokenAsync(token, validationParameters);
 
             if (result.IsValid)
             {
@@ -94,8 +91,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Utils
 
                 TokenPayloadDto payload = new TokenPayloadDto
                 {
-                    Role = role ,
-                    Email = email ,
+                    Role = role,
+                    Email = email,
                     UserId = userId
                 };
 

@@ -1,13 +1,11 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -50,7 +48,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The restaurant if found; otherwise, null.</returns>
-        public async Task<Restaurants> GetRestaurantAsync(string restaurantName , bool enableTracking, CancellationToken cancellationToken = default)
+        public async Task<Restaurants> GetRestaurantAsync(string restaurantName, bool enableTracking, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
             {
@@ -69,7 +67,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The restaurant if found; otherwise, null.</returns>
-        public async Task<Restaurants> GetRestaurantByIdAsync(long restaurantId , bool enableTracking, CancellationToken cancellationToken = default)
+        public async Task<Restaurants> GetRestaurantByIdAsync(long restaurantId, bool enableTracking, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
             {

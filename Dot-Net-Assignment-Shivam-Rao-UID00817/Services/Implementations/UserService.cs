@@ -21,7 +21,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         private readonly IAuthService _authService;
 
-        public UserService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork , IAuthService authService)
+        public UserService(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IUnitOfWork unitOfWork, IAuthService authService)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
@@ -48,7 +48,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="userId">The user id of the user whose whose details are to be updated.</param>
         /// <param name="model">The updated details.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
-        public async Task UpdateAccountAsync(long userId , UpdateAccountDto model, CancellationToken cancellationToken = default)
+        public async Task UpdateAccountAsync(long userId, UpdateAccountDto model, CancellationToken cancellationToken = default)
         {
             if (model is null)
             {

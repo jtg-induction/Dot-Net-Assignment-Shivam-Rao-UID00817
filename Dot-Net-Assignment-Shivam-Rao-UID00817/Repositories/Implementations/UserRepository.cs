@@ -1,7 +1,6 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
@@ -71,7 +70,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The user if found; otherwise, null.</returns>
-        public async Task<Users> GetUserByEmailAsync(string email , bool enableTracking = false, CancellationToken cancellationToken = default)
+        public async Task<Users> GetUserByEmailAsync(string email, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -86,7 +85,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The user if found; otherwise, null.</returns>
-        public async Task<Users> GetUserByUserIdAsync(long userId , bool enableTracking = false, CancellationToken cancellationToken = default)
+        public async Task<Users> GetUserByUserIdAsync(long userId, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
@@ -116,7 +115,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// </exception>
         public async Task<Users> GetUserWithUpdateLockAsync(long userId, CancellationToken cancellationToken = default)
         {
-            var UserId = new SqlParameter("@p0" , userId);
+            var UserId = new SqlParameter("@p0", userId);
             return await _db.Users.SqlQuery("SELECT user_id AS UserId," +
                                                     "email AS Email," +
                                                     "phone_number AS PhoneNumber," +
@@ -127,7 +126,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                                                     "created_at AS CreatedAt," +
                                                     "updated_at AS UpdatedAt," +
                                                     "role AS Role" +
-                                                    " FROM Users WITH(UPDLOCK, ROWLOCK) WHERE user_id = @p0;" , UserId).FirstOrDefaultAsync() ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
+                                                    " FROM Users WITH(UPDLOCK, ROWLOCK) WHERE user_id = @p0;", UserId).FirstOrDefaultAsync() ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
         }
     }
 }

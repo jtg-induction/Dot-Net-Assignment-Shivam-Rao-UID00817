@@ -1,5 +1,4 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using System;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers
@@ -16,10 +15,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers
         {
             return new CookieOptions
             {
-                HttpOnly = true ,
-                Secure = true ,
-                SameSite = Microsoft.Owin.SameSiteMode.Lax ,
-                Expires = DateTime.UtcNow.AddDays(ExpiresInDays) ,
+                HttpOnly = true,
+                Secure = true,
+                SameSite = Microsoft.Owin.SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddDays(ExpiresInDays),
                 Path = path
             };
         }

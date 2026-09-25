@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
@@ -11,7 +8,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 
         public List<long> UserIds { get; set; } = new List<long>();
 
-        public OnboardOwnersIdDto(long restaurantId,  List<long> userIds)
+        public OnboardOwnersIdDto(long restaurantId, List<long> userIds)
         {
             RestaurantId = restaurantId;
 
