@@ -13,7 +13,7 @@ using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
-    public class ItemRepository : IItemsRepository
+    public class ItemRepository : IItemRepository
     {
         private readonly Restaurant_ManagementContext _db;
 
