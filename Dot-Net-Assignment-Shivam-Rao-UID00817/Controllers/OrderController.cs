@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Net;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using System.Web.Security;
+using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {
@@ -28,6 +29,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPost, Route("")]
         public async Task<HttpResponseMessage> PlaceOrder([FromBody] OrderRequestDto model)
         {
+            if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
             var claimsPrincipal = User as ClaimsPrincipal;
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
