@@ -18,7 +18,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
     public class OrderService : IOrderService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IItemsRepository _itemRepository;
+        private readonly IItemRepository _itemRepository;
         private readonly IAddressRepository _addressRepository;
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IOrderRepository _orderRepository;
@@ -26,7 +26,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         private readonly IOwnerManagesRestaurantsRepository _ownerManagesRestaurantsRepository;
         private readonly Restaurant_ManagementContext _db;
 
-        public OrderService(IUserRepository userRepository, IItemsRepository itemsRepository, IAddressRepository addressRepository, IRestaurantRepository restaurantRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork, IOwnerManagesRestaurantsRepository ownerManagesRestaurantsRepository, Restaurant_ManagementContext db)
+        public OrderService(IUserRepository userRepository, IItemRepository itemsRepository, IAddressRepository addressRepository, IRestaurantRepository restaurantRepository, IOrderRepository orderRepository, IUnitOfWork unitOfWork, IOwnerManagesRestaurantsRepository ownerManagesRestaurantsRepository, Restaurant_ManagementContext db)
         {
             _addressRepository = addressRepository;
             _db = db;

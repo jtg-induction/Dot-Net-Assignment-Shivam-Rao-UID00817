@@ -18,9 +18,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
     public class RestaurantService : IRestaurantService
     {
         private readonly IRestaurantRepository _restaurantRepository;
-        private readonly IItemsRepository _itemsRepository;
+        private readonly IItemRepository _itemsRepository;
 
-        public RestaurantService(IRestaurantRepository restaurantRepository, IItemsRepository itemsRepository)
+        public RestaurantService(IRestaurantRepository restaurantRepository, IItemRepository itemsRepository)
         {
             _restaurantRepository = restaurantRepository;
             _itemsRepository = itemsRepository;

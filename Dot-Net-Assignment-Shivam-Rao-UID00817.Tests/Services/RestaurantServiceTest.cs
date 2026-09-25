@@ -14,7 +14,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
     public class RestaurantServiceTests
     {
         private Mock<IRestaurantRepository> _mockRestaurantRepository;
-        private Mock<IItemsRepository> _mockItemsRepository;
+        private Mock<IItemRepository> _mockItemsRepository;
 
         private RestaurantService _restaurantService;
 
@@ -22,7 +22,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
         public void Setup()
         {
             _mockRestaurantRepository = new Mock<IRestaurantRepository>();
-            _mockItemsRepository = new Mock<IItemsRepository>();
+            _mockItemsRepository = new Mock<IItemRepository>();
 
             _restaurantService = new RestaurantService(
                 _mockRestaurantRepository.Object ,
