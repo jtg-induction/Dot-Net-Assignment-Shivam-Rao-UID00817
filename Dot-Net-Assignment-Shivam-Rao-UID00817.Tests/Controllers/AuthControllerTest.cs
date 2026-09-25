@@ -35,7 +35,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             var response = new HttpResponse(null);
 
-            var context = new HttpContext(request , response);
+            var context = new HttpContext(request ,response);
 
             foreach (string key in cookies)
             {
@@ -103,7 +103,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             IHttpActionResult result = await _controller.Logout();
 
-            Assert.That(result , Is.TypeOf<UnauthorizedResult>());
+            Assert.That(result ,Is.TypeOf<UnauthorizedResult>());
 
             _mockAuthService.Verify(
                 x => x.LogoutAsync(It.IsAny<string>()) ,
@@ -117,7 +117,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             string refreshToken = "abc123";
 
             var cookies = new HttpCookieCollection();
-            cookies.Add(new HttpCookie("refresh_token" , refreshToken));
+            cookies.Add(new HttpCookie("refresh_token" ,refreshToken));
 
             SetHttpContext(cookies);
 
@@ -127,7 +127,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             IHttpActionResult result = await _controller.Logout();
 
-            Assert.That(result , Is.TypeOf<OkResult>());
+            Assert.That(result ,Is.TypeOf<OkResult>());
 
             _mockAuthService.Verify(
                 x => x.LogoutAsync(refreshToken) ,
@@ -141,7 +141,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             string refreshToken = "invalid-token";
 
             var cookies = new HttpCookieCollection();
-            cookies.Add(new HttpCookie("refresh_token" , refreshToken));
+            cookies.Add(new HttpCookie("refresh_token" ,refreshToken));
 
             SetHttpContext(cookies);
 
@@ -151,7 +151,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             IHttpActionResult result = await _controller.Logout();
 
-            Assert.That(result , Is.TypeOf<UnauthorizedResult>());
+            Assert.That(result ,Is.TypeOf<UnauthorizedResult>());
 
             _mockAuthService.Verify(
                 x => x.LogoutAsync(refreshToken) ,

@@ -1,11 +1,9 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -17,12 +15,26 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         {
             _db = db;
         }
+
+        /// <summary>
+        /// Adds multiple restaurant ownership entries to the database context.
+        /// </summary>
+        /// <param name="Owners">The ownership entries to add.</param>
         public void Add(List<Owner_Manages_Restaurants> Owners)
         {
             _db.Owner_Manages_Restaurants.AddRange(Owners);
         }
 
-        public async Task<Owner_Manages_Restaurants> GetOwnerIfExistsAsync(long userId, long restaurantId, bool enableTracking = false)
+
+        /// <summary>
+        /// Retrieves an ownership entry for a user and restaurant, with optional change tracking.
+        /// </summary>
+        /// <param name="userId">The ID of the owner.</param>
+        /// <param name="restaurantId">The ID of the restaurant.</param>
+        /// <param name="enableTracking">Whether to enable entity tracking.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>The ownership entry if found; otherwise, null.</returns>
+        public async Task<Owner_Manages_Restaurants> GetOwnerIfExistsAsync(long userId, long restaurantId, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
             {
@@ -34,6 +46,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             }
         }
 
+
+        /// <summary>
+        /// Removes a restaurant ownership entry from the database context.
+        /// </summary>
+        /// <param name="Entry">The ownership entry to remove.</param>
         public void Remove(Owner_Manages_Restaurants Entry)
         {
             _db.Owner_Manages_Restaurants.Remove(Entry);

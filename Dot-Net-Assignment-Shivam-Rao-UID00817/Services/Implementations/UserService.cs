@@ -5,6 +5,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
@@ -20,7 +21,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         private readonly IAuthService _authService;
 
-        public UserService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork , IAuthService authService)
+        public UserService(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IUnitOfWork unitOfWork, IAuthService authService)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
@@ -28,7 +29,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _authService = authService;
         }
 
-        public async Task DeactivateAccountAsync(long userId)
+        /// <summary>
+        /// Deactivate the account of the given user id, logs out of all the devices (revokes all the refresh token for the user id).
+        /// </summary>
+        /// <param name="userId">The user id of the user whose account is to be deactiated.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        public async Task DeactivateAccountAsync(long userId, CancellationToken cancellationToken = default)
         {
             await _userRepository.DeactivateUserAsync(userId);
             await _authService.LogOutFromAllDevicesAsync(userId);
@@ -36,7 +42,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAccountAsync(long userId , UpdateAccountDto model)
+        /// <summary>
+        /// Update the account details of the requesting user (name, phone number)
+        /// </summary>
+        /// <param name="userId">The user id of the user whose whose details are to be updated.</param>
+        /// <param name="model">The updated details.</param>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        public async Task UpdateAccountAsync(long userId, UpdateAccountDto model, CancellationToken cancellationToken = default)
         {
             if (model is null)
             {

@@ -1,9 +1,5 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Results;
@@ -27,16 +23,20 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
                 errorResponse.Errors = validationException.ValidationMessages;
                 statusCode = HttpStatusCode.BadRequest;
             }
+            else if (context.Exception is UnauthorizedException unauthorizedException)
+            {
+                statusCode = HttpStatusCode.Unauthorized;
+            }
             else
             {
                 statusCode = HttpStatusCode.InternalServerError;
             }
 
             context.Result = new NegotiatedContentResult<ErrorResponse>(
-                statusCode ,
-                errorResponse ,
-                context.RequestContext.Configuration.Services.GetContentNegotiator() ,
-                context.Request ,
+                statusCode,
+                errorResponse,
+                context.RequestContext.Configuration.Services.GetContentNegotiator(),
+                context.Request,
                 context.RequestContext.Configuration.Formatters
             );
         }

@@ -78,10 +78,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
         {
             long userId = 123;
 
-            await _userService.UpdateAccountAsync(userId , null);
+            await _userService.UpdateAccountAsync(userId ,null);
 
             _mockUserRespository.Verify(
-                x => x.GetUserByUserIdAsync(It.IsAny<long>() , It.IsAny<bool>()) ,
+                x => x.GetUserByUserIdAsync(It.IsAny<long>() ,It.IsAny<bool>()) ,
                 Times.Never
             );
 
@@ -109,16 +109,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRespository.Setup(
-                x => x.GetUserByUserIdAsync(userId , true))
+                x => x.GetUserByUserIdAsync(userId ,true))
                 .ReturnsAsync(user);
 
             _mockUnitOfWork.Setup(
                 x => x.SaveChangesAsync())
                 .ReturnsAsync(1);
 
-            await _userService.UpdateAccountAsync(userId , model);
+            await _userService.UpdateAccountAsync(userId ,model);
 
-            Assert.That(user.Name , Is.EqualTo("John"));
+            Assert.That(user.Name ,Is.EqualTo("John"));
 
             _mockUnitOfWork.Verify(
                 x => x.SaveChangesAsync() ,
@@ -144,7 +144,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRespository.Setup(
-                x => x.GetUserByUserIdAsync(userId , true))
+                x => x.GetUserByUserIdAsync(userId ,true))
                 .ReturnsAsync(user);
 
             _mockUserRespository.Setup(
@@ -155,7 +155,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 x => x.SaveChangesAsync())
                 .ReturnsAsync(1);
 
-            await _userService.UpdateAccountAsync(userId , model);
+            await _userService.UpdateAccountAsync(userId ,model);
 
             Assert.That(
                 user.PhoneNumber ,
@@ -191,7 +191,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRespository.Setup(
-                x => x.GetUserByUserIdAsync(userId , true))
+                x => x.GetUserByUserIdAsync(userId ,true))
                 .ReturnsAsync(user);
 
             _mockUserRespository.Setup(
@@ -199,7 +199,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 .ReturnsAsync(true);
 
             var exception = Assert.ThrowsAsync<ConflictException>(
-                async () => await _userService.UpdateAccountAsync(userId , model)
+                async () => await _userService.UpdateAccountAsync(userId ,model)
             );
 
             Assert.That(
@@ -232,7 +232,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRespository.Setup(
-                x => x.GetUserByUserIdAsync(userId , true))
+                x => x.GetUserByUserIdAsync(userId ,true))
                 .ReturnsAsync(user);
 
             _mockUserRespository.Setup(
@@ -243,12 +243,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 x => x.SaveChangesAsync())
                 .ReturnsAsync(1);
 
-            await _userService.UpdateAccountAsync(userId , model);
+            await _userService.UpdateAccountAsync(userId ,model);
 
             Assert.Multiple(() =>
             {
-                Assert.That(user.Name , Is.EqualTo("John Smith"));
-                Assert.That(user.PhoneNumber , Is.EqualTo("9876543210"));
+                Assert.That(user.Name ,Is.EqualTo("John Smith"));
+                Assert.That(user.PhoneNumber ,Is.EqualTo("9876543210"));
             });
 
             _mockUnitOfWork.Verify(

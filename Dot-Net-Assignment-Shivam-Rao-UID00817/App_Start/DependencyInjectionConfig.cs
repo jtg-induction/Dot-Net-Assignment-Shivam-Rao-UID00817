@@ -29,7 +29,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.App_Start
 
             builder.RegisterType<OwnerManagesRestaurantsRepository>().As<IOwnerManagesRestaurantsRepository>().InstancePerRequest();
 
-            builder.RegisterType<ItemRepository>().As<IItemsRepository>().InstancePerRequest();
+            builder.RegisterType<ItemRepository>().As<IItemRepository>().InstancePerRequest();
 
             builder.RegisterType<OrderRepository>().As<IOrderRepository>().InstancePerRequest();
 

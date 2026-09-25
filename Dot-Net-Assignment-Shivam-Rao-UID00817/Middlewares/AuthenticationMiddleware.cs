@@ -27,7 +27,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
 
             string authHeader = context.Request.Headers.Get("Authorization");
 
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer " , StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
             {
                 context.Response.StatusCode = (Int16)HttpStatusCode.Unauthorized;
                 await context.Response.WriteAsync(Constants.ErrorMessages.NO_AUTH_TOKEN);
@@ -48,15 +48,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Middlewares
             var identity = new ClaimsIdentity("Bearer");
 
             identity.AddClaim(
-                new Claim("userId" , payload.UserId.ToString())
+                new Claim("userId", payload.UserId.ToString())
             );
 
             identity.AddClaim(
-                new Claim(ClaimTypes.Email , payload.Email)
+                new Claim(ClaimTypes.Email, payload.Email)
             );
 
             identity.AddClaim(
-                new Claim(ClaimTypes.Role , payload.Role)
+                new Claim(ClaimTypes.Role, payload.Role)
             );
 
             context.Request.User = new ClaimsPrincipal(identity);

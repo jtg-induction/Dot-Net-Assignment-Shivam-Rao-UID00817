@@ -56,7 +56,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         public virtual Users Users { get; set; }
 
 
-        public Decimal TotalAmount  { get; set; }
+        public Decimal TotalAmount { get; set; }
 
         [Index("IX_Restaurant_Id")]
         [Column("restaurant_id")]
@@ -67,7 +67,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
 
         public virtual ICollection<Order_Items> OrderItems { get; set; }
 
-        public Orders(long userId, long restaurantId, decimal totalAmount, string addressLine1 , string city , string state , string pincode , string country, string addressLine2 = "", string instructions = "")
+        public Orders(long userId, long restaurantId, decimal totalAmount, string addressLine1, string city, string state, string pincode, string country, string addressLine2 = "", string instructions = "")
         {
             this.Instructions = instructions;
             this.RestaurantId = restaurantId;
@@ -82,6 +82,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
             this.CreatedAt = DateTime.UtcNow;
             this.UpdatedAt = DateTime.UtcNow;
             this.TotalAmount = totalAmount;
+        }
+
+        public Orders()
+        {
+
         }
     }
 }

@@ -6,10 +6,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
 using Moq;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
@@ -44,32 +41,32 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
         [Test]
         public async Task GetValidEmailsAsync_ValidEmail_ReturnsNormalizedEmail()
         {
-            var emails = new List<string>{"  OWNER@TEST.COM  "};
+            var emails = new List<string> { "  OWNER@TEST.COM  " };
 
             var status = new List<EmailAndStatus>();
 
-            var result = await _service.GetValidEmailsAsync(emails , status);
+            var result = await _service.GetValidEmailsAsync(emails ,status);
 
-            Assert.That(result.Count , Is.EqualTo(1));
-            Assert.That(result[0] , Is.EqualTo("owner@test.com"));
+            Assert.That(result.Count ,Is.EqualTo(1));
+            Assert.That(result[0] ,Is.EqualTo("owner@test.com"));
 
-            Assert.That(status.Count , Is.EqualTo(0));
+            Assert.That(status.Count ,Is.EqualTo(0));
         }
 
         [Test]
         public async Task GetValidEmailsAsync_InvalidEmail_AddsFailedStatus()
         {
-            var emails = new List<string>{"invalid-email"};
+            var emails = new List<string> { "invalid-email" };
 
             var status = new List<EmailAndStatus>();
 
-            var result = await _service.GetValidEmailsAsync(emails , status);
+            var result = await _service.GetValidEmailsAsync(emails ,status);
 
-            Assert.That(result.Count , Is.EqualTo(0));
-            Assert.That(status.Count , Is.EqualTo(1));
+            Assert.That(result.Count ,Is.EqualTo(0));
+            Assert.That(status.Count ,Is.EqualTo(1));
 
-            Assert.That(status[0].Email , Is.EqualTo("invalid-email"));
-            Assert.That(status[0].IsOnBoarded , Is.False);
+            Assert.That(status[0].Email ,Is.EqualTo("invalid-email"));
+            Assert.That(status[0].IsOnBoarded ,Is.False);
             Assert.That(
                 status[0].Message ,
                 Is.EqualTo(ErrorMessages.INVALID_EMAIL_FORMAT)
@@ -82,7 +79,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var restaurant = new RestaurantOnboardDto
             {
                 Name = "Existing Restaurant" ,
-                Emails = new List<string>{"owner@test.com"}
+                Emails = new List<string> { "owner@test.com" }
             };
 
             var existingRestaurant = new Restaurants(
@@ -111,7 +108,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
 
             _mockRestaurantRepository.Verify(
-                x => x.GetRestaurantAsync("Existing Restaurant" , false) ,
+                x => x.GetRestaurantAsync("Existing Restaurant" ,false) ,
                 Times.Once
             );
         }
@@ -122,7 +119,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var restaurant = new RestaurantOnboardDto
             {
                 Name = "New Restaurant" ,
-                Emails = new List<string>{"owner@test.com"}
+                Emails = new List<string> { "owner@test.com" }
             };
 
             _mockRestaurantRepository.Setup(
@@ -133,7 +130,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             _mockUserRepository.Setup(
                 x => x.GetUsersByEmails(
-                    It.Is<List<string>>(emails =>emails.Contains("owner@test.com"))))
+                    It.Is<List<string>>(emails => emails.Contains("owner@test.com"))))
                 .ReturnsAsync(new List<Users>());
 
             var exception = Assert.ThrowsAsync<ValidationException>(
@@ -209,8 +206,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             var result = await _service.OnboardRestaurantAsync(restaurant);
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result.EmailStatus , Is.Not.Null);
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result.EmailStatus ,Is.Not.Null);
 
             _mockRestaurantRepository.Verify(
                 x => x.Add(It.Is<Restaurants>(
@@ -238,7 +235,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var model = new OwnerOnboardRequestDto
             {
                 Name = "Test Restaurant" ,
-                Emails = new List<string>{"owner@test.com"}
+                Emails = new List<string> { "owner@test.com" }
             };
 
             var user = new Users
@@ -279,10 +276,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var result =
                 await _service.AssignOwnerToRestaurantAsync(model);
 
-            Assert.That(result , Is.Not.Null);
-            Assert.That(result.EmailStatus.Count , Is.EqualTo(1));
+            Assert.That(result ,Is.Not.Null);
+            Assert.That(result.EmailStatus.Count ,Is.EqualTo(1));
 
-            Assert.That(user.Role , Is.EqualTo(Enums.Roles.Owner));
+            Assert.That(user.Role ,Is.EqualTo(Enums.Roles.Owner));
 
             _mockOwnerRepository.Verify(
                 x => x.Add(
@@ -306,7 +303,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var model = new OwnerOnboardRequestDto
             {
                 Name = "Missing Restaurant" ,
-                Emails = new List<string>{"owner@test.com"}
+                Emails = new List<string> { "owner@test.com" }
             };
 
             var user = new Users

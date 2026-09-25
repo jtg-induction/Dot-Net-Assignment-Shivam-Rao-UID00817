@@ -1,22 +1,18 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
-using Microsoft.Owin.Security.Provider;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Web;
-using System.Web.Http;
 using System.Threading.Tasks;
-using System.Net;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using System.Web.Http;
+using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {
     [RoutePrefix("api/orders")]
-    public class OrderController: ApiController
+    public class OrderController : ApiController
     {
         private readonly IOrderService _orderService;
 
@@ -25,16 +21,54 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             _orderService = orderService;
         }
 
+
         [HttpPost, Route("")]
         public async Task<HttpResponseMessage> PlaceOrder([FromBody] OrderRequestDto model)
+        {
+            if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
+            var claimsPrincipal = User as ClaimsPrincipal;
+
+            long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
+
+            var response = await _orderService.PlaceOrderAsync(userId, model);
+
+            return Request.CreateResponse(HttpStatusCode.Created, response);
+        }
+
+        [HttpGet, Route("")]
+        public async Task<HttpResponseMessage> GetCustomerOrders(int pageNumber = 1)
         {
             var claimsPrincipal = User as ClaimsPrincipal;
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
 
-            var response = await _orderService.PlaceOrderAsync(userId , model);
+            var result = await _orderService.GetAllOrdersAsync(userId, pageNumber);
 
-            return Request.CreateResponse(HttpStatusCode.Created, response);
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+        [HttpGet, Route("order/{orderId}")]
+        public async Task<HttpResponseMessage> GetOrderDetails(long orderId)
+        {
+            var claimsPrincipal = User as ClaimsPrincipal;
+
+            long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
+
+            var result = await _orderService.GetOrderDetailsAsync(userId, orderId);
+
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
+
+        [HttpPatch, Route("order/{orderId}")]
+        public async Task<HttpResponseMessage> CancelOrder(long orderId)
+        {
+            var claimsPrincipal = User as ClaimsPrincipal;
+
+            long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
+
+            await _orderService.CancelOrderAsync(userId, orderId);
+
+            return Request.CreateResponse(HttpStatusCode.NoContent);
         }
     }
 }

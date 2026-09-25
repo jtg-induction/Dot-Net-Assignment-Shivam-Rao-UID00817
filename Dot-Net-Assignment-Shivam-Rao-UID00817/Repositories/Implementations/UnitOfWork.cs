@@ -1,9 +1,10 @@
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System.Threading.Tasks;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using System.Linq;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using System;
 using System.Data.Entity;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -16,7 +17,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db = db;
         }
 
-        public async Task<int> SaveChangesAsync()
+        /// <summary>
+        /// Saves all changes to the database and updates the modification timestamp of changed entities.
+        /// </summary>
+        /// <param name="cancellationToken">Token used to cancel the operation.</param>
+        /// <returns>The number of database records affected.</returns>
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var entries = _db.ChangeTracker.Entries<IAuditableEntity>().Where(e => e.State == EntityState.Modified);
 
@@ -28,6 +34,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             return await _db.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Releases the database context and associated resources.
+        /// </summary>
         public void Dispose()
         {
             _db.Dispose();
