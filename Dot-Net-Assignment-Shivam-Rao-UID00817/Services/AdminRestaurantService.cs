@@ -122,8 +122,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 {
                     ToOnboard.Add(new Owner_Manages_Restaurants(user.UserId, RestaurantId));
                     Status.Add(new EmailAndStatus(user.Email, null));
-                    user.Role = Enums.Roles.Owner;
-                }
+                user.Role = Enums.Roles.Owner;
+            }
             }
             _ownerManagesRestaurantsRepository.Add(ToOnboard);
 
