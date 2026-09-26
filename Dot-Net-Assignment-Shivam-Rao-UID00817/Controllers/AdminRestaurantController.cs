@@ -31,7 +31,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
-        [HttpPost, Route("onboarding")]
+        [HttpPost, Route("onboard")]
         public async Task<HttpResponseMessage> Onboard([FromBody] OwnerOnboardRequestDto model)
         {
             var result = await _adminService.AssignOwnerToRestaurantAsync(model);

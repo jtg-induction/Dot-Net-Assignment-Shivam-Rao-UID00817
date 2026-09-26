@@ -33,5 +33,9 @@
         public const string USER_NOT_ACTIVE = "Account with given email is not active";
 
         public const string CANNOT_ASSIGN_OWNER_TO_RESTAURANT_THAT_IS_NOT_ACTIVE = "Cannot Assign owners to restaurant that is not active.";
+
+        public const string ADMIN_EMAIL = "admin@example.com";
+
+        public const string CANNNOT_ONBOARD_ADMIN_TO_RESTAURANT = "Cannot onboard admin to restaurant"; 
     }
 }
