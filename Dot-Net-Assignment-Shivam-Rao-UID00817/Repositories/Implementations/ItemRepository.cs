@@ -43,7 +43,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <returns>A list of matching items.</returns>
         public async Task<List<Items>> GetItemsAsync(List<long> itemIds, long restaurantId, bool includeInactive = false, CancellationToken cancellationToken = default)
         {
-            if(includeInactive) 
+            if (includeInactive)
                 return await _db.Items.Where(x => (x.RestaurantId == restaurantId && itemIds.Contains(x.ItemId))).ToListAsync();
             else
                 return await _db.Items.Where(x => (x.RestaurantId == restaurantId && x.IsActive && itemIds.Contains(x.ItemId))).ToListAsync();
