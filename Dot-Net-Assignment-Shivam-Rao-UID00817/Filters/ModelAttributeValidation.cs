@@ -11,7 +11,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Filters
     {
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            if (actionContext.ModelState.Count() == 0)
+            if (actionContext.ModelState.Count() == 0 && !actionContext.ModelState.IsValid)
             {
                 throw new ValidationException(Constants.ErrorMessages.MODEL_WAS_NULL);
             }
