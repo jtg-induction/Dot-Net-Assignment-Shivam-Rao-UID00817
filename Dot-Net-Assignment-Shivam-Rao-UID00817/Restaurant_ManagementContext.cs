@@ -19,5 +19,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
         public DbSet<Menu_Items> Menu_Items { get; set; }
         public DbSet<Orders> Orders { get; set; }
         public DbSet<Order_Items> Order_Items { get; set; }
+        public DbSet<Refresh_Tokens> Refresh_Tokens { get; set; }
     }
 }
