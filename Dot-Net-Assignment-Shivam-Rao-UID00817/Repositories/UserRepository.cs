@@ -31,7 +31,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db.Users.Add(user);
         }
 
-        public async Task<Users> GetUserByEmailAsync(string email , bool enableTracking)
+        public async Task<Users> GetUserByEmailAsync(string email , bool enableTracking = false)
         {
             if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -39,7 +39,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                 return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<Users> GetUserByUserIdAsync(long userId , bool enableTracking)
+        public async Task<Users> GetUserByUserIdAsync(long userId , bool enableTracking = false)
         {
             if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);

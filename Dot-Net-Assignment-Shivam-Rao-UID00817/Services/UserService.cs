@@ -32,27 +32,24 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         {
             await _userRepository.DeactivateUserAsync(userId);
             await _authService.LogOutFromAllDevicesAsync(userId);
-
             await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task UpdateAccountAsync(long userId , UpdateAccountDto model)
         {
-            if (model is null)
-            {
-                return;
-            }
             Users user = await _userRepository.GetUserByUserIdAsync(userId, true);
             if (!String.IsNullOrWhiteSpace(model.Name))
             {
                 user.Name = model.Name.Trim();
             }
+
             if (!String.IsNullOrWhiteSpace(model.PhoneNumber))
             {
                 if (await _userRepository.PhoneNumberExistsAsync(model.PhoneNumber.Trim()))
                     throw new ConflictException(ErrorMessages.DUPLICATE_PHONE_NUMBER);
                 user.PhoneNumber = model.PhoneNumber.Trim();
             }
+
             await _unitOfWork.SaveChangesAsync();
         }
     }

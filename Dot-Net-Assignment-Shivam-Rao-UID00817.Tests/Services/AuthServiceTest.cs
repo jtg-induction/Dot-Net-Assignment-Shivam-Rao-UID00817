@@ -116,7 +116,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
 
             Assert.That(
                 createdUser.Role ,
-                Is.EqualTo("Customer")
+                Is.EqualTo(Constants.Enums.Roles.Customer)
             );
 
             Assert.That(
@@ -138,7 +138,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 UserId = 1 ,
                 Email = "shivam@example.com" ,
                 Password = HashingHelper.HashPassword("Pass@1234") ,
-                Role = "Customer"
+                Role = Constants.Enums.Roles.Customer
             };
 
             var model = new LoginRequestDto
@@ -148,7 +148,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUserByEmailAsync("shivam@example.com", false))
+                x => x.GetUserByEmailAsync("shivam@example.com" , false))
                 .ReturnsAsync(user);
 
             var result = await _authService.LoginAsync(model);
@@ -193,7 +193,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 UserId = 1 ,
                 Email = "Shivam@example.com" ,
                 Password = HashingHelper.HashPassword("Pass@1234") ,
-                Role = "Customer"
+                Role = Constants.Enums.Roles.Customer
             };
 
             var model = new LoginRequestDto
@@ -228,11 +228,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             {
                 UserId = 1 ,
                 Email = "Shivam@example.com" ,
-                Role = "Customer"
+                Role = Constants.Enums.Roles.Customer
             };
 
             _mockRefreshTokenRepository
-                .Setup(x => x.GetRefreshTokenExistsAsync(oldRefreshToken, false))
+                .Setup(x => x.GetRefreshTokenExistsAsync(oldRefreshToken, true))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository
@@ -265,7 +265,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             {
                 UserId = 1 ,
                 Email = "Shivam@example.com" ,
-                Role = "Customer"
+                Role = Constants.Enums.Roles.Customer
             };
 
             _mockRefreshTokenRepository.Setup(
