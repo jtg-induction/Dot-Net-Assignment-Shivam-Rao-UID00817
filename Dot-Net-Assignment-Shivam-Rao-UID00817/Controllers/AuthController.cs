@@ -36,8 +36,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             TokenResultDto tokenResult = (TokenResultDto)await _authService.LoginAsync(model);
 
-            Request.GetOwinContext().Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , CookieHelper.GetCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
-            Request.GetOwinContext().Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , CookieHelper.GetCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+            Request.GetOwinContext().Response.Cookies.Append("refresh_token" , 
+                                                                tokenResult.RefreshToken ,
+                                                                CookieHelper.CreateCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+            Request.GetOwinContext().Response.Cookies.Append("refresh_token" ,
+                                                                tokenResult.RefreshToken ,
+                                                                CookieHelper.CreateCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
 
             return base.Ok(new LoginResponseDto
             {
@@ -55,8 +59,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             TokenResultDto tokenResult = (TokenResultDto)await _authService.RotateTokenAsync(HttpUtility.UrlDecode(cookie.Value));
 
-            Request.GetOwinContext().Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , CookieHelper.GetCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
-            Request.GetOwinContext().Response.Cookies.Append("refresh_token" , tokenResult.RefreshToken , CookieHelper.GetCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+            Request.GetOwinContext().Response.Cookies.Append("refresh_token" ,
+                                                                tokenResult.RefreshToken ,
+                                                                CookieHelper.CreateCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+            Request.GetOwinContext().Response.Cookies.Append("refresh_token" ,
+                                                                tokenResult.RefreshToken ,
+                                                                CookieHelper.CreateCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
 
             return base.Ok(new LoginResponseDto
             {

@@ -148,7 +148,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUserByEmailAsync("shivam@example.com", false))
+                x => x.GetUserByEmailAsync("shivam@example.com" , false))
                 .ReturnsAsync(user);
 
             var result = await _authService.LoginAsync(model);
