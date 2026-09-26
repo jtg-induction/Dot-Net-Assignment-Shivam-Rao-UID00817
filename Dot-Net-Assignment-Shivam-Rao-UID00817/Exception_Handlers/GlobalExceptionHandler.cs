@@ -15,13 +15,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
     {
         public override void Handle(ExceptionHandlerContext context)
         {
-            HttpStatusCode statusCode = 0;
-            if (context.Exception is ConflictException)
+            var errorResponse = new ErrorResponse();
+            HttpStatusCode statusCode;
+            if (context.Exception is ConflictException conflictException)
             {
+                errorResponse.Errors.Add(conflictException.Message);
                 statusCode = HttpStatusCode.Conflict;
             }
-            else if (context.Exception is ValidationException)
+            else if (context.Exception is ValidationException validationException)
             {
+                errorResponse.Errors = validationException.ValidationMessages;
                 statusCode = HttpStatusCode.BadRequest;
             }
             else
@@ -29,28 +32,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Exception_Handlers
                 statusCode = HttpStatusCode.InternalServerError;
             }
 
-            context.Result = new NegotiatedContentResult<List<string>>(
+            context.Result = new NegotiatedContentResult<ErrorResponse>(
                 statusCode ,
-                new List<string>(context.Exception.Message.Split('^')) ,
+                errorResponse ,
                 context.RequestContext.Configuration.Services.GetContentNegotiator() ,
                 context.Request ,
                 context.RequestContext.Configuration.Formatters
             );
-        }
-
-        private class ErrorMessageResult : IHttpActionResult
-        {
-            private readonly HttpResponseMessage _httpResponseMessage;
-
-            public ErrorMessageResult(HttpResponseMessage httpResponseMessage)
-            {
-                _httpResponseMessage = httpResponseMessage;
-            }
-
-            public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
-            {
-                return Task.FromResult(_httpResponseMessage);
-            }
         }
     }
 }

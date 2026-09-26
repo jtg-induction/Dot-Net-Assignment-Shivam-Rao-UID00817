@@ -1,7 +1,9 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
+using System;
 using System.Data.Entity;
 using System.Threading.Tasks;
+
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -14,9 +16,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db = db;
         }
 
-        public async Task<bool> UserExistsAsync(string email , string phoneNumber)
+        public async Task<bool> EmailExistsAsync(string email)
         {
-            return await _db.Users.AnyAsync(u => u.Email == email || u.PhoneNumber == phoneNumber);
+            return await _db.Users.AnyAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> PhoneNumberExistsAsync(string phoneNumber)
+        {
+            return await _db.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
         }
 
         public void Add(Users user)
@@ -24,20 +31,25 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db.Users.Add(user);
         }
 
-        public async Task<Users> GetUserByEmailAsync(string email , bool AsNoTracking)
+        public async Task<Users> GetUserByEmailAsync(string email , bool enableTracking = false)
         {
-            if (AsNoTracking)
-                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
-            else
+            if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+            else
+                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<Users> GetUserByUserIdAsync(long userId , bool AsNoTracking)
+        public async Task<Users> GetUserByUserIdAsync(long userId , bool enableTracking = false)
         {
-            if (AsNoTracking)
-                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId);
-            else
+            if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            else
+                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId);
+        }
+
+        public async Task DeactivateUserAsync(long userId)
+        {
+            (await _db.Users.FindAsync(userId)).IsActive = false;
         }
     }
 }

@@ -238,13 +238,17 @@
     <Compile Include="App_Start\DependencyInjectionConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Constants\EXCEPTION_MESSAGES.cs" />
-    <Compile Include="Constants\NUMBER_CONSTANTS.cs" />
-    <Compile Include="Constants\REGEX.cs" />
+    <Compile Include="Constants\Enums.cs" />
+    <Compile Include="Constants\ErrorMessages.cs" />
+    <Compile Include="Constants\NumberConstants.cs" />
+    <Compile Include="Constants\PublicPaths.cs" />
+    <Compile Include="Constants\Regex.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Exceptions\ConflictException.cs" />
     <Compile Include="Exceptions\ModelValidationException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Exception_Handlers\ErrorResponse.cs" />
     <Compile Include="Exception_Handlers\GlobalExceptionHandler.cs" />
     <Compile Include="Filters\ModelAttributeValidation.cs" />
     <Compile Include="Global.asax.cs">
@@ -252,6 +256,7 @@
     </Compile>
     <Compile Include="Helpers\CookieHelper.cs" />
     <Compile Include="Helpers\HashingHelper.cs" />
+    <Compile Include="Middlewares\AuthenticationMiddleware.cs" />
     <Compile Include="Migrations\202609101645205_InitialCreate.cs" />
     <Compile Include="Migrations\202609101645205_InitialCreate.Designer.cs">
       <DependentUpon>202609101645205_InitialCreate.cs</DependentUpon>
@@ -264,13 +269,27 @@
     <Compile Include="Migrations\202609141208267_AddedRefreshTokenTable.Designer.cs">
       <DependentUpon>202609141208267_AddedRefreshTokenTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202609190623370_ChangeDataTypeNoEnum.cs" />
+    <Compile Include="Migrations\202609190623370_ChangeDataTypeNoEnum.Designer.cs">
+      <DependentUpon>202609190623370_ChangeDataTypeNoEnum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202609190646275_Droppingroles2.cs" />
+    <Compile Include="Migrations\202609190646275_Droppingroles2.Designer.cs">
+      <DependentUpon>202609190646275_Droppingroles2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202609190656164_RenameRoles2.cs" />
+    <Compile Include="Migrations\202609190656164_RenameRoles2.Designer.cs">
+      <DependentUpon>202609190656164_RenameRoles2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Addresses.cs" />
     <Compile Include="Models\DTOs\LoginRequestDto.cs" />
     <Compile Include="Models\DTOs\LoginResponseDto.cs" />
-    <Compile Include="Models\DTOs\MessageResponseDto.cs" />
-    <Compile Include="Models\DTOs\RefreshTokenDto.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
+    <Compile Include="Models\DTOs\TokenPayloadDto.cs" />
+    <Compile Include="Models\DTOs\TokenResultDto.cs" />
+    <Compile Include="Models\DTOs\UpdateAccountDto.cs" />
+    <Compile Include="Models\IAuditableEntity.cs" />
     <Compile Include="Models\Items.cs" />
     <Compile Include="Models\Menus.cs" />
     <Compile Include="Models\Menu_Items.cs" />
@@ -289,9 +308,11 @@
     <Compile Include="Repositories\UnitOfWork.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Restaurant_ManagementContext.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\AuthService.cs" />
+    <Compile Include="Services\Interfaces\IUserService.cs" />
     <Compile Include="Services\Interfaces\IAuthService.cs" />
-    <Compile Include="Utils\TokenGenerator.cs" />
+    <Compile Include="Utils\JWTUtil.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +345,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202609141208267_AddedRefreshTokenTable.resx">
       <DependentUpon>202609141208267_AddedRefreshTokenTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609190623370_ChangeDataTypeNoEnum.resx">
+      <DependentUpon>202609190623370_ChangeDataTypeNoEnum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609190646275_Droppingroles2.resx">
+      <DependentUpon>202609190646275_Droppingroles2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609190656164_RenameRoles2.resx">
+      <DependentUpon>202609190656164_RenameRoles2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

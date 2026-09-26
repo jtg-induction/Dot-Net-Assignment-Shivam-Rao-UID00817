@@ -32,14 +32,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             string email = model.Email.Trim().ToLower();
             string phoneNumber = model.PhoneNumber.Trim();
 
-            bool userExists = await _userRepository.UserExistsAsync(email , phoneNumber);
+            bool phoneNumberExists = await _userRepository.PhoneNumberExistsAsync(phoneNumber);
+            bool emailExists = await _userRepository.EmailExistsAsync(email);
 
-            if (userExists)
-            {
-                throw new ConflictException(
-                    EXCEPTION_MESSAGES.USER_ALREADY_EXISTS
-                );
-            }
+
+            if (emailExists) throw new ConflictException(ErrorMessages.USER_ALREADY_EXISTS);
+            else if (phoneNumberExists) throw new ConflictException(ErrorMessages.DUPLICATE_PHONE_NUMBER);
 
             var newUser = new Users(email , phoneNumber , model.Password , model.Name);
 
@@ -48,18 +46,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public class TokenResult : ITokenResult
-        {
-            public string AccessToken { get; set; }
-            public string RefreshToken { get; set; }
-        }
-
-        public async Task<ITokenResult> LoginAsync(LoginRequestDto model)
+        public async Task<TokenResultDto> LoginAsync(LoginRequestDto model)
         {
             string email = model.Email.Trim().ToLower();
             var user = (await _userRepository.GetUserByEmailAsync(email , true)) ?? throw new ValidationException
                 (
-                    EXCEPTION_MESSAGES.INVALID_CREDENTIALS
+                    ErrorMessages.INVALID_CREDENTIALS
                 );
 
             bool passwordValid = HashingHelper.VerifyPassword(model.Password , user.Password);
@@ -67,56 +59,66 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             if (!passwordValid)
             {
                 throw new ValidationException(
-                    EXCEPTION_MESSAGES.INVALID_CREDENTIALS
+                    ErrorMessages.INVALID_CREDENTIALS
                 );
             }
 
-            string accessToken = TokenGenerator.GenerateAccessToken(email , user.UserId , user.Role);
-            string refreshToken = TokenGenerator.GenerateRefreshToken();
+            if (user.IsActive == false)
+            {
+                user.IsActive = true;
+            }
+
+            string accessToken = JWTUtil.GenerateAccessToken(email , user.UserId , user.Role);
+            string refreshToken = JWTUtil.GenerateRefreshToken();
 
             _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId , refreshToken));
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new TokenResult
-            {
-                AccessToken = accessToken ,
-                RefreshToken = refreshToken
-            };
+            return new TokenResultDto(accessToken , refreshToken);
         }
 
-        public async Task<ITokenResult> RotateTokenAsync(string refreshToken)
+        public async Task<TokenResultDto> RotateTokenAsync(string refreshToken)
         {
-            var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken , false);
+            var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken, false);
 
-            if (existingToken == null) throw new Exceptions.ValidationException(EXCEPTION_MESSAGES.INVALID_REFRESH_TOKEN);
+            if (existingToken == null) throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
 
             _refreshTokenRepository.DeleteRefreshToken(existingToken);
 
             if (existingToken.ExpiresAt < DateTime.UtcNow)
             {
-                throw new Exceptions.ValidationException(EXCEPTION_MESSAGES.INVALID_REFRESH_TOKEN);
+                throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
             }
 
             var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId , true);
 
-            var accessToken = TokenGenerator.GenerateAccessToken(
+            var accessToken = JWTUtil.GenerateAccessToken(
                 user.Email ,
                 user.UserId ,
                 user.Role
             );
 
-            var newRefreshToken = TokenGenerator.GenerateRefreshToken();
+            var newRefreshToken = JWTUtil.GenerateRefreshToken();
 
             _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId , newRefreshToken));
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new TokenResult
-            {
-                AccessToken = accessToken ,
-                RefreshToken = newRefreshToken
-            };
+            return new TokenResultDto(accessToken , refreshToken);
+        }
+
+        public async Task<bool> LogoutAsync(string refreshToken)
+        {
+            bool res = await _refreshTokenRepository.RemoveIfTokenExistsAsync(refreshToken);
+            await _unitOfWork.SaveChangesAsync();
+
+            return res;
+        }
+
+        public async Task LogOutFromAllDevicesAsync(long userId)
+        {
+            await _refreshTokenRepository.RemoveAllTokensForUserIdAsync(userId);
         }
     }
 }

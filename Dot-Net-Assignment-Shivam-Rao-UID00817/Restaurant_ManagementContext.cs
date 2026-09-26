@@ -13,7 +13,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
         public DbSet<Addresses> Addresses { get; set; }
         public DbSet<User_Address_Type> User_Address_Type { get; set; }
         public DbSet<Restaurants> Restaurants { get; set; }
-        public DbSet<Owner_Manages_Restaurants> owner_Manages_Restaurants { get; set; }
+        public DbSet<Owner_Manages_Restaurants> Owner_Manages_Restaurants { get; set; }
         public DbSet<Menus> Menus { get; set; }
         public DbSet<Items> Items { get; set; }
         public DbSet<Menu_Items> Menu_Items { get; set; }

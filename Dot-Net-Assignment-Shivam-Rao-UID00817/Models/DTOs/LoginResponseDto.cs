@@ -4,7 +4,7 @@
     {
         public string AccessToken { get; set; }
 
-        public int ExpiresIn { get; set; }
+        public int ExpiresInSeconds { get; set; }
 
     }
 }
