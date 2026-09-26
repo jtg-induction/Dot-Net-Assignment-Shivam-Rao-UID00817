@@ -1,4 +1,5 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -17,17 +18,17 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         }
 
         [HttpGet, Route("")]
-        public async Task<HttpResponseMessage> Restaurant(int pageNumber = 1)
+        public async Task<HttpResponseMessage> Restaurant(int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE)
         {
-            var result = await _restaurantService.GetRestaurantsAsync(pageNumber);
+            var result = await _restaurantService.GetRestaurantsAsync(pageNumber, pageSize);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
         [HttpGet, Route("{restaurantId}")]
-        public async Task<HttpResponseMessage> Menu(long restaurantId, int pageNumber = 1)
+        public async Task<HttpResponseMessage> Menu(long restaurantId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE)
         {
-            var result = await _restaurantService.GetItemsAsync(pageNumber, restaurantId);
+            var result = await _restaurantService.GetItemsAsync(restaurantId, pageNumber, pageSize);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }

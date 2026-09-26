@@ -31,15 +31,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The address if found; otherwise, null.</returns>
-        public async Task<Addresses> GetAddressAsync(long addressId, bool enableTracking, CancellationToken cancellationToken = default)
+        public async Task<Addresses> GetAddressWithAddressId(long addressId, bool enableTracking, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
             {
-                return await _db.Addresses.FindAsync(addressId);
+                return await _db.Addresses.FindAsync(addressId, cancellationToken);
             }
             else
             {
-                return await _db.Addresses.AsNoTracking().FirstOrDefaultAsync(u => u.AddressId == addressId);
+                return await _db.Addresses.AsNoTracking().FirstOrDefaultAsync(u => u.AddressId == addressId, cancellationToken);
             }
         }
 
@@ -48,9 +48,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// </summary>
         /// <param name="addressId">The ID of the address to remove.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
-        public async Task RemoveAsync(long addressId, CancellationToken cancellationToken = default)
+        public async Task Remove(long addressId, CancellationToken cancellationToken = default)
         {
-            _db.Addresses.Remove(await GetAddressAsync(addressId, true));
+            _db.Addresses.Remove(await GetAddressWithAddressId(addressId, true));
         }
     }
 }

@@ -33,12 +33,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="pageNumber">The page number to retrieve.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of active restaurants.</returns>
-        public async Task<List<Restaurants>> GetActiveRestaurants(int pageNumber, CancellationToken cancellationToken = default)
+        public async Task<List<Restaurants>> GetActiveRestaurants(int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
             return await _db.Restaurants.Where(r => r.IsActive).OrderBy(x => x.RestaurantId)
-                                                                .Skip((pageNumber - 1) * NumberConstants.PAGE_SIZE)
-                                                                .Take(NumberConstants.PAGE_SIZE)
-                                                                .ToListAsync();
+                                                                .Skip((pageNumber - 1) * pageSize)
+                                                                .Take(pageSize)
+                                                                .ToListAsync(cancellationToken);
         }
 
         /// <summary>
@@ -48,15 +48,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The restaurant if found; otherwise, null.</returns>
-        public async Task<Restaurants> GetRestaurantAsync(string restaurantName, bool enableTracking, CancellationToken cancellationToken = default)
+        public async Task<Restaurants> GetRestaurantByName(string restaurantName, bool enableTracking, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
             {
-                return await _db.Restaurants.FirstOrDefaultAsync(r => r.Name.ToLower() == restaurantName.ToLower());
+                return await _db.Restaurants.FirstOrDefaultAsync(r => r.Name.ToLower() == restaurantName.ToLower(), cancellationToken);
             }
             else
             {
-                return await _db.Restaurants.AsNoTracking().FirstOrDefaultAsync(r => r.Name.ToLower() == restaurantName.ToLower());
+                return await _db.Restaurants.AsNoTracking().FirstOrDefaultAsync(r => r.Name.ToLower() == restaurantName.ToLower(), cancellationToken);
             }
         }
 
@@ -67,15 +67,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The restaurant if found; otherwise, null.</returns>
-        public async Task<Restaurants> GetRestaurantByIdAsync(long restaurantId, bool enableTracking, CancellationToken cancellationToken = default)
+        public async Task<Restaurants> GetRestaurantById(long restaurantId, bool enableTracking, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
             {
-                return await _db.Restaurants.FindAsync(restaurantId);
+                return await _db.Restaurants.FindAsync(restaurantId, cancellationToken);
             }
             else
             {
-                return await _db.Restaurants.AsNoTracking().FirstOrDefaultAsync(r => r.RestaurantId == restaurantId);
+                return await _db.Restaurants.AsNoTracking().FirstOrDefaultAsync(r => r.RestaurantId == restaurantId, cancellationToken);
             }
         }
     }

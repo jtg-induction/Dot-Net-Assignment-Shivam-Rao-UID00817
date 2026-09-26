@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
-using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 {
@@ -25,7 +24,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPost, Route("")]
         public async Task<HttpResponseMessage> PlaceOrder([FromBody] OrderRequestDto model)
         {
-            if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
             var claimsPrincipal = User as ClaimsPrincipal;
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
@@ -36,18 +34,18 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         }
 
         [HttpGet, Route("")]
-        public async Task<HttpResponseMessage> GetCustomerOrders(int pageNumber = 1)
+        public async Task<HttpResponseMessage> GetCustomerOrders(int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE)
         {
             var claimsPrincipal = User as ClaimsPrincipal;
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
 
-            var result = await _orderService.GetAllOrdersAsync(userId, pageNumber);
+            var result = await _orderService.GetAllOrdersAsync(userId, pageNumber, pageSize);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
-        [HttpGet, Route("order/{orderId}")]
+        [HttpGet, Route("{orderId}")]
         public async Task<HttpResponseMessage> GetOrderDetails(long orderId)
         {
             var claimsPrincipal = User as ClaimsPrincipal;
@@ -59,7 +57,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
-        [HttpPatch, Route("order/{orderId}")]
+        [HttpPatch, Route("{orderId}")]
         public async Task<HttpResponseMessage> CancelOrder(long orderId)
         {
             var claimsPrincipal = User as ClaimsPrincipal;

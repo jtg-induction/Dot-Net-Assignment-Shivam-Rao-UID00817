@@ -22,7 +22,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPost, Route("register")]
         public async Task<IHttpActionResult> Register([FromBody] RegisterDto model)
         {
-            if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
             await _authService.RegisterAsync(model);
 
             return StatusCode(System.Net.HttpStatusCode.Created);
@@ -31,8 +30,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpPost, Route("login")]
         public async Task<IHttpActionResult> Login([FromBody] LoginRequestDto model)
         {
-            if (model is null) throw new ValidationException(ErrorMessages.INVALID_OPERATION);
-
             TokenResultDto tokenResult = (TokenResultDto)await _authService.LoginAsync(model);
 
             Request.GetOwinContext().Response.Cookies.Append("refresh_token",

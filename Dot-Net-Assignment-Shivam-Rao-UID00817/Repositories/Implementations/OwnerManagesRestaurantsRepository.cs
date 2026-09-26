@@ -34,15 +34,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The ownership entry if found; otherwise, null.</returns>
-        public async Task<Owner_Manages_Restaurants> GetOwnerIfExistsAsync(long userId, long restaurantId, bool enableTracking = false, CancellationToken cancellationToken = default)
+        public async Task<Owner_Manages_Restaurants> GetOwnerIfExists(long userId, long restaurantId, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
             {
-                return await _db.Owner_Manages_Restaurants.FindAsync(restaurantId, userId);
+                return await _db.Owner_Manages_Restaurants.FindAsync(restaurantId, userId, cancellationToken);
             }
             else
             {
-                return await _db.Owner_Manages_Restaurants.AsNoTracking().FirstOrDefaultAsync(o => o.UserId == userId && o.RestaurantId == restaurantId);
+                return await _db.Owner_Manages_Restaurants.AsNoTracking().FirstOrDefaultAsync(o => o.UserId == userId && o.RestaurantId == restaurantId, cancellationToken);
             }
         }
 

@@ -28,9 +28,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="pageNumber">The page number.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of all the active restaurants.</returns>
-        public async Task<List<GetRestaurantsResponseDto>> GetRestaurantsAsync(int pageNumber, CancellationToken cancellationToken = default)
+        public async Task<List<GetRestaurantsResponseDto>> GetRestaurantsAsync(int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
-            List<Restaurants> activeRestaurants = await _restaurantRepository.GetActiveRestaurants(pageNumber);
+            List<Restaurants> activeRestaurants = await _restaurantRepository.GetActiveRestaurants(pageNumber, pageSize);
 
             List<GetRestaurantsResponseDto> response = new List<GetRestaurantsResponseDto>();
 
@@ -56,16 +56,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="restaurant_id">The restaurant id of the restaurant whose menu is to be retrieved.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>List of all the available items for the restaurant.</returns>
-        public async Task<GetMenuResponseDto> GetItemsAsync(int pageNumber, long restaurant_id, CancellationToken cancellationToken = default)
+        public async Task<GetMenuResponseDto> GetItemsAsync(long restaurant_id, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
-            Restaurants restaurant = await _restaurantRepository.GetRestaurantByIdAsync(restaurant_id, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
+            Restaurants restaurant = await _restaurantRepository.GetRestaurantById(restaurant_id, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
 
             if (!restaurant.IsActive)
             {
                 throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             }
 
-            List<Items> activeItems = await _itemsRepository.GetItems(restaurant_id, pageNumber);
+            List<Items> activeItems = await _itemsRepository.GetAllItemsByRestaurantId(restaurant_id, pageNumber, pageSize);
 
             List<ItemAndPrice> items = new List<ItemAndPrice>();
 

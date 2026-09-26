@@ -50,11 +50,18 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         {
             long userId = user.UserId;
 
-            var requestedItems = order.Items.OrderBy(x => x.ItemId).ToList();
+            var requestedItems = order.Items.GroupBy(i => i.ItemId)
+                                            .Select(g => new OrderItemsReq
+                                            {
+                                                ItemId = g.Key,
+                                                Quantity = g.Sum(i => i.Quantity),
+                                            })
+                                            .OrderBy(x => x.ItemId)
+                                            .ToList();
 
             var itemIds = requestedItems.Select(x => x.ItemId).ToList();
 
-            var items = await _itemRepository.GetItemsWithUpdateLockAsync(itemIds, restaurant.RestaurantId);
+            var items = await _itemRepository.GetItemsWithUpdateLock(itemIds, restaurant.RestaurantId);
 
             if (items.Count != requestedItems.Count) throw new ValidationException(ErrorMessages.INVALID_ITEMS);
 
@@ -141,11 +148,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <returns>An object with the details of the placed order i.e. Order Id, address, items etc.</returns>
         public async Task<OrderResponseDto> PlaceOrderAsync(long userId, OrderRequestDto order, CancellationToken cancellationToken = default)
         {
-            var restaurant = await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
+            var restaurant = await _restaurantRepository.GetRestaurantById(order.RestaurantId, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
 
-            var address = await _addressRepository.GetAddressAsync(order.AddressId, false) ?? throw new ValidationException(ErrorMessages.ADDRESS_DOES_NOT_EXIST);
+            var address = await _addressRepository.GetAddressWithAddressId(order.AddressId, false) ?? throw new ValidationException(ErrorMessages.ADDRESS_DOES_NOT_EXIST);
 
-            var user = await _userRepository.GetUserWithUpdateLockAsync(userId) ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
+            var user = await _userRepository.GetUserWithUpdateLock(userId) ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
 
             if (order.Items is null || order.Items.Count == 0) throw new ValidationException(ErrorMessages.ATLEAST_ONE_ITEM_REQUIRED);
 
@@ -175,13 +182,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="pageNumber">The Page Number.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of all the orders of the customer.</returns>
-        public async Task<GetCustomerOrdersDto> GetAllOrdersAsync(long userId, int pageNumber, CancellationToken cancellationToken = default)
+        public async Task<GetCustomerOrdersDto> GetAllOrdersAsync(long userId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
-            var orders = await _orderRepository.GetOrdersByUserId(userId, pageNumber);
+            var orders = await _orderRepository.GetOrdersByUserId(userId, pageNumber, pageSize);
             var response = new GetCustomerOrdersDto();
             foreach (var order in orders)
             {
-                string restaurantName = (await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId, false)).Name;
+                string restaurantName = (await _restaurantRepository.GetRestaurantById(order.RestaurantId, false)).Name;
                 response.Orders.Add(new OrderHistoryItems(order.OrderId, restaurantName, order.TotalAmount, order.Status, order.CreatedAt, order.UpdatedAt));
             }
 
@@ -200,10 +207,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             var order = await _orderRepository.GetOrderById(orderId, false) ?? throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
             if (order.UserId != userId) throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
 
-            string restaurantName = (await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId, false)).Name;
+            string restaurantName = (await _restaurantRepository.GetRestaurantById(order.RestaurantId, false)).Name;
 
             var response = new GetCustomerOrderDetailsDto(orderId, restaurantName, order.Status, order.Instructions, order.TotalAmount, order.AddressLine1, order.City, order.State, order.Pincode, order.Country, order.CreatedAt, order.UpdatedAt, order.AddressLine2);
-            var Items = await _orderRepository.GetOrderItems(orderId);
+            var Items = await _orderRepository.GetOrderItemsByOrderId(orderId);
 
             foreach (var item in Items)
             {
@@ -225,22 +232,31 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="filterByCity">The parameter to filter the orders by the city.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of all the orders belonging to the restaurant based on the searching, sorting and filteing parameters.</returns>
-        public async Task<GetRestaurantOrdersDto> GetAllOrdersAsync(long userId, long restaurantId, int pageNumber, string search, Enums.SortBy sortBy, Enums.FilterBy filterBy, string filterByCity = "", CancellationToken cancellationToken = default)
+        public async Task<GetRestaurantOrdersDto> GetAllOrdersAsync(long userId, long restaurantId, Enums.FilterBy filterBy, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", Enums.SortBy sortBy = Enums.SortBy.OrderDateLatest, string filterByCity = "", CancellationToken cancellationToken = default)
         {
-            if (await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(userId, restaurantId, false) == null)
+            if (await _ownerManagesRestaurantsRepository.GetOwnerIfExists(userId, restaurantId, false) == null)
             {
                 throw new UnauthorizedException();
             }
 
-            var orders = await _orderRepository.GetOrdersByRestaurantId(restaurantId, pageNumber, search, sortBy, filterBy, filterByCity);
+            var orders = await _orderRepository.GetOrdersByRestaurantId(restaurantId, filterBy, pageNumber, pageSize, search, sortBy, filterByCity);
 
 
             var response = new GetRestaurantOrdersDto();
             foreach (var order in orders)
             {
-                string restaurantName = (await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId, false)).Name;
-                int itemCount = (await _orderRepository.GetOrderItems(order.OrderId)).Count;
-                response.Orders.Add(new RestaurantOrderHistoryItems(order.OrderId, restaurantName, order.TotalAmount, order.Status, order.CreatedAt, order.UpdatedAt, order.AddressLine1, order.City, itemCount));
+                string restaurantName = (await _restaurantRepository.GetRestaurantById(order.RestaurantId, false)).Name;
+                int itemCount = (await _orderRepository.GetOrderItemsByOrderId(order.OrderId)).Count;
+                response.Orders.Add(new RestaurantOrderHistoryItems(
+                                                        order.OrderId,
+                                                        restaurantName,
+                                                        order.TotalAmount,
+                                                        order.Status,
+                                                        order.CreatedAt,
+                                                        order.UpdatedAt,
+                                                        order.AddressLine1,
+                                                        order.City,
+                                                        itemCount));
             }
 
             if (sortBy == Enums.SortBy.ItemCount)
@@ -265,19 +281,35 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <returns>An object with all the details of the requested order.</returns>
         public async Task<GetRestaurantOrderDetailsDto> GetOrderDetailsAsync(long userId, long restaurantId, long orderId, CancellationToken cancellationToken = default)
         {
-            if (await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(userId, restaurantId, false) == null)
+            if (await _ownerManagesRestaurantsRepository.GetOwnerIfExists(userId, restaurantId, false) == null)
             {
                 throw new UnauthorizedException();
             }
             var order = await _orderRepository.GetOrderById(orderId, false) ?? throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
             if (order.RestaurantId != restaurantId) throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
 
-            string restaurantName = (await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId, false)).Name;
+            string restaurantName = (await _restaurantRepository.GetRestaurantById(order.RestaurantId, false)).Name;
 
-            var user = await _userRepository.GetUserByUserIdAsync(userId, false);
+            var user = await _userRepository.GetUserByUserId(userId, false);
 
-            var response = new GetRestaurantOrderDetailsDto(orderId, user.Name, user.PhoneNumber, restaurantName, order.Status, order.Instructions, order.TotalAmount, order.AddressLine1, order.City, order.State, order.Pincode, order.Country, order.CreatedAt, order.UpdatedAt, order.AddressLine2);
-            var Items = await _orderRepository.GetOrderItems(orderId);
+            var response = new GetRestaurantOrderDetailsDto(
+                                                orderId,
+                                                user.Name,
+                                                user.PhoneNumber,
+                                                restaurantName,
+                                                order.Status,
+                                                order.Instructions,
+                                                order.TotalAmount,
+                                                order.AddressLine1,
+                                                order.City,
+                                                order.State,
+                                                order.Pincode,
+                                                order.Country,
+                                                order.CreatedAt,
+                                                order.UpdatedAt,
+                                                order.AddressLine2
+            );
+            var Items = await _orderRepository.GetOrderItemsByOrderId(orderId);
 
             foreach (var item in Items)
             {
@@ -287,32 +319,54 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             return response;
         }
 
+        /// <summary>
+        /// Refunds the order amount to the wallet balance and increments the available quantities of the respective items in the items table.
+        /// </summary>
+        /// <param name="user">Object of the Users table with update lock.</param>
+        /// <param name="orderId">OrderId of the placed order.</param>
+        /// <param name="restaurantId">Restaurant Id of the restaurant where the order was placed.</param>
+        /// <param name="Amount">The Order amount of the order.</param>
+        public async Task RefundToWalletAndIncreaseItemQuantity(Users user, long orderId, long restaurantId, decimal Amount)
+        {
+            var itemAndQuantity = (await _orderRepository.GetOrderItemsByOrderId(orderId)).ToDictionary(x => x.ItemId, x => x.Quantity);
+            var itemsWithLock = await _itemRepository.GetItemsWithUpdateLock(itemAndQuantity.Keys.ToList(), restaurantId);
+
+            foreach (var item in itemsWithLock)
+            {
+                item.AvailableQuantity += itemAndQuantity[item.ItemId];
+            }
+
+            user.WalletBalance += Amount;
+        }
 
         /// <summary>
-        /// Cancels the orders given that its current status is placed and refunds the amount to the users wallet.
+        /// Cancels the orders, refunds the amount to the users wallet and increase the available quantity of items given that its current status is placed.
         /// </summary>
         /// <param name="userId">The user id of the requesting user.</param>
         /// <param name="orderId">The order id of the order to be cancelled.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task CancelOrderAsync(long userId, long orderId, CancellationToken cancellationToken = default)
         {
-            var order = await _orderRepository.GetOrderWithUpdateLockAsync(orderId);
+            var order = await _orderRepository.GetOrderWithUpdateLock(orderId);
             if (order.UserId != userId) throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
-            var user = await _userRepository.GetUserWithUpdateLockAsync(userId);
+            var user = await _userRepository.GetUserWithUpdateLock(userId);
+            var orderItems = await _orderRepository.GetOrderItemsByOrderId(orderId);
             bool cancelled = false;
             if (order.Status == Enums.OrderStatus.Placed)
             {
                 order.Status = Enums.OrderStatus.Cancelled;
-                user.WalletBalance += order.TotalAmount;
                 cancelled = true;
             }
+            await RefundToWalletAndIncreaseItemQuantity(user, order.OrderId, order.RestaurantId, order.TotalAmount);
             await _unitOfWork.SaveChangesAsync();
             if (cancelled) return;
             else throw new ValidationException(ErrorMessages.CANNOT_CANCEL_ORDER_AFTER_IT_HAS_BEEN_ACCEPTED);
         }
 
+
+
         /// <summary>
-        /// Changes the order status of the order with the given order given that the new status is a valid one and refunds the amount to the users wallet.
+        /// Changes the order status of the order with the given order given that the new status is a valid one and refunds the amount to the users wallet, increases the available quantity.
         /// </summary>
         /// <param name="restaurantId">The restaurant id to which the order was placed.</param>
         /// <param name="ownerId">The owner id of the requesting owner.</param>
@@ -321,13 +375,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task ManageOrderAsync(long restaurantId, long ownerId, long orderId, OrderManagementRequestDto model, CancellationToken cancellationToken = default)
         {
-            if (await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(ownerId, restaurantId, false) == null)
+            if (await _ownerManagesRestaurantsRepository.GetOwnerIfExists(ownerId, restaurantId, false) == null)
             {
                 throw new UnauthorizedException();
             }
-            var order = await _orderRepository.GetOrderWithUpdateLockAsync(orderId);
+            var order = await _orderRepository.GetOrderWithUpdateLock(orderId);
             if (order.RestaurantId != restaurantId) throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
-            var user = await _userRepository.GetUserWithUpdateLockAsync(order.UserId);
+            var user = await _userRepository.GetUserWithUpdateLock(order.UserId);
             var newStatus = model.ChangeStatusTo;
             var currentStatus = order.Status;
 
@@ -363,7 +417,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             }
             if (order.Status == Enums.OrderStatus.Rejected)
             {
-                user.WalletBalance += order.TotalAmount;
+                await RefundToWalletAndIncreaseItemQuantity(user, orderId, restaurantId, order.TotalAmount);
             }
             await _unitOfWork.SaveChangesAsync();
         }

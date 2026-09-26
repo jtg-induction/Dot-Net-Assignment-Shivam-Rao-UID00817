@@ -53,11 +53,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         {
             if (enableTracking)
             {
-                return await _db.Orders.FindAsync(orderId);
+                return await _db.Orders.FindAsync(orderId, cancellationToken);
             }
             else
             {
-                return await _db.Orders.AsNoTracking().FirstOrDefaultAsync(x => x.OrderId == orderId);
+                return await _db.Orders.AsNoTracking().FirstOrDefaultAsync(x => x.OrderId == orderId, cancellationToken);
             }
         }
 
@@ -68,11 +68,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="pageNumber">The page number to retrieve.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A paginated list of the user's orders.</returns>
-        public async Task<List<Orders>> GetOrdersByUserId(long userId, int pageNumber = 1, CancellationToken cancellationToken = default)
+        public async Task<List<Orders>> GetOrdersByUserId(long userId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
-            return await _db.Orders.Where(x => x.UserId == userId).OrderBy(x => x.OrderId).Skip((pageNumber - 1) * NumberConstants.PAGE_SIZE)
-                                                                                        .Take(NumberConstants.PAGE_SIZE)
-                                                                                        .ToListAsync();
+            return await _db.Orders.Where(x => x.UserId == userId).OrderBy(x => x.OrderId)
+                                                                    .Skip((pageNumber - 1) * pageSize)
+                                                                    .Take(pageSize)
+                                                                    .ToListAsync(cancellationToken);
         }
 
 
@@ -82,9 +83,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="orderId">The ID of the order.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of order items.</returns>
-        public async Task<List<Order_Items>> GetOrderItems(long orderId, CancellationToken cancellationToken = default)
+        public async Task<List<Order_Items>> GetOrderItemsByOrderId(long orderId, CancellationToken cancellationToken = default)
         {
-            return await _db.Order_Items.Where(x => x.OrderId == orderId).ToListAsync();
+            return await _db.Order_Items.Where(x => x.OrderId == orderId).ToListAsync(cancellationToken);
         }
 
 
@@ -98,7 +99,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="filterByCity">The city used to filter orders.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A filtered and paginated list of restaurant orders.</returns>
-        public async Task<List<Orders>> GetOrdersByRestaurantId(long restaurantId, int pageNumber, string search, Enums.SortBy sortBy, Enums.FilterBy filterBy, string filterByCity = "", CancellationToken cancellationToken = default)
+        public async Task<List<Orders>> GetOrdersByRestaurantId(long restaurantId, Enums.FilterBy filterBy, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", Enums.SortBy sortBy = Enums.SortBy.OrderDateLatest, string filterByCity = "", CancellationToken cancellationToken = default)
         {
             IQueryable<Orders> query = _db.Orders.Where(x => x.RestaurantId == restaurantId);
 
@@ -106,7 +107,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                query = query.Where(x => x.AddressLine1.ToLower().Contains(search.Trim().ToLower()));
+                search = search.Trim();
+                query = query.Where(x => x.AddressLine1.Contains(search));
             }
 
             // Sorting
@@ -156,11 +158,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                     query = query.Where(x => x.Status == Enums.OrderStatus.Delivered);
                     break;
             }
-            if (!string.IsNullOrWhiteSpace(filterByCity)) query = query.Where(x => x.City.ToLower().Contains(filterByCity.Trim().ToLower()));
+            if (!string.IsNullOrWhiteSpace(filterByCity))
+            {
+                filterByCity = filterByCity.Trim();
+                query = query.Where(x => x.City.Contains(filterByCity));
+            }
 
-            return await query.OrderByDescending(x => x.UpdatedAt).Skip((pageNumber - 1) * NumberConstants.PAGE_SIZE)
-                                                                                        .Take(NumberConstants.PAGE_SIZE)
-                                                                                        .ToListAsync();
+            return await query.OrderByDescending(x => x.UpdatedAt).Skip((pageNumber - 1) * pageSize)
+                                                                  .Take(pageSize)
+                                                                  .ToListAsync(cancellationToken);
         }
 
         /// <summary>
@@ -172,7 +178,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <exception cref="ValidationException">
         /// Thrown when the specified order does not exist.
         /// </exception>
-        public async Task<Orders> GetOrderWithUpdateLockAsync(long orderId, CancellationToken cancellationToken = default)
+        public async Task<Orders> GetOrderWithUpdateLock(long orderId, CancellationToken cancellationToken = default)
         {
             var OrderId = new SqlParameter("@p0", orderId);
             return await _db.Orders.SqlQuery("SELECT order_id AS OrderId," +
@@ -189,7 +195,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                                                     "user_id AS UserId," +
                                                     "restaurant_id AS RestaurantId," +
                                                     "TotalAmount AS TotalAmount" +
-                                                    " FROM Orders WITH(UPDLOCK, ROWLOCK) WHERE order_id = @p0;", OrderId).FirstOrDefaultAsync() ?? throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
+                                                    " FROM Orders WITH(UPDLOCK, ROWLOCK) WHERE order_id = @p0;", OrderId).FirstOrDefaultAsync(cancellationToken) ?? throw new ValidationException(ErrorMessages.ORDER_DOES_NOT_EXIST);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                 entry.Entity.UpdatedAt = DateTime.UtcNow;
             }
 
-            return await _db.SaveChangesAsync();
+            return await _db.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>

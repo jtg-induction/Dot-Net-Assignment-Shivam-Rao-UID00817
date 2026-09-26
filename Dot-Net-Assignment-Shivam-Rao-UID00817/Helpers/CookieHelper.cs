@@ -11,7 +11,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers
         /// <param name="path">The path where the cookie is valid.</param>
         /// <param name="ExpiresInDays">The number of days until the cookie expires.</param>
         /// <returns>Configured cookie options.</returns>
-        public static CookieOptions GetCookieOptions(string path, int ExpiresInDays)
+        public static CookieOptions CreateCookieOptions(string path, int ExpiresInDays)
         {
             return new CookieOptions
             {

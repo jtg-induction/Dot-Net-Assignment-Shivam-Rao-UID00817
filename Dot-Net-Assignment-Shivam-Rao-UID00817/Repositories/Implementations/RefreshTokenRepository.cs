@@ -32,12 +32,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The refresh token record if found; otherwise, null.</returns>
-        public async Task<Refresh_Tokens> GetRefreshTokenExistsAsync(string token, bool enableTracking = false, CancellationToken cancellationToken = default)
+        public async Task<Refresh_Tokens> GetRefreshTokenIfExists(string token, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
-                return await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);
+                return await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token, cancellationToken);
             else
-                return await _db.Refresh_Tokens.AsNoTracking().FirstOrDefaultAsync(u => u.RefreshToken == token);
+                return await _db.Refresh_Tokens.AsNoTracking().FirstOrDefaultAsync(u => u.RefreshToken == token, cancellationToken);
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="token">The refresh token value.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>True if the token was found and removed; otherwise, false.</returns>
-        public async Task<bool> RemoveIfTokenExistsAsync(string token, CancellationToken cancellationToken = default)
+        public async Task<bool> RemoveTokenIfExists(string token, CancellationToken cancellationToken = default)
         {
-            var TokenRecord = await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);
+            var TokenRecord = await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token, cancellationToken);
 
             if (TokenRecord == null) return false;
 
@@ -71,9 +71,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
-        public async Task RemoveAllTokensForUserIdAsync(long userId, CancellationToken cancellationToken = default)
+        public async Task RemoveAllTokensForUserId(long userId, CancellationToken cancellationToken = default)
         {
-            var TokenRecords = await _db.Refresh_Tokens.Where(u => u.UserId == userId).ToListAsync();
+            var TokenRecords = await _db.Refresh_Tokens.Where(u => u.UserId == userId).ToListAsync(cancellationToken);
 
             _db.Refresh_Tokens.RemoveRange(TokenRecords);
         }

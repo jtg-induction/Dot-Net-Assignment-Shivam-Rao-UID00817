@@ -27,9 +27,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="email">The email address to check.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>True if the email exists; otherwise, false.</returns>
-        public async Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default)
+        public async Task<bool> EmailExists(string email, CancellationToken cancellationToken = default)
         {
-            return await _db.Users.AnyAsync(u => u.Email == email);
+            return await _db.Users.AnyAsync(u => u.Email == email, cancellationToken);
         }
 
         /// <summary>
@@ -38,9 +38,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="phoneNumber">The phone number to check.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>True if the phone number exists; otherwise, false.</returns>
-        public async Task<bool> PhoneNumberExistsAsync(string phoneNumber, CancellationToken cancellationToken = default)
+        public async Task<bool> PhoneNumberExists(string phoneNumber, CancellationToken cancellationToken = default)
         {
-            return await _db.Users.AnyAsync(u => u.PhoneNumber == phoneNumber);
+            return await _db.Users.AnyAsync(u => u.PhoneNumber == phoneNumber, cancellationToken);
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="emails">The email addresses to search for.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of matching active users.</returns>
-        public async Task<List<Users>> GetUsersByEmails(List<string> emails, CancellationToken cancellationToken = default)
+        public async Task<List<Users>> GetValidActiveUsersByEmails(List<string> emails, CancellationToken cancellationToken = default)
         {
-            return await _db.Users.Where(x => emails.Contains(x.Email) && x.IsActive).ToListAsync();
+            return await _db.Users.Where(x => emails.Contains(x.Email) && x.IsActive).ToListAsync(cancellationToken);
         }
 
         /// <summary>
@@ -70,12 +70,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The user if found; otherwise, null.</returns>
-        public async Task<Users> GetUserByEmailAsync(string email, bool enableTracking = false, CancellationToken cancellationToken = default)
+        public async Task<Users> GetUserByEmail(string email, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
-                return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+                return await _db.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
             else
-                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
+                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
 
         /// <summary>
@@ -85,12 +85,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="enableTracking">Whether to enable entity tracking.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>The user if found; otherwise, null.</returns>
-        public async Task<Users> GetUserByUserIdAsync(long userId, bool enableTracking = false, CancellationToken cancellationToken = default)
+        public async Task<Users> GetUserByUserId(long userId, bool enableTracking = false, CancellationToken cancellationToken = default)
         {
             if (enableTracking)
-                return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+                return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId, cancellationToken);
             else
-                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId);
+                return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId, cancellationToken);
         }
 
 
@@ -99,9 +99,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// </summary>
         /// <param name="userId">The ID of the user to deactivate.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
-        public async Task DeactivateUserAsync(long userId, CancellationToken cancellationToken = default)
+        public async Task DeactivateUser(long userId, CancellationToken cancellationToken = default)
         {
-            (await _db.Users.FindAsync(userId)).IsActive = false;
+            (await _db.Users.FindAsync(userId, cancellationToken)).IsActive = false;
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <exception cref="ValidationException">
         /// Thrown when the specified user does not exist.
         /// </exception>
-        public async Task<Users> GetUserWithUpdateLockAsync(long userId, CancellationToken cancellationToken = default)
+        public async Task<Users> GetUserWithUpdateLock(long userId, CancellationToken cancellationToken = default)
         {
             var UserId = new SqlParameter("@p0", userId);
             return await _db.Users.SqlQuery("SELECT user_id AS UserId," +
@@ -126,7 +126,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                                                     "created_at AS CreatedAt," +
                                                     "updated_at AS UpdatedAt," +
                                                     "role AS Role" +
-                                                    " FROM Users WITH(UPDLOCK, ROWLOCK) WHERE user_id = @p0;", UserId).FirstOrDefaultAsync() ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
+                                                    " FROM Users WITH(UPDLOCK, ROWLOCK) WHERE user_id = @p0;", UserId).FirstOrDefaultAsync(cancellationToken) ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
         }
     }
 }

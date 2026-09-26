@@ -38,8 +38,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             string email = model.Email.Trim().ToLower();
             string phoneNumber = model.PhoneNumber.Trim();
 
-            bool phoneNumberExists = await _userRepository.PhoneNumberExistsAsync(phoneNumber);
-            bool emailExists = await _userRepository.EmailExistsAsync(email);
+            bool phoneNumberExists = await _userRepository.PhoneNumberExists(phoneNumber);
+            bool emailExists = await _userRepository.EmailExists(email);
 
 
             if (emailExists) throw new ConflictException(ErrorMessages.USER_ALREADY_EXISTS);
@@ -61,7 +61,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         public async Task<TokenResultDto> LoginAsync(LoginRequestDto model, CancellationToken cancellationToken = default)
         {
             string email = model.Email.Trim().ToLower();
-            var user = (await _userRepository.GetUserByEmailAsync(email, false)) ?? throw new ValidationException
+            var user = (await _userRepository.GetUserByEmail(email, false)) ?? throw new ValidationException
                 (
                     ErrorMessages.INVALID_CREDENTIALS
                 );
@@ -98,7 +98,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <returns>An object with the access token and the Expiry time.</returns>
         public async Task<TokenResultDto> RotateTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
-            var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken, true);
+            var existingToken = await _refreshTokenRepository.GetRefreshTokenIfExists(refreshToken, true);
 
             if (existingToken == null) throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
 
@@ -109,7 +109,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
             }
 
-            var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId, false);
+            var user = await _userRepository.GetUserByUserId(existingToken.UserId, false);
 
             var accessToken = JWTUtil.GenerateAccessToken(
                 user.Email,
@@ -134,7 +134,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <returns>True when the refresh token was valid and the user was logged out successfully; Otherwise, false.</returns>
         public async Task<bool> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
-            bool res = await _refreshTokenRepository.RemoveIfTokenExistsAsync(refreshToken);
+            bool res = await _refreshTokenRepository.RemoveTokenIfExists(refreshToken);
             await _unitOfWork.SaveChangesAsync();
 
             return res;
@@ -147,7 +147,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="cancellationToken">Token used to cancel the operation. </param>
         public async Task LogOutFromAllDevicesAsync(long userId, CancellationToken cancellationToken = default)
         {
-            await _refreshTokenRepository.RemoveAllTokensForUserIdAsync(userId);
+            await _refreshTokenRepository.RemoveAllTokensForUserId(userId);
         }
     }
 }
