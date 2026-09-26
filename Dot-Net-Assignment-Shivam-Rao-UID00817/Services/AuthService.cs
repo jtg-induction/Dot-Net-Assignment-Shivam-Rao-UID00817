@@ -87,7 +87,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _refreshTokenRepository.DeleteRefreshToken(existingToken);
 
             if (existingToken.ExpiresAt < DateTime.UtcNow)
-            if (existingToken.ExpiresAt < DateTime.UtcNow)
             {
                 throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
             }
