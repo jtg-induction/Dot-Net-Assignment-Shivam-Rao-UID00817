@@ -11,5 +11,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
     {
         void Add(Restaurants restaurant);
         Task<Restaurants> GetRestaurantAsync(string restaurantName , bool enableTracking);
+        Task<Restaurants> GetRestaurantByIdAsync(long restaurantId, bool enableTracking);
+        IQueryable<Restaurants> GetActiveRestaurants();
     }
 }

@@ -34,7 +34,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             }
         }
 
-        public async Task RemoveAsync(Owner_Manages_Restaurants Entry)
+        public void Remove(Owner_Manages_Restaurants Entry)
         {
             _db.Owner_Manages_Restaurants.Remove(Entry);
         }
