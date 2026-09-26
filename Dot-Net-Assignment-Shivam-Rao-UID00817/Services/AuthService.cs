@@ -49,7 +49,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         public async Task<TokenResultDto> LoginAsync(LoginRequestDto model)
         {
             string email = model.Email.Trim().ToLower();
-            var user = (await _userRepository.GetUserByEmailAsync(email , true)) ?? throw new ValidationException
+            var user = (await _userRepository.GetUserByEmailAsync(email , false)) ?? throw new ValidationException
                 (
                     ErrorMessages.INVALID_CREDENTIALS
                 );
@@ -80,7 +80,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task<TokenResultDto> RotateTokenAsync(string refreshToken)
         {
-            var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken, false);
+            var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken , true);
 
             if (existingToken == null) throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
 
@@ -91,7 +91,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
             }
 
-            var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId , true);
+            var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId , false);
 
             var accessToken = JWTUtil.GenerateAccessToken(
                 user.Email ,
@@ -105,7 +105,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new TokenResultDto(accessToken , refreshToken);
+            return new TokenResultDto(accessToken , newRefreshToken);
         }
 
         public async Task<bool> LogoutAsync(string refreshToken)
