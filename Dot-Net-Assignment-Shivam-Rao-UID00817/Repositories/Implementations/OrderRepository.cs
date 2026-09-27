@@ -117,9 +117,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 
             meta.TotalCount = query.Count();
             meta.CurrentPage = pageNumber;
-            meta.TotalPages = (int)Math.Ceiling(pageSize / (float)meta.TotalCount);
-            meta.HasPrevious = pageNumber > 1;
-            meta.HasNext = pageNumber < meta.TotalPages;
             meta.PageSize = pageSize;
 
             // Sorting

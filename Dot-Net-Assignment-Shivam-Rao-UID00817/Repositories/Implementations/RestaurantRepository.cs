@@ -39,9 +39,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         {
             var data = _db.Restaurants.Where(r => r.IsActive).OrderBy(x => x.RestaurantId);
             meta.TotalCount = data.Count();
-            meta.HasPrevious = pageNumber > 1;
-            meta.TotalPages = (int)Math.Ceiling(meta.TotalCount / (float)pageSize);
-            meta.HasNext = pageNumber < meta.TotalPages;
             meta.CurrentPage = pageNumber;
             meta.PageSize = pageSize;
             return await data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);

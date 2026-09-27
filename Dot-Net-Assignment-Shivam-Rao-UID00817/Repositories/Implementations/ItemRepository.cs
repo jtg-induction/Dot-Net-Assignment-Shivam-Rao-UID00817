@@ -33,9 +33,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             var data = _db.Items.Where(x => (x.RestaurantId == restaurantId && x.IsActive && x.AvailableQuantity > 0)).OrderBy(x => x.RestaurantId);
             meta.TotalCount = data.Count();
             meta.CurrentPage = pageNumber;
-            meta.HasPrevious = pageNumber > 1;
-            meta.TotalPages = (int)Math.Ceiling(data.Count() / (double)pageSize);
-            meta.HasNext = pageNumber < meta.TotalPages;
             meta.PageSize = pageSize;
             return await data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
         }
