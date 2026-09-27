@@ -34,10 +34,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             Request.GetOwinContext().Response.Cookies.Append("refresh_token",
                                                                 tokenResult.RefreshToken,
-                                                                CookieHelper.CreateCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+                                                                CookieHelper.CreateHttpOnlySecureCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
             Request.GetOwinContext().Response.Cookies.Append("refresh_token",
                                                                 tokenResult.RefreshToken,
-                                                                CookieHelper.CreateCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+                                                                CookieHelper.CreateHttpOnlySecureCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
 
             return base.Ok(new LoginResponseDto
             {
@@ -57,10 +57,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             Request.GetOwinContext().Response.Cookies.Append("refresh_token",
                                                                 tokenResult.RefreshToken,
-                                                                CookieHelper.CreateCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+                                                                CookieHelper.CreateHttpOnlySecureCookieOptions("/api/auth/refresh", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
             Request.GetOwinContext().Response.Cookies.Append("refresh_token",
                                                                 tokenResult.RefreshToken,
-                                                                CookieHelper.CreateCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
+                                                                CookieHelper.CreateHttpOnlySecureCookieOptions("/api/auth/logout", NumberConstants.REFRESH_TOKEN_EXPIRES_IN_DAYS));
 
             return base.Ok(new LoginResponseDto
             {

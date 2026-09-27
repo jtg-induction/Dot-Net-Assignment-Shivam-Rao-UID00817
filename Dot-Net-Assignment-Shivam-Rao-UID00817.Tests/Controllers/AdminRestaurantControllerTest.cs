@@ -47,7 +47,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             var expectedResponse = new OwnerOnboardResponseDto
             {
-                EmailStatus = new List<EmailAndStatus>()
+                EmailErrors = new List<EmailAndStatus>()
             };
 
             _mockAdminService.Setup(
@@ -77,7 +77,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             var expectedResponse = new OwnerOnboardResponseDto
             {
-                EmailStatus = new List<EmailAndStatus>()
+                EmailErrors = new List<EmailAndStatus>()
             };
 
             _mockAdminService.Setup(
