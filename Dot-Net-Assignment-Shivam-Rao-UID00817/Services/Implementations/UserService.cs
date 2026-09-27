@@ -36,9 +36,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task DeactivateAccountAsync(long userId, CancellationToken cancellationToken = default)
         {
-            await _userRepository.DeactivateUser(userId);
-            await _authService.LogOutFromAllDevicesAsync(userId);
-            await _unitOfWork.SaveChangesAsync();
+            await _userRepository.DeactivateUser(userId, cancellationToken);
+            await _authService.LogOutFromAllDevicesAsync(userId, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task UpdateAccountAsync(long userId, UpdateAccountDto model, CancellationToken cancellationToken = default)
         {
-            Users user = await _userRepository.GetUserByUserId(userId, true);
+            Users user = await _userRepository.GetUserByUserId(userId, true, cancellationToken);
             if (!String.IsNullOrWhiteSpace(model.Name))
             {
                 user.Name = model.Name.Trim();
@@ -57,12 +57,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             if (!String.IsNullOrWhiteSpace(model.PhoneNumber))
             {
-                if (await _userRepository.PhoneNumberExists(model.PhoneNumber.Trim()))
+                if (await _userRepository.PhoneNumberExists(model.PhoneNumber.Trim(), cancellationToken))
                     throw new ConflictException(ErrorMessages.DUPLICATE_PHONE_NUMBER);
                 user.PhoneNumber = model.PhoneNumber.Trim();
             }
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -38,6 +38,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpGet, Route("{restaurantId}/orders")]
         public async Task<HttpResponseMessage> GetRestaurantOrders(long restaurantId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", Enums.SortBy sortBy = Enums.SortBy.OrderDateLatest, Enums.FilterBy filterBy = Enums.FilterBy.Default, string filterByCity = "")
         {
+            if (pageNumber < 1 || pageSize < 1) return Request.CreateResponse(HttpStatusCode.NotFound);
             var claimsPrincipal = User as ClaimsPrincipal;
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);

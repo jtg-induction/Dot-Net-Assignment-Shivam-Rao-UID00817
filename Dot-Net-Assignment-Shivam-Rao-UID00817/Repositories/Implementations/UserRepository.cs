@@ -126,7 +126,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                                                     "created_at AS CreatedAt," +
                                                     "updated_at AS UpdatedAt," +
                                                     "role AS Role" +
-                                                    " FROM Users WITH(UPDLOCK, ROWLOCK) WHERE user_id = @p0;", UserId).FirstOrDefaultAsync(cancellationToken) ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
+                                                    " FROM Users WITH(UPDLOCK, ROWLOCK) WHERE user_id = @p0;", UserId).FirstOrDefaultAsync(cancellationToken)
+                                                    ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
         }
     }
 }

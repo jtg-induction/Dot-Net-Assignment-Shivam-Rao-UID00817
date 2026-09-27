@@ -2,6 +2,7 @@
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
@@ -36,6 +37,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         [HttpGet, Route("")]
         public async Task<HttpResponseMessage> GetCustomerOrders(int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE)
         {
+            if (pageNumber < 1 || pageSize < 1) return Request.CreateResponse(HttpStatusCode.NotFound);
             var claimsPrincipal = User as ClaimsPrincipal;
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);

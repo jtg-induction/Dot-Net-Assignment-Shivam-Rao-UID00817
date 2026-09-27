@@ -7,6 +7,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+using System;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -26,12 +28,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="pageNumber">The page number to retrieve.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of available items.</returns>
-        public async Task<List<Items>> GetAllItemsByRestaurantId(long restaurantId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, bool includeInactive = false, CancellationToken cancellationToken = default)
+        public async Task<List<Items>> GetAllItemsByRestaurantId(long restaurantId, PaginationMetadata meta,int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, bool includeInactive = false, CancellationToken cancellationToken = default)
         {
-            return await _db.Items.Where(x => (x.RestaurantId == restaurantId && x.IsActive && x.AvailableQuantity > 0)).OrderBy(x => x.RestaurantId)
-                                                                                                                        .Skip((pageNumber - 1) * pageSize)
-                                                                                                                        .Take(pageSize)
-                                                                                                                        .ToListAsync(cancellationToken);
+            var data = _db.Items.Where(x => (x.RestaurantId == restaurantId && x.IsActive && x.AvailableQuantity > 0)).OrderBy(x => x.RestaurantId);
+            meta.TotalCount = data.Count();
+            meta.CurrentPage = pageNumber;
+            meta.HasPrevious = pageNumber > 1;
+            meta.TotalPages = (int)Math.Ceiling(data.Count() / (double)pageSize);
+            meta.HasNext = pageNumber < meta.TotalPages;
+            meta.PageSize = pageSize;
+            return await data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
         }
 
         /// <summary>

@@ -323,11 +323,10 @@
     <Compile Include="Models\DTOs\OrderResponseDto.cs" />
     <Compile Include="Models\DTOs\OwnerOnboardRequestDto.cs" />
     <Compile Include="Models\DTOs\OwnerOnboardResponseDto.cs" />
+    <Compile Include="Models\DTOs\PaginationMetadata.cs" />
     <Compile Include="Models\DTOs\RegisterDto.cs" />
-    <Compile Include="Models\DTOs\RemoveOwnerFromRestaurantDto.cs" />
     <Compile Include="Models\DTOs\RestaurantActivateDeactivateDto.cs" />
     <Compile Include="Models\DTOs\RestaurantOnboardDto.cs" />
-    <Compile Include="Models\DTOs\RestaurantOnboardResponseDto.cs" />
     <Compile Include="Models\DTOs\TokenPayloadDto.cs" />
     <Compile Include="Models\DTOs\TokenResultDto.cs" />
     <Compile Include="Models\DTOs\UpdateAccountDto.cs" />

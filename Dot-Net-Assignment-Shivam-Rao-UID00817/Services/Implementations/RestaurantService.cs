@@ -28,15 +28,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="pageNumber">The page number.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of all the active restaurants.</returns>
-        public async Task<List<GetRestaurantsResponseDto>> GetRestaurantsAsync(int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
+        public async Task<RestaurantsList> GetRestaurantsAsync(int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
-            List<Restaurants> activeRestaurants = await _restaurantRepository.GetActiveRestaurants(pageNumber, pageSize);
+            var meta = new PaginationMetadata();
+            List<Restaurants> activeRestaurants = await _restaurantRepository.GetActiveRestaurants(meta, pageNumber, pageSize, cancellationToken);
 
-            List<GetRestaurantsResponseDto> response = new List<GetRestaurantsResponseDto>();
+            List<GetRestaurantsResponseDto> data = new List<GetRestaurantsResponseDto>();
 
             foreach (Restaurants restaurant in activeRestaurants)
             {
-                response.Add(new GetRestaurantsResponseDto(
+                data.Add(new GetRestaurantsResponseDto(
                     restaurant.RestaurantId,
                     restaurant.Name,
                     restaurant.AddressLine1,
@@ -46,6 +47,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                     restaurant.Country,
                     restaurant.AddressLine2));
             }
+
+            var response = new RestaurantsList { Restaurants = data, Meta = meta };
+
             return response;
         }
 
@@ -58,14 +62,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <returns>List of all the available items for the restaurant.</returns>
         public async Task<GetMenuResponseDto> GetItemsAsync(long restaurant_id, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
-            Restaurants restaurant = await _restaurantRepository.GetRestaurantById(restaurant_id, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
+            Restaurants restaurant = await _restaurantRepository.GetRestaurantById(restaurant_id, false, cancellationToken) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
 
             if (!restaurant.IsActive)
             {
                 throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             }
 
-            List<Items> activeItems = await _itemsRepository.GetAllItemsByRestaurantId(restaurant_id, pageNumber, pageSize);
+            var meta = new PaginationMetadata();
+
+            List<Items> activeItems = await _itemsRepository.GetAllItemsByRestaurantId(restaurant_id, meta, pageNumber, pageSize, false, cancellationToken);
 
             List<ItemAndPrice> items = new List<ItemAndPrice>();
 
@@ -85,7 +91,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 restaurant.State,
                 restaurant.Pincode,
                 restaurant.Country,
-                restaurant.AddressLine2), items);
+                restaurant.AddressLine2), items, meta);
 
             return response;
         }

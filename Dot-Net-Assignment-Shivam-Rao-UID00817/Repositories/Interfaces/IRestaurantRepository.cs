@@ -3,6 +3,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
 {
@@ -11,6 +12,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
         void Add(Restaurants restaurant);
         Task<Restaurants> GetRestaurantByName(string restaurantName, bool enableTracking, CancellationToken cancellationToken = default);
         Task<Restaurants> GetRestaurantById(long restaurantId, bool enableTracking, CancellationToken cancellationToken = default);
-        Task<List<Restaurants>> GetActiveRestaurants(int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default);
+        Task<List<Restaurants>> GetActiveRestaurants(PaginationMetadata meta, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default);
     }
 }

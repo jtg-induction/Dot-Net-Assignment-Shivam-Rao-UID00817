@@ -1,6 +1,8 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
@@ -89,17 +91,19 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         }
 
 
-        /// Retrieves a paginated list of restaurant orders with search, sorting, and filtering options.
+        /// <summary>
+        /// Retrieves a paginated list of restaurant orders with search, sorting, and filtering options
         /// </summary>
         /// <param name="restaurantId">The ID of the restaurant.</param>
-        /// <param name="pageNumber">The page number to retrieve.</param>
+        /// <param name="filterBy">The order status filter.</param>
+        /// <param name="pageNumber">>The page number to retrieve.</param>
+        /// <param name="pageSize">The page size to retrieve.</param>
         /// <param name="search">The search text used to filter orders by address.</param>
         /// <param name="sortBy">The sorting option.</param>
-        /// <param name="filterBy">The order status filter.</param>
         /// <param name="filterByCity">The city used to filter orders.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A filtered and paginated list of restaurant orders.</returns>
-        public async Task<List<Orders>> GetOrdersByRestaurantId(long restaurantId, Enums.FilterBy filterBy, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", Enums.SortBy sortBy = Enums.SortBy.OrderDateLatest, string filterByCity = "", CancellationToken cancellationToken = default)
+        public async Task<List<Orders>> GetOrdersByRestaurantId(long restaurantId,PaginationMetadata meta, Enums.FilterBy filterBy, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", Enums.SortBy sortBy = Enums.SortBy.OrderDateLatest, string filterByCity = "", CancellationToken cancellationToken = default)
         {
             IQueryable<Orders> query = _db.Orders.Where(x => x.RestaurantId == restaurantId);
 
@@ -110,6 +114,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                 search = search.Trim();
                 query = query.Where(x => x.AddressLine1.Contains(search));
             }
+
+            meta.TotalCount = query.Count();
+            meta.CurrentPage = pageNumber;
+            meta.TotalPages = (int)Math.Ceiling(pageSize / (float)meta.TotalCount);
+            meta.HasPrevious = pageNumber > 1;
+            meta.HasNext = pageNumber < meta.TotalPages;
+            meta.PageSize = pageSize;
 
             // Sorting
             switch (sortBy)
