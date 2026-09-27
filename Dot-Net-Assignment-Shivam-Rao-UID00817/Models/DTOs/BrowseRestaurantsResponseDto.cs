@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
+﻿namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
     public class BrowseRestaurantsResponseDto
     {
@@ -12,11 +7,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string City { get; set; }
-        public string State {  get; set; }
+        public string State { get; set; }
         public string Pincode { get; set; }
         public string Country { get; set; }
 
-        public BrowseRestaurantsResponseDto(long restaurantId, string name, string addressLine1, string city, string state, string pincode, string country, string addressLine2  = "")
+        public BrowseRestaurantsResponseDto(long restaurantId, string name, string addressLine1, string city, string state, string pincode, string country, string addressLine2 = "")
         {
             this.RestaurantId = restaurantId;
             this.RestaurantName = name;

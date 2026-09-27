@@ -20,7 +20,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         private readonly IAuthService _authService;
 
-        public UserService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork , IAuthService authService)
+        public UserService(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IUnitOfWork unitOfWork, IAuthService authService)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
@@ -35,7 +35,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAccountAsync(long userId , UpdateAccountDto model)
+        public async Task UpdateAccountAsync(long userId, UpdateAccountDto model)
         {
             Users user = await _userRepository.GetUserByUserIdAsync(userId, true);
             if (!String.IsNullOrWhiteSpace(model.Name))

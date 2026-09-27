@@ -1,13 +1,10 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -33,7 +30,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         public async Task<List<Items>> GetItemsWithUpdateLockAsync(List<long> itemIds, long restaurantId)
         {
             var sqlParams = new List<SqlParameter>();
-            var restaurantParam = new SqlParameter("@RestaurantId" , restaurantId);
+            var restaurantParam = new SqlParameter("@RestaurantId", restaurantId);
             sqlParams.Add(restaurantParam);
 
             var parameterNames = new List<string>();
@@ -41,10 +38,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             {
                 string paramName = $"@item{i}";
                 parameterNames.Add(paramName);
-                sqlParams.Add(new SqlParameter(paramName , itemIds[i]));
+                sqlParams.Add(new SqlParameter(paramName, itemIds[i]));
             }
 
-            string inClause = string.Join(", " , parameterNames);
+            string inClause = string.Join(", ", parameterNames);
 
             string query = $@"
                             SELECT item_id AS ItemId, 
@@ -59,7 +56,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                             AND is_active = 1
                             AND item_id IN ({inClause});";
 
-            return await _db.Items.SqlQuery(query , sqlParams.ToArray()).ToListAsync();
+            return await _db.Items.SqlQuery(query, sqlParams.ToArray()).ToListAsync();
         }
     }
 }

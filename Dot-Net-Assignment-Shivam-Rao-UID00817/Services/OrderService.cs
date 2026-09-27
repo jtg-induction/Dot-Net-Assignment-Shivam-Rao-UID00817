@@ -1,15 +1,13 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using System;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
-using System.Data.Entity;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
@@ -34,7 +32,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _orderRepository = orderRepository;
         }
 
-        public async Task<OrderResponseDto> PlaceOrderAsync(DbContextTransaction transaction,Users user, Addresses address, Restaurants restaurant, OrderRequestDto order)
+        public async Task<OrderResponseDto> PlaceOrderAsync(DbContextTransaction transaction, Users user, Addresses address, Restaurants restaurant, OrderRequestDto order)
         {
             long userId = user.UserId;
 
@@ -42,7 +40,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             var itemIds = requestedItems.Select(x => x.ItemId).ToList();
 
-            var items = await _itemRepository.GetItemsWithUpdateLockAsync(itemIds , restaurant.RestaurantId);
+            var items = await _itemRepository.GetItemsWithUpdateLockAsync(itemIds, restaurant.RestaurantId);
 
             if (items.Count != requestedItems.Count) throw new ValidationException(ErrorMessages.INVALID_ITEMS);
 
@@ -67,15 +65,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             else user.WalletBalance -= total;
 
             var newOrder = new Orders(
-                userId ,
-                order.RestaurantId ,
-                total ,
-                address.AddressLine1 ,
-                address.City ,
-                address.State ,
-                address.Pincode ,
-                address.Country ,
-                address.AddressLine2 ,
+                userId,
+                order.RestaurantId,
+                total,
+                address.AddressLine1,
+                address.City,
+                address.State,
+                address.Pincode,
+                address.Country,
+                address.AddressLine2,
                 order.Instructions
             );
 
@@ -87,10 +85,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
                 var orderItem = new Order_Items
                 {
-                    Orders = newOrder ,
-                    ItemId = item.ItemId ,
-                    Name = item.Name ,
-                    ItemPrice = item.Price ,
+                    Orders = newOrder,
+                    ItemId = item.ItemId,
+                    Name = item.Name,
+                    ItemPrice = item.Price,
                     Quantity = requestedItem.Quantity
                 };
 
@@ -103,28 +101,28 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             return new OrderResponseDto
             {
-                OrderId = newOrder.OrderId ,
-                UserId = newOrder.UserId ,
-                RestaurantId = newOrder.RestaurantId ,
-                TotalAmount = newOrder.TotalAmount ,
-                Status = newOrder.Status.ToString() ,
+                OrderId = newOrder.OrderId,
+                UserId = newOrder.UserId,
+                RestaurantId = newOrder.RestaurantId,
+                TotalAmount = newOrder.TotalAmount,
+                Status = newOrder.Status.ToString(),
 
                 Items = newOrder.OrderItems.Select(x => new OrderItemResponseDto
                 {
-                    ItemId = x.ItemId ,
-                    Name = x.Name ,
-                    ItemPrice = x.ItemPrice ,
-                    Quantity = x.Quantity ,
+                    ItemId = x.ItemId,
+                    Name = x.Name,
+                    ItemPrice = x.ItemPrice,
+                    Quantity = x.Quantity,
                     TotalPrice = x.ItemPrice * x.Quantity
                 }).ToList()
             };
         }
 
-        public async Task<OrderResponseDto> PlaceOrderAsync(long userId , OrderRequestDto order)
+        public async Task<OrderResponseDto> PlaceOrderAsync(long userId, OrderRequestDto order)
         {
-            var restaurant = await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId , false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
+            var restaurant = await _restaurantRepository.GetRestaurantByIdAsync(order.RestaurantId, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
 
-            var address = await _addressRepository.GetAddressAsync(order.AddressId , false) ?? throw new ValidationException(ErrorMessages.ADDRESS_DOES_NOT_EXIST);
+            var address = await _addressRepository.GetAddressAsync(order.AddressId, false) ?? throw new ValidationException(ErrorMessages.ADDRESS_DOES_NOT_EXIST);
 
             var user = await _userRepository.GetUserWithUpdateLockAsync(userId) ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
 
@@ -140,7 +138,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 {
                     transaction.Rollback();
                     throw e;
-                }catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     transaction.Rollback();
                     throw e;

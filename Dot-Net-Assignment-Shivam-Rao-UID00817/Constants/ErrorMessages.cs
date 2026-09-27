@@ -48,6 +48,6 @@
 
         public const string ADMIN_EMAIL = "admin@example.com";
 
-        public const string CANNNOT_ONBOARD_ADMIN_TO_RESTAURANT = "Cannot onboard admin to restaurant"; 
+        public const string CANNNOT_ONBOARD_ADMIN_TO_RESTAURANT = "Cannot onboard admin to restaurant";
     }
 }

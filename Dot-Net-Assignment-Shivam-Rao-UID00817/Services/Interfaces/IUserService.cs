@@ -7,6 +7,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces
     {
         Task DeactivateAccountAsync(long userId);
 
-        Task UpdateAccountAsync(long userId , UpdateAccountDto model);
+        Task UpdateAccountAsync(long userId, UpdateAccountDto model);
     }
 }

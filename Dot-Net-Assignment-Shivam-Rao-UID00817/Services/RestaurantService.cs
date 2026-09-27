@@ -3,14 +3,11 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
-using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
-using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Razor.Parser;
-using System.Data.Entity;
+using ValidationException = Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 {
@@ -35,15 +32,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             List<BrowseRestaurantsResponseDto> response = new List<BrowseRestaurantsResponseDto>();
 
-            foreach (Restaurants restaurant in activeRestaurants) {
+            foreach (Restaurants restaurant in activeRestaurants)
+            {
                 response.Add(new BrowseRestaurantsResponseDto(
-                    restaurant.RestaurantId, 
-                    restaurant.Name, 
-                    restaurant.AddressLine1, 
-                    restaurant.City, 
-                    restaurant.State, 
-                    restaurant.Pincode, 
-                    restaurant.Country, 
+                    restaurant.RestaurantId,
+                    restaurant.Name,
+                    restaurant.AddressLine1,
+                    restaurant.City,
+                    restaurant.State,
+                    restaurant.Pincode,
+                    restaurant.Country,
                     restaurant.AddressLine2));
             }
             return response;
@@ -53,7 +51,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         {
             Restaurants restaurant = await _restaurantRepository.GetRestaurantByIdAsync(restaurant_id, false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
 
-            if(restaurant.IsActive == false)
+            if (restaurant.IsActive == false)
             {
                 throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             }
@@ -68,19 +66,19 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             foreach (Items item in activeItems)
             {
                 items.Add(new ItemAndPrice(
-                    item.ItemId ,
-                    item.Name ,
+                    item.ItemId,
+                    item.Name,
                     item.Price
                     ));
             }
 
             BrowseMenuResponseDto response = new BrowseMenuResponseDto(new BrowseRestaurantsResponseDto(
-                restaurant.RestaurantId, 
-                restaurant.Name, 
-                restaurant.City, 
-                restaurant.State, 
-                restaurant.Pincode, 
-                restaurant.Country, 
+                restaurant.RestaurantId,
+                restaurant.Name,
+                restaurant.City,
+                restaurant.State,
+                restaurant.Pincode,
+                restaurant.Country,
                 restaurant.AddressLine2), items);
 
             return response;

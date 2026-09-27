@@ -1,11 +1,8 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -28,7 +25,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             return _db.Restaurants.Where(r => r.IsActive);
         }
 
-        public async Task<Restaurants> GetRestaurantAsync(string restaurantName , bool enableTracking)
+        public async Task<Restaurants> GetRestaurantAsync(string restaurantName, bool enableTracking)
         {
             if (enableTracking)
             {
@@ -40,7 +37,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             }
         }
 
-        public async Task<Restaurants> GetRestaurantByIdAsync(long restaurantId , bool enableTracking)
+        public async Task<Restaurants> GetRestaurantByIdAsync(long restaurantId, bool enableTracking)
         {
             if (enableTracking)
             {

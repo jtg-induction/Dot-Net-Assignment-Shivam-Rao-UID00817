@@ -20,7 +20,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public AuthService(IUserRepository userRepository , IRefreshTokenRepository refreshTokenRepository , IUnitOfWork unitOfWork)
+        public AuthService(IUserRepository userRepository, IRefreshTokenRepository refreshTokenRepository, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _refreshTokenRepository = refreshTokenRepository;
@@ -39,7 +39,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             if (emailExists) throw new ConflictException(ErrorMessages.USER_ALREADY_EXISTS);
             else if (phoneNumberExists) throw new ConflictException(ErrorMessages.DUPLICATE_PHONE_NUMBER);
 
-            var newUser = new Users(email , phoneNumber , model.Password , model.Name);
+            var newUser = new Users(email, phoneNumber, model.Password, model.Name);
 
             _userRepository.Add(newUser);
 
@@ -49,12 +49,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         public async Task<TokenResultDto> LoginAsync(LoginRequestDto model)
         {
             string email = model.Email.Trim().ToLower();
-            var user = (await _userRepository.GetUserByEmailAsync(email , false)) ?? throw new ValidationException
+            var user = (await _userRepository.GetUserByEmailAsync(email, false)) ?? throw new ValidationException
                 (
                     ErrorMessages.INVALID_CREDENTIALS
                 );
 
-            bool passwordValid = HashingHelper.VerifyPassword(model.Password , user.Password);
+            bool passwordValid = HashingHelper.VerifyPassword(model.Password, user.Password);
 
             if (!passwordValid)
             {
@@ -68,19 +68,19 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 user.IsActive = true;
             }
 
-            string accessToken = JWTUtil.GenerateAccessToken(email , user.UserId , user.Role);
+            string accessToken = JWTUtil.GenerateAccessToken(email, user.UserId, user.Role);
             string refreshToken = JWTUtil.GenerateRefreshToken();
 
-            _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId , refreshToken));
+            _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId, refreshToken));
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new TokenResultDto(accessToken , refreshToken);
+            return new TokenResultDto(accessToken, refreshToken);
         }
 
         public async Task<TokenResultDto> RotateTokenAsync(string refreshToken)
         {
-            var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken , true);
+            var existingToken = await _refreshTokenRepository.GetRefreshTokenExistsAsync(refreshToken, true);
 
             if (existingToken == null) throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
 
@@ -91,21 +91,21 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 throw new Exceptions.ValidationException(ErrorMessages.INVALID_REFRESH_TOKEN);
             }
 
-            var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId , false);
+            var user = await _userRepository.GetUserByUserIdAsync(existingToken.UserId, false);
 
             var accessToken = JWTUtil.GenerateAccessToken(
-                user.Email ,
-                user.UserId ,
+                user.Email,
+                user.UserId,
                 user.Role
             );
 
             var newRefreshToken = JWTUtil.GenerateRefreshToken();
 
-            _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId , newRefreshToken));
+            _refreshTokenRepository.Add(new Refresh_Tokens(user.UserId, newRefreshToken));
 
             await _unitOfWork.SaveChangesAsync();
 
-            return new TokenResultDto(accessToken , newRefreshToken);
+            return new TokenResultDto(accessToken, newRefreshToken);
         }
 
         public async Task<bool> LogoutAsync(string refreshToken)

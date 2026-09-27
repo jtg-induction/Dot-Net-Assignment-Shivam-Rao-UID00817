@@ -9,10 +9,10 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Helpers
         {
             return new CookieOptions
             {
-                HttpOnly = true ,
-                Secure = true ,
-                SameSite = SameSiteMode.Lax ,
-                Expires = DateTime.UtcNow.AddDays(ExpiresInDays) ,
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddDays(ExpiresInDays),
                 Path = path
             };
         }

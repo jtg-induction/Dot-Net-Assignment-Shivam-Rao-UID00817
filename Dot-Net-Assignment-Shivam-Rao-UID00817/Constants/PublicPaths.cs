@@ -27,7 +27,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Constants
 
             return PublicEndpoints.Contains(path)
                 || PublicPrefixes.Any(prefix =>
-                    path.StartsWith(prefix , StringComparison.OrdinalIgnoreCase));
+                    path.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

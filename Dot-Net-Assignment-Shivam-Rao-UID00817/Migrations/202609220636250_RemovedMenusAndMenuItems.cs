@@ -1,8 +1,7 @@
 ﻿namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class RemovedMenusAndMenuItems : DbMigration
     {
         public override void Up()
@@ -19,31 +18,31 @@
             DropTable("dbo.Menu_Items");
             DropTable("dbo.Menus");
         }
-        
+
         public override void Down()
         {
             CreateTable(
                 "dbo.Menus",
                 c => new
-                    {
-                        menu_id = c.Long(nullable: false, identity: true),
-                        restaurant_id = c.Long(nullable: false),
-                        name = c.String(nullable: false),
-                        is_active = c.Boolean(nullable: false),
-                        created_at = c.DateTime(nullable: false),
-                        updated_at = c.DateTime(nullable: false),
-                    })
+                {
+                    menu_id = c.Long(nullable: false, identity: true),
+                    restaurant_id = c.Long(nullable: false),
+                    name = c.String(nullable: false),
+                    is_active = c.Boolean(nullable: false),
+                    created_at = c.DateTime(nullable: false),
+                    updated_at = c.DateTime(nullable: false),
+                })
                 .PrimaryKey(t => t.menu_id);
-            
+
             CreateTable(
                 "dbo.Menu_Items",
                 c => new
-                    {
-                        menu_id = c.Long(nullable: false),
-                        item_id = c.Long(nullable: false),
-                    })
+                {
+                    menu_id = c.Long(nullable: false),
+                    item_id = c.Long(nullable: false),
+                })
                 .PrimaryKey(t => new { t.menu_id, t.item_id });
-            
+
             DropForeignKey("dbo.Items", "restaurant_id", "dbo.Restaurants");
             DropIndex("dbo.Items", new[] { "restaurant_id" });
             DropColumn("dbo.Items", "restaurant_id");

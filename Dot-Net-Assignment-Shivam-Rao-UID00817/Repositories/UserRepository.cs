@@ -1,7 +1,6 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
@@ -41,7 +40,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             return await _db.Users.Where(x => emails.Contains(x.Email) && x.IsActive).ToListAsync();
         }
 
-        public async Task<Users> GetUserByEmailAsync(string email , bool enableTracking = false)
+        public async Task<Users> GetUserByEmailAsync(string email, bool enableTracking = false)
         {
             if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -49,7 +48,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                 return await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<Users> GetUserByUserIdAsync(long userId , bool enableTracking = false)
+        public async Task<Users> GetUserByUserIdAsync(long userId, bool enableTracking = false)
         {
             if (enableTracking)
                 return await _db.Users.FirstOrDefaultAsync(u => u.UserId == userId);
@@ -64,7 +63,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 
         public async Task<Users> GetUserWithUpdateLockAsync(long userId)
         {
-            var UserId = new SqlParameter("@p0" , userId);
+            var UserId = new SqlParameter("@p0", userId);
             return await _db.Users.SqlQuery("SELECT user_id AS UserId," +
                                                     "email AS Email," +
                                                     "phone_number AS PhoneNumber," +
@@ -75,7 +74,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                                                     "created_at AS CreatedAt," +
                                                     "updated_at AS UpdatedAt," +
                                                     "role AS Role" +
-                                                    " FROM Users WITH(UPDLOCK, ROWLOCK) WHERE user_id = @p0;" , UserId).FirstOrDefaultAsync() ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
+                                                    " FROM Users WITH(UPDLOCK, ROWLOCK) WHERE user_id = @p0;", UserId).FirstOrDefaultAsync() ?? throw new ValidationException(ErrorMessages.USER_DOES_NOT_EXIST);
         }
     }
 }

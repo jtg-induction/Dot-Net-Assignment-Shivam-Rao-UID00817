@@ -6,6 +6,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
@@ -31,53 +32,72 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             _ownerManagesRestaurantsRepository = ownerManagesRestaurantsRepository;
         }
 
-        bool CheckEmailFormat(string email)
+        private bool CheckEmailFormat(string email)
         {
-            return System.Text.RegularExpressions.Regex.IsMatch(email.Trim(), Constants.Regex.EMAIL_REGEX);
+            return System.Text.RegularExpressions.Regex.IsMatch(email, Constants.Regex.EMAIL_REGEX);
         }
 
-        public async Task<List<string>> GetValidEmailsAsync(List<string> Emails, List<EmailAndStatus> status)
+        public async Task<List<string>> GetValidEmailsAsync(List<string> emails, List<EmailAndStatus> status)
         {
-            List<string> validEmails = new List<string>();
+            var validEmails = new List<string>();
 
-            foreach (string email in Emails)
+            foreach (string rawEmail in emails)
             {
-                if(string.Equals(email.Trim(), ErrorMessages.ADMIN_EMAIL, StringComparison.OrdinalIgnoreCase))
+                string email = rawEmail.Trim().ToLowerInvariant();
+
+                if (string.Equals(email, ErrorMessages.ADMIN_EMAIL, StringComparison.OrdinalIgnoreCase))
                 {
-                    status.Add(new EmailAndStatus(email.Trim().ToLower(), ErrorMessages.CANNNOT_ONBOARD_ADMIN_TO_RESTAURANT));
+                    status.Add(new EmailAndStatus(email, ErrorMessages.CANNNOT_ONBOARD_ADMIN_TO_RESTAURANT));
+                    continue;
                 }
-                else if (CheckEmailFormat(email))
+                if (!CheckEmailFormat(email))
                 {
-                    validEmails.Add(email.Trim().ToLower());
+                    status.Add(new EmailAndStatus(email, ErrorMessages.INVALID_EMAIL_FORMAT));
+                    continue;
                 }
-                else
-                {
-                    status.Add(new EmailAndStatus(email.Trim().ToLower(), ErrorMessages.INVALID_EMAIL_FORMAT));
-                }
+                validEmails.Add(email);
             }
             return validEmails;
         }
 
+
         public async Task<OwnerOnboardResponseDto> OnboardRestaurantAsync(RestaurantOnboardDto restaurant)
         {
-            if (!(await _restaurantRepository.GetRestaurantAsync(restaurant.Name.Trim(), false) is null))
+            Restaurants existingRestaurant = await _restaurantRepository.GetRestaurantAsync(
+                    restaurant.Name.Trim(),
+                    false);
+
+            if (existingRestaurant != null)
             {
-                throw new ConflictException(ErrorMessages.RESTAURANT_ALREADY_EXISTS);
+                throw new ConflictException(
+                    ErrorMessages.RESTAURANT_ALREADY_EXISTS);
             }
 
-            List<EmailAndStatus> Status = new List<EmailAndStatus>();
+            var status = new List<EmailAndStatus>();
 
+            List<string> validEmails = await GetValidEmailsAsync(restaurant.Emails, status);
 
-            List<string> ValidEmails = await GetValidEmailsAsync(restaurant.Emails, Status);
+            List<Users> validUsers = await _userRepository.GetUsersByEmails(validEmails);
 
-            List<Users> ValidUsers = await _userRepository.GetUsersByEmails(ValidEmails);
-
-            if (ValidUsers.Count == 0)
+            foreach (string email in validEmails)
             {
-                throw new ValidationException(ErrorMessages.NO_VALID_EMAILS);
+                bool userExists = validUsers.Any(x => string.Equals(x.Email.Trim(), email, StringComparison.OrdinalIgnoreCase));
+
+                if (!userExists)
+                {
+                    status.Add(new EmailAndStatus(email, ErrorMessages.USER_DOES_NOT_EXIST));
+                }
             }
 
-            Restaurants NewRestaurant = new Restaurants(
+            if (validUsers.Count == 0)
+            {
+                return new OwnerOnboardResponseDto
+                {
+                    EmailErrors = status
+                };
+            }
+
+            Restaurants newRestaurant = new Restaurants(
                 restaurant.Name,
                 restaurant.AddressLine1,
                 restaurant.City,
@@ -87,80 +107,97 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                 restaurant.AddressLine2
             );
 
-            _restaurantRepository.Add(NewRestaurant);
+            _restaurantRepository.Add(newRestaurant);
 
             await _unitOfWork.SaveChangesAsync();
 
-            await AssignOwnerToRestaurantAsync(NewRestaurant.Name, ValidUsers, Status);
+            await AssignOwnerToRestaurantAsync(newRestaurant.Name, validUsers, status);
 
-            foreach (string email in ValidEmails)
+            return new OwnerOnboardResponseDto
             {
-                if (!Status.Exists(x => x.Email == email))
-                {
-                    Status.Add(new EmailAndStatus(email, ErrorMessages.USER_DOESNOT_EXIST));
-                }
-            }
-
-            return new OwnerOnboardResponseDto { EmailErrors = Status };
+                EmailErrors = status
+            };
         }
 
-        public async Task AssignOwnerToRestaurantAsync(string Name, List<Users> ValidUsers, List<EmailAndStatus> Status)
+
+        public async Task AssignOwnerToRestaurantAsync(string name, List<Users> validUsers, List<EmailAndStatus> status)
         {
-            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(Name , false) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
-            if (restaurant.IsActive == false)
+            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name, false);
+
+            if (restaurant == null)
+            {
+                throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
+            }
+
+            if (!restaurant.IsActive)
             {
                 throw new ValidationException(ErrorMessages.CANNOT_ASSIGN_OWNER_TO_RESTAURANT_THAT_IS_NOT_ACTIVE);
             }
 
-            long RestaurantId = restaurant.RestaurantId;
+            long restaurantId = restaurant.RestaurantId;
 
-            List<Owner_Manages_Restaurants> ToOnboard = new List<Owner_Manages_Restaurants>();
+            var toOnboard = new List<Owner_Manages_Restaurants>();
 
-            foreach (Users user in ValidUsers)
+            foreach (Users user in validUsers)
             {
-                if (await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(user.UserId, RestaurantId, false) is null)
-                {
-                    ToOnboard.Add(new Owner_Manages_Restaurants(user.UserId, RestaurantId));
-                    Status.Add(new EmailAndStatus(user.Email, null));
-                user.Role = Enums.Roles.Owner;
-            }
-            }
-            _ownerManagesRestaurantsRepository.Add(ToOnboard);
+                Owner_Manages_Restaurants existingOwner = await _ownerManagesRestaurantsRepository.GetOwnerIfExistsAsync(user.UserId, restaurantId, false);
 
-            await _unitOfWork.SaveChangesAsync();
+                if (existingOwner == null)
+                {
+                    toOnboard.Add(new Owner_Manages_Restaurants(user.UserId, restaurantId));
+                    user.Role = Enums.Roles.Owner;
+                }
+            }
+
+            if (toOnboard.Count > 0)
+            {
+                _ownerManagesRestaurantsRepository.Add(toOnboard);
+                await _unitOfWork.SaveChangesAsync();
+            }
         }
 
 
         public async Task<OwnerOnboardResponseDto> AssignOwnerToRestaurantAsync(OwnerOnboardRequestDto model)
         {
-            List<EmailAndStatus> Status = new List<EmailAndStatus>();
+            var status = new List<EmailAndStatus>();
 
+            List<string> validEmails = await GetValidEmailsAsync(model.Emails, status);
 
-            List<string> ValidEmails = await GetValidEmailsAsync(model.Emails, Status);
+            List<Users> validUsers = await _userRepository.GetUsersByEmails(validEmails);
 
-            List<Users> ValidUsers = await _userRepository.GetUsersByEmails(ValidEmails);
-
-            if (ValidUsers.Count == 0)
+            foreach (string email in validEmails)
             {
-                throw new ValidationException(ErrorMessages.NO_VALID_EMAILS);
-            }
+                bool userExists = validUsers.Any(x => string.Equals(x.Email.Trim(), email, StringComparison.OrdinalIgnoreCase));
 
-            await AssignOwnerToRestaurantAsync(model.Name, ValidUsers, Status);
-
-            foreach (string email in ValidEmails)
-            {
-                if (!Status.Exists(x => x.Email == email))
+                if (!userExists)
                 {
-                    Status.Add(new EmailAndStatus(email , false , ErrorMessages.USER_DOES_NOT_EXIST));
+                    status.Add(new EmailAndStatus(email, ErrorMessages.USER_DOES_NOT_EXIST));
                 }
             }
 
-            return new OwnerOnboardResponseDto { EmailErrors = Status };
+            if (validUsers.Count == 0)
+            {
+                return new OwnerOnboardResponseDto
+                {
+                    EmailErrors = status
+                };
+            }
+
+            await AssignOwnerToRestaurantAsync(
+                model.Name,
+                validUsers,
+                status
+            );
+
+            return new OwnerOnboardResponseDto
+            {
+                EmailErrors = status
+            };
         }
 
         public async Task DeactivateRestaurant(string name)
         {
-            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim() , true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
+            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim(), true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             if (restaurant.IsActive == false)
             {
                 return;
@@ -171,7 +208,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
         public async Task ActivateRestaurant(string name)
         {
-            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim() , true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
+            Restaurants restaurant = await _restaurantRepository.GetRestaurantAsync(name.Trim(), true) ?? throw new ValidationException(ErrorMessages.RESTAURANT_DOES_NOT_EXIST);
             if (restaurant.IsActive == true)
             {
                 return;
