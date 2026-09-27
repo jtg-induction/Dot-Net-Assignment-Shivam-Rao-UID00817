@@ -12,7 +12,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817
         {
             config.MapHttpAttributeRoutes();
 
-            config.Services.Replace(typeof(IExceptionHandler) , new GlobalExceptionHandler());
+            config.Services.Replace(typeof(IExceptionHandler), new GlobalExceptionHandler());
 
             config.Filters.Add(new ModelAttributeValidation());
 

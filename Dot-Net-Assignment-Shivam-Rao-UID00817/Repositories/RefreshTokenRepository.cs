@@ -19,7 +19,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db.Refresh_Tokens.Add(RefreshToken);
         }
 
-        public async Task<Refresh_Tokens> GetRefreshTokenExistsAsync(string token , bool enableTracking = false)
+        public async Task<Refresh_Tokens> GetRefreshTokenExistsAsync(string token, bool enableTracking = false)
         {
             if (enableTracking)
                 return await _db.Refresh_Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);

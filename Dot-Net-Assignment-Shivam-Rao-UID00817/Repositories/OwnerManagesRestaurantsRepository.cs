@@ -1,11 +1,8 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -34,7 +31,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             }
         }
 
-        public async Task RemoveAsync(Owner_Manages_Restaurants Entry)
+        public void Remove(Owner_Manages_Restaurants Entry)
         {
             _db.Owner_Manages_Restaurants.Remove(Entry);
         }

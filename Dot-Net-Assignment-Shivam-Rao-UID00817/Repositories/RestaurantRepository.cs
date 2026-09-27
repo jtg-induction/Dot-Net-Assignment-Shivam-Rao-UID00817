@@ -1,11 +1,8 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
 {
@@ -23,7 +20,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             _db.Restaurants.Add(restaurant);
         }
 
-        public async Task<Restaurants> GetRestaurantAsync(string restaurantName , bool enableTracking)
+        public IQueryable<Restaurants> GetActiveRestaurants()
+        {
+            return _db.Restaurants.Where(r => r.IsActive);
+        }
+
+        public async Task<Restaurants> GetRestaurantAsync(string restaurantName, bool enableTracking)
         {
             if (enableTracking)
             {
@@ -32,6 +34,18 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
             else
             {
                 return await _db.Restaurants.AsNoTracking().FirstOrDefaultAsync(r => r.Name.ToLower() == restaurantName.ToLower());
+            }
+        }
+
+        public async Task<Restaurants> GetRestaurantByIdAsync(long restaurantId, bool enableTracking)
+        {
+            if (enableTracking)
+            {
+                return await _db.Restaurants.FindAsync(restaurantId);
+            }
+            else
+            {
+                return await _db.Restaurants.AsNoTracking().FirstOrDefaultAsync(r => r.RestaurantId == restaurantId);
             }
         }
     }

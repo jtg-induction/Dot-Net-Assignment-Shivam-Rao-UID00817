@@ -1,8 +1,7 @@
 ﻿namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class RemovedUserAddressThroughTableAndAddedAddressDetailsToRestaurant : DbMigration
     {
         public override void Up()
@@ -28,19 +27,19 @@
             DropColumn("dbo.Restaurants", "address_id");
             DropTable("dbo.User_Address_Type");
         }
-        
+
         public override void Down()
         {
             CreateTable(
                 "dbo.User_Address_Type",
                 c => new
-                    {
-                        user_id = c.Long(nullable: false),
-                        address_id = c.Long(nullable: false),
-                        address_type = c.String(nullable: false),
-                    })
+                {
+                    user_id = c.Long(nullable: false),
+                    address_id = c.Long(nullable: false),
+                    address_type = c.String(nullable: false),
+                })
                 .PrimaryKey(t => new { t.user_id, t.address_id });
-            
+
             AddColumn("dbo.Restaurants", "address_id", c => c.Long(nullable: false));
             DropForeignKey("dbo.Addresses", "user_id", "dbo.Users");
             DropIndex("dbo.Addresses", new[] { "user_id" });

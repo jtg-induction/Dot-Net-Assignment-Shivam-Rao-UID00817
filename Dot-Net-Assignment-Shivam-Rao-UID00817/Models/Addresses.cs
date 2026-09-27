@@ -11,6 +11,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Column("address_id")]
         public long AddressId { get; set; }
 
+        [Index("IX_User_Id")]
         [Column("user_id")]
         public long UserId { get; set; }
         [ForeignKey(nameof(UserId))]
@@ -46,7 +47,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
 
-        public Addresses(string addressLine1 , string addressLine2 , string city , string state , string pincode , string country)
+        public Addresses(string addressLine1, string addressLine2, string city, string state, string pincode, string country)
         {
             DateTime currentTime = DateTime.UtcNow;
             this.AddressLine1 = addressLine1;

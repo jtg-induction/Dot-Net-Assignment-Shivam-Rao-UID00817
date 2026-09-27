@@ -7,14 +7,14 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models
     public class Order_Items
     {
         [Key]
-        [Column("order_id" , Order = 1)]
+        [Column("order_id", Order = 1)]
         public long OrderId { get; set; }
 
         [ForeignKey(nameof(OrderId))]
         public virtual Orders Orders { get; set; }
 
         [Key]
-        [Column("item_id" , Order = 2)]
+        [Column("item_id", Order = 2)]
         public long ItemId { get; set; }
 
         [ForeignKey(nameof(ItemId))]
