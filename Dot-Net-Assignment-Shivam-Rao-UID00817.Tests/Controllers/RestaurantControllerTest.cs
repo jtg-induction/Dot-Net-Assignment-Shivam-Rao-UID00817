@@ -1,68 +1,161 @@
-﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers;
+﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 {
     [TestFixture]
-    public class RestaurantControllerTest
+    public class RestaurantControllerTests
     {
-        private Mock<IRestaurantService> _mockRestaurantService;
-
+        private Mock<IRestaurantService> _restaurantServiceMock;
         private RestaurantController _controller;
 
         [SetUp]
         public void Setup()
         {
-            _mockRestaurantService = new Mock<IRestaurantService>();
+            _restaurantServiceMock = new Mock<IRestaurantService>();
 
             _controller = new RestaurantController(
-                _mockRestaurantService.Object
+                _restaurantServiceMock.Object
             );
 
             _controller.Request = new HttpRequestMessage();
+        }
+
+        [Test]
+        public async Task Restaurant_ValidParameters_ReturnsOk()
+        {
+            int pageNumber = 1;
+            int pageSize = NumberConstants.PAGE_SIZE;
+            var expectedResult = new RestaurantsList();
+
+            _restaurantServiceMock
+                .Setup(x => x.GetRestaurantsAsync(pageNumber ,pageSize))
+                .ReturnsAsync(expectedResult);
+
+            var config = new HttpConfiguration();
+            var request = new HttpRequestMessage();
+            request.Properties[System.Web.Http.Hosting.HttpPropertyKeys.HttpConfigurationKey] = config;
+
+            _controller.Request = request;
+            _controller.Configuration = config;
+
+            var response = await _controller.Restaurant(pageNumber ,pageSize);
+
+            Assert.That(response ,Is.Not.Null);
+            Assert.That(response.StatusCode ,Is.EqualTo(HttpStatusCode.OK));
+
+            _restaurantServiceMock.Verify(x => x.GetRestaurantsAsync(pageNumber ,pageSize) ,Times.Once);
+        }
+
+
+        [Test]
+        public async Task Restaurant_InvalidPageNumber_ReturnsNotFound()
+        {
+            int pageNumber = 0;
+            int pageSize = NumberConstants.PAGE_SIZE;
+
+            var response = await _controller.Restaurant(
+                pageNumber ,
+                pageSize
+            );
+            Assert.That(response ,Is.Not.Null);
+            Assert.That(
+                response.StatusCode ,
+                Is.EqualTo(HttpStatusCode.NotFound)
+            );
+
+            _restaurantServiceMock.Verify(
+                x => x.GetRestaurantsAsync(
+                    It.IsAny<int>() ,
+                    It.IsAny<int>()
+                ) ,
+                Times.Never
+            );
+        }
+
+        [Test]
+        public async Task Restaurant_InvalidPageSize_ReturnsNotFound()
+        {
+            int pageNumber = 1;
+            int pageSize = 0;
+
+            var response = await _controller.Restaurant(
+                pageNumber ,
+                pageSize
+            );
+
+            Assert.That(response ,Is.Not.Null);
+            Assert.That(
+                response.StatusCode ,
+                Is.EqualTo(HttpStatusCode.NotFound)
+            );
+
+            _restaurantServiceMock.Verify(
+                x => x.GetRestaurantsAsync(
+                    It.IsAny<int>() ,
+                    It.IsAny<int>()
+                ) ,
+                Times.Never
+            );
+        }
+
+        [Test]
+        public async Task Restaurant_PassesCorrectParametersToService()
+        {
+            int pageNumber = 3;
+            int pageSize = 10;
+
+            var expectedResult = new RestaurantsList();
+
+            _restaurantServiceMock
+                .Setup(x => x.GetRestaurantsAsync(pageNumber ,pageSize))
+                .ReturnsAsync(expectedResult);
+
+            _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
+
+            await _controller.Restaurant(pageNumber ,pageSize);
+
+            _restaurantServiceMock.Verify(
+                x => x.GetRestaurantsAsync(pageNumber ,pageSize) ,
+                Times.Once
+            );
         }
 
+
         [Test]
-        public async Task Restaurant_ValidRequest_ReturnsOk()
+        public async Task Menu_ValidParameters_ReturnsOk()
         {
-
+            long restaurantId = 1;
             int pageNumber = 1;
+            int pageSize = NumberConstants.PAGE_SIZE;
 
-            var expectedResult = new List<GetRestaurantsResponseDto>
-        {
-            new GetRestaurantsResponseDto(
-                1,
-                "Pizza Palace",
-                "123 Main Street",
-                "Gurgaon",
-                "Haryana",
-                "122001",
-                "India",
-                "Near Mall"
-            )
-        };
+            var expectedResult = new GetMenuResponseDto();
 
-            _mockRestaurantService
-                .Setup(x => x.GetRestaurantsAsync(
+            _restaurantServiceMock
+                .Setup(x => x.GetItemsAsync(
+                    restaurantId ,
                     pageNumber ,
-                    It.IsAny<CancellationToken>()))
+                    pageSize))
                 .ReturnsAsync(expectedResult);
 
+            _controller.Request = new HttpRequestMessage();
+            _controller.Configuration = new HttpConfiguration();
 
-            HttpResponseMessage response =
-                await _controller.Restaurant(pageNumber);
-
+            // Act
+            var response = await _controller.Menu(
+                restaurantId ,
+                pageNumber ,
+                pageSize
+            );
 
             Assert.That(response ,Is.Not.Null);
             Assert.That(
@@ -70,190 +163,105 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 Is.EqualTo(HttpStatusCode.OK)
             );
 
-            var result =
-                await response.Content
-                    .ReadAsAsync<List<GetRestaurantsResponseDto>>();
-
-            Assert.That(result ,Is.Not.Null);
-            Assert.That(result.Count ,Is.EqualTo(1));
-
-            Assert.That(result[0].RestaurantId ,Is.EqualTo(1));
-            Assert.That(result[0].RestaurantName ,Is.EqualTo("Pizza Palace"));
-
-            _mockRestaurantService.Verify(
-                x => x.GetRestaurantsAsync(
+            _restaurantServiceMock.Verify(
+                x => x.GetItemsAsync(
+                    restaurantId ,
                     pageNumber ,
-                    It.IsAny<CancellationToken>()) ,
+                    pageSize) ,
                 Times.Once
             );
         }
 
-        [Test]
-        public async Task Restaurant_DefaultPageNumber_CallsServiceWithPageOne()
-        {
-
-            var expectedResult =
-                new List<GetRestaurantsResponseDto>();
-
-            _mockRestaurantService
-                .Setup(x => x.GetRestaurantsAsync(
-                    1 ,
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(expectedResult);
-
-
-            var response = await _controller.Restaurant();
-
-
-            Assert.That(
-                response.StatusCode ,
-                Is.EqualTo(HttpStatusCode.OK)
-            );
-
-            _mockRestaurantService.Verify(
-                x => x.GetRestaurantsAsync(
-                    1 ,
-                    It.IsAny<CancellationToken>()) ,
-                Times.Once
-            );
-        }
 
         [Test]
-        public async Task Menu_ValidRequest_ReturnsOk()
+        public async Task Menu_InvalidPageNumber_ReturnsNotFound()
         {
-
             long restaurantId = 1;
-            int pageNumber = 1;
+            int pageNumber = 0;
+            int pageSize = NumberConstants.PAGE_SIZE;
 
-            var expectedResult = new GetMenuResponseDto(
-                new GetRestaurantsResponseDto(
-                    1 ,
-                    "Pizza Palace" ,
-                    "Gurgaon" ,
-                    "Haryana" ,
-                    "122001" ,
-                    "India" ,
-                    "Near Mall"
-                ) ,
-                new List<ItemAndPrice>
-                {
-            new ItemAndPrice(
-                101,
-                "Margherita Pizza",
-                299
-            )
-                }
+            var response = await _controller.Menu(
+                restaurantId ,
+                pageNumber ,
+                pageSize
             );
-
-            _mockRestaurantService
-                .Setup(x => x.GetItemsAsync(
-                    pageNumber ,
-                    restaurantId ,
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(expectedResult);
-
-
-            HttpResponseMessage response =
-                await _controller.Menu(
-                    restaurantId ,
-                    pageNumber
-                );
-
 
             Assert.That(response ,Is.Not.Null);
-
             Assert.That(
                 response.StatusCode ,
-                Is.EqualTo(HttpStatusCode.OK)
+                Is.EqualTo(HttpStatusCode.NotFound)
             );
 
-            var result =
-                await response.Content
-                    .ReadAsAsync<GetMenuResponseDto>();
-
-            Assert.That(result ,Is.Not.Null);
-
-            Assert.That(
-                result.Restaurant.RestaurantId ,
-                Is.EqualTo(restaurantId)
-            );
-
-            Assert.That(
-                result.Restaurant.RestaurantName ,
-                Is.EqualTo("Pizza Palace")
-            );
-
-            Assert.That(
-                result.items.Count ,
-                Is.EqualTo(1)
-            );
-
-            Assert.That(
-                result.items[0].ItemId ,
-                Is.EqualTo(101)
-            );
-
-            Assert.That(
-                result.items[0].Name ,
-                Is.EqualTo("Margherita Pizza")
-            );
-
-            Assert.That(
-                result.items[0].Price ,
-                Is.EqualTo(299)
-            );
-
-            _mockRestaurantService.Verify(
+            _restaurantServiceMock.Verify(
                 x => x.GetItemsAsync(
-                    pageNumber ,
-                    restaurantId ,
-                    It.IsAny<CancellationToken>()) ,
-                Times.Once
+                    It.IsAny<long>() ,
+                    It.IsAny<int>() ,
+                    It.IsAny<int>()) ,
+                Times.Never
             );
         }
 
         [Test]
-        public async Task Menu_DefaultPageNumber_CallsServiceWithPageOne()
+        public async Task Menu_InvalidPageSize_ReturnsNotFound()
         {
-
             long restaurantId = 1;
+            int pageNumber = 1;
+            int pageSize = 0;
 
-            var expectedResult = new GetMenuResponseDto(
-                new GetRestaurantsResponseDto(
-                    1 ,
-                    "Pizza Palace" ,
-                    "Gurgaon" ,
-                    "Haryana" ,
-                    "122001" ,
-                    "India" ,
-                    "Near Mall"
-                ) ,
-                new List<ItemAndPrice>()
+            var response = await _controller.Menu(
+                restaurantId ,
+                pageNumber ,
+                pageSize
             );
 
-            _mockRestaurantService
-                .Setup(x => x.GetItemsAsync(
-                    1 ,
-                    restaurantId ,
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(expectedResult);
-
-
-            var response = await _controller.Menu(restaurantId);
-
-
+            Assert.That(response ,Is.Not.Null);
             Assert.That(
                 response.StatusCode ,
-                Is.EqualTo(HttpStatusCode.OK)
+                Is.EqualTo(HttpStatusCode.NotFound)
             );
 
-            _mockRestaurantService.Verify(
+            _restaurantServiceMock.Verify(
                 x => x.GetItemsAsync(
-                    1 ,
+                    It.IsAny<long>() ,
+                    It.IsAny<int>() ,
+                    It.IsAny<int>()) ,
+                Times.Never
+            );
+        }
+
+        [Test]
+        public async Task Menu_PassesCorrectParametersToService()
+        {
+            long restaurantId = 25;
+            int pageNumber = 2;
+            int pageSize = 5;
+
+            var expectedResult = new GetMenuResponseDto();
+
+            _restaurantServiceMock
+                .Setup(x => x.GetItemsAsync(
                     restaurantId ,
-                    It.IsAny<CancellationToken>()) ,
+                    pageNumber ,
+                    pageSize))
+                .ReturnsAsync(expectedResult);
+
+            _controller.Request = new HttpRequestMessage();
+            _controller.Configuration = new HttpConfiguration();
+
+            await _controller.Menu(
+                restaurantId ,
+                pageNumber ,
+                pageSize
+            );
+
+            _restaurantServiceMock.Verify(
+                x => x.GetItemsAsync(
+                    restaurantId ,
+                    pageNumber ,
+                    pageSize) ,
                 Times.Once
             );
         }
+
     }
 }

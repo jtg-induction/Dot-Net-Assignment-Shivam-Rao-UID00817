@@ -62,7 +62,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             await _authService.RegisterAsync(model);
 
             _mockUserRepository.Verify(
-                x => x.EmailExistsAsync(
+                x => x.EmailExists(
                     "kwabersinked@blinklist.com") ,
                 Times.Once
             );
@@ -84,7 +84,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 PhoneNumber = "561-662-8099"
             };
 
-            _mockUserRepository.Setup(x => x.EmailExistsAsync(
+            _mockUserRepository.Setup(x => x.EmailExists(
                 "kwabersinked@blinklist.com")).ReturnsAsync(false);
 
             Users createdUser = null;
@@ -148,7 +148,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUserByEmailAsync("shivam@example.com" ,false))
+                x => x.GetUserByEmail("shivam@example.com" ,false))
                 .ReturnsAsync(user);
 
             var result = await _authService.LoginAsync(model);
@@ -177,7 +177,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUserByEmailAsync("janedoe@example.com" ,false))
+                x => x.GetUserByEmail("janedoe@example.com" ,false))
                 .ReturnsAsync((Users)null);
 
             Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException>(
@@ -203,7 +203,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUserByEmailAsync(user.Email ,false))
+                x => x.GetUserByEmail(user.Email ,false))
                 .ReturnsAsync(user);
 
             Assert.ThrowsAsync<Dot_Net_Assignment_Shivam_Rao_UID00817.Exceptions.ValidationException>(
@@ -232,11 +232,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRefreshTokenRepository
-                .Setup(x => x.GetRefreshTokenExistsAsync(oldRefreshToken ,true))
+                .Setup(x => x.GetRefreshTokenIfExists(oldRefreshToken ,true))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository
-                .Setup(x => x.GetUserByUserIdAsync(1 ,false))
+                .Setup(x => x.GetUserByUserId(1 ,false))
                 .ReturnsAsync(user);
 
             var result = await _authService.RotateTokenAsync(oldRefreshToken);
@@ -269,11 +269,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRefreshTokenRepository.Setup(
-                x => x.GetRefreshTokenExistsAsync(oldRefreshToken ,true))
+                x => x.GetRefreshTokenIfExists(oldRefreshToken ,true))
                 .ReturnsAsync(tokenRecord);
 
             _mockUserRepository.Setup(
-                x => x.GetUserByUserIdAsync(1 ,false))
+                x => x.GetUserByUserId(1 ,false))
                 .ReturnsAsync(user);
 
             var result = await _authService.RotateTokenAsync(oldRefreshToken);
@@ -296,7 +296,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var refreshToken = "invalid-token";
 
             _mockRefreshTokenRepository
-                .Setup(x => x.GetRefreshTokenExistsAsync(refreshToken ,false))
+                .Setup(x => x.GetRefreshTokenIfExists(refreshToken ,false))
                 .ReturnsAsync((Refresh_Tokens)null);
 
             var ex = Assert.ThrowsAsync<ValidationException>(
@@ -306,7 +306,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             Assert.That(ex.Message ,Is.EqualTo("Refresh Token is Invalid."));
 
             _mockUserRepository.Verify(
-                x => x.GetUserByUserIdAsync(It.IsAny<long>() ,false) ,
+                x => x.GetUserByUserId(It.IsAny<long>() ,false) ,
                 Times.Never
             );
 
@@ -322,7 +322,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             string refreshToken = "abc123";
 
             _mockRefreshTokenRepository
-                .Setup(x => x.RemoveIfTokenExistsAsync(refreshToken))
+                .Setup(x => x.RemoveTokenIfExists(refreshToken))
                 .ReturnsAsync(true);
 
             _mockUnitOfWork.Setup(
@@ -334,7 +334,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             Assert.That(result ,Is.True);
 
             _mockRefreshTokenRepository.Verify(
-                x => x.RemoveIfTokenExistsAsync(refreshToken) ,
+                x => x.RemoveTokenIfExists(refreshToken) ,
                 Times.Once
             );
 
@@ -350,7 +350,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             string refreshToken = "invalid-token";
 
             _mockRefreshTokenRepository
-                .Setup(x => x.RemoveIfTokenExistsAsync(refreshToken))
+                .Setup(x => x.RemoveTokenIfExists(refreshToken))
                 .ReturnsAsync(false);
 
             _mockUnitOfWork.Setup(
@@ -362,7 +362,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             Assert.That(result ,Is.False);
 
             _mockRefreshTokenRepository.Verify(
-                x => x.RemoveIfTokenExistsAsync(refreshToken) ,
+                x => x.RemoveTokenIfExists(refreshToken) ,
                 Times.Once
             );
 

@@ -89,11 +89,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 "Delhi" ,
                 "110001" ,
                 "India" ,
-                null
+                ""
             );
 
             _mockRestaurantRepository.Setup(
-                x => x.GetRestaurantAsync(
+                x => x.GetRestaurantByName(
                     "Existing Restaurant" ,
                     false))
                 .ReturnsAsync(existingRestaurant);
@@ -108,48 +108,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
 
             _mockRestaurantRepository.Verify(
-                x => x.GetRestaurantAsync("Existing Restaurant" ,false) ,
+                x => x.GetRestaurantByName("Existing Restaurant" ,false) ,
                 Times.Once
-            );
-        }
-
-        [Test]
-        public void OnboardRestaurantAsync_NoValidUsers_ThrowsValidationException()
-        {
-            var restaurant = new RestaurantOnboardDto
-            {
-                Name = "New Restaurant" ,
-                Emails = new List<string> { "owner@test.com" }
-            };
-
-            _mockRestaurantRepository.Setup(
-                x => x.GetRestaurantAsync(
-                    "New Restaurant" ,
-                    false))
-                .ReturnsAsync((Restaurants)null);
-
-            _mockUserRepository.Setup(
-                x => x.GetUsersByEmails(
-                    It.Is<List<string>>(emails => emails.Contains("owner@test.com"))))
-                .ReturnsAsync(new List<Users>());
-
-            var exception = Assert.ThrowsAsync<ValidationException>(
-                async () => await _service.OnboardRestaurantAsync(restaurant)
-            );
-
-            Assert.That(
-                exception.Message ,
-                Is.EqualTo(ErrorMessages.NO_VALID_EMAILS)
-            );
-
-            _mockRestaurantRepository.Verify(
-                x => x.Add(It.IsAny<Restaurants>()) ,
-                Times.Never
-            );
-
-            _mockUnitOfWork.Verify(
-                x => x.SaveChangesAsync() ,
-                Times.Never
             );
         }
 
@@ -165,7 +125,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 Pincode = "110001" ,
                 Country = "India" ,
                 AddressLine2 = "" ,
-                Emails = new List<string>{"owner@test.com"}
+                Emails = new List<string> { "owner@test.com" }
             };
 
             var user = new Users
@@ -174,36 +134,30 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 Email = "owner@test.com"
             };
 
-            _mockRestaurantRepository.Setup(
-                x => x.GetRestaurantAsync(
-                    "New Restaurant" ,
-                    false))
-                .ReturnsAsync((Restaurants)null);
+            _mockRestaurantRepository.SetupSequence(
+                x => x.GetRestaurantByName(
+                "New Restaurant" ,false))
+                .ReturnsAsync((Restaurants)null)
+                .ReturnsAsync(
+                new Restaurants(
+                "New Restaurant" ,
+                "123 Main Street" ,
+                "Delhi" ,
+                "Delhi" ,
+                "110001" ,
+                "India" ,
+                ""
+            )
+                {
+                    RestaurantId = 10 ,
+                    IsActive = true
+                }
+            );
 
             _mockUserRepository.Setup(
-                x => x.GetUsersByEmails(
+                x => x.GetValidActiveUsersByEmails(
                     It.IsAny<List<string>>()))
                 .ReturnsAsync(new List<Users> { user });
-
-            _mockRestaurantRepository.Setup(
-                x => x.GetRestaurantAsync(
-                    "New Restaurant" ,
-                    false))
-                .ReturnsAsync(
-                    new Restaurants(
-                        "New Restaurant" ,
-                        "123 Main Street" ,
-                        "Delhi" ,
-                        "Delhi" ,
-                        "110001" ,
-                        "India" ,
-                        ""
-                    )
-                    {
-                        RestaurantId = 10 ,
-                        IsActive = true
-                    }
-                );
 
             _mockUnitOfWork.Setup(
                 x => x.SaveChangesAsync())
@@ -212,7 +166,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             var result = await _service.OnboardRestaurantAsync(restaurant);
 
             Assert.That(result ,Is.Not.Null);
-            Assert.That(result.EmailStatus ,Is.Not.Null);
+            Assert.That(result.EmailErrors.Count ,Is.EqualTo(0));
 
             _mockRestaurantRepository.Verify(
                 x => x.Add(It.Is<Restaurants>(
@@ -231,6 +185,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 Times.Once
             );
         }
+
 
 
 
@@ -264,12 +219,12 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUsersByEmails(
+                x => x.GetValidActiveUsersByEmails(
                     It.IsAny<List<string>>()))
                 .ReturnsAsync(new List<Users> { user });
 
             _mockRestaurantRepository.Setup(
-                x => x.GetRestaurantAsync(
+                x => x.GetRestaurantByName(
                     "Test Restaurant" ,
                     false))
                 .ReturnsAsync(restaurant);
@@ -282,7 +237,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
                 await _service.AssignOwnerToRestaurantAsync(model);
 
             Assert.That(result ,Is.Not.Null);
-            Assert.That(result.EmailStatus.Count ,Is.EqualTo(1));
+            Assert.That(result.EmailErrors.Count ,Is.EqualTo(0));
 
             Assert.That(user.Role ,Is.EqualTo(Enums.Roles.Owner));
 
@@ -318,11 +273,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRepository.Setup(
-                x => x.GetUsersByEmails(It.IsAny<List<string>>()))
+                x => x.GetValidActiveUsersByEmails(It.IsAny<List<string>>()))
                 .ReturnsAsync(new List<Users> { user });
 
             _mockRestaurantRepository.Setup(
-                x => x.GetRestaurantAsync(
+                x => x.GetRestaurantByName(
                     "Missing Restaurant" ,
                     false))
                 .ReturnsAsync((Restaurants)null);

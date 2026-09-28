@@ -1,5 +1,6 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Constants;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
+using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
 using Moq;
@@ -36,39 +37,39 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             int pageNumber = 1;
 
             var restaurants = new List<Restaurants>
-        {
-            new Restaurants
             {
-                RestaurantId = 1,
-                Name = "Pizza Palace",
-                AddressLine1 = "123 Main Street",
-                City = "Gurgaon",
-                State = "Haryana",
-                Pincode = "122001",
-                Country = "India",
-                AddressLine2 = "Near Mall"
-            }
-        };
+                new Restaurants
+                {
+                    RestaurantId = 1,
+                    Name = "Pizza Palace",
+                    AddressLine1 = "123 Main Street",
+                    City = "Gurgaon",
+                    State = "Haryana",
+                    Pincode = "122001",
+                    Country = "India",
+                    AddressLine2 = "Near Mall"
+                }
+            };
 
             _mockRestaurantRepository
-                .Setup(x => x.GetActiveRestaurants(pageNumber))
+                .Setup(x => x.GetActiveRestaurants(It.IsAny<PaginationMetadata>() ,pageNumber))
                 .ReturnsAsync(restaurants);
 
-            var result = await _restaurantService
-                .GetRestaurantsAsync(pageNumber);
+            var result = await _restaurantService.GetRestaurantsAsync(pageNumber);
 
             Assert.That(result ,Is.Not.Null);
-            Assert.That(result.Count ,Is.EqualTo(1));
+            Assert.That(result.Restaurants.Count ,Is.EqualTo(1));
 
-            Assert.That(result[0].RestaurantId ,Is.EqualTo(1));
-            Assert.That(result[0].RestaurantName ,Is.EqualTo("Pizza Palace"));
-            Assert.That(result[0].City ,Is.EqualTo("Gurgaon"));
+            Assert.That(result.Restaurants[0].RestaurantId ,Is.EqualTo(1));
+            Assert.That(result.Restaurants[0].RestaurantName ,Is.EqualTo("Pizza Palace"));
+            Assert.That(result.Restaurants[0].City ,Is.EqualTo("Gurgaon"));
 
             _mockRestaurantRepository.Verify(
-                x => x.GetActiveRestaurants(pageNumber) ,
+                x => x.GetActiveRestaurants(It.IsAny<PaginationMetadata>() ,pageNumber) ,
                 Times.Once
             );
         }
+
 
         [Test]
         public async Task GetRestaurantsAsync_NoRestaurants_ReturnsEmptyList()
@@ -76,19 +77,23 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             int pageNumber = 1;
 
             _mockRestaurantRepository
-                .Setup(x => x.GetActiveRestaurants(pageNumber))
+                .Setup(x => x.GetActiveRestaurants(It.IsAny<PaginationMetadata>() ,pageNumber))
                 .ReturnsAsync(new List<Restaurants>());
 
-            var result = await _restaurantService
-                .GetRestaurantsAsync(pageNumber);
+            var result = await _restaurantService.GetRestaurantsAsync(pageNumber);
 
             Assert.That(result ,Is.Not.Null);
-            Assert.That(result ,Is.Empty);
+
+            Assert.That(result.Restaurants ,Is.Not.Null);
+            Assert.That(result.Restaurants ,Is.Empty);
         }
+
+
 
         [Test]
         public async Task GetItemsAsync_ActiveRestaurant_ReturnsMenu()
         {
+            // Arrange
             long restaurantId = 1;
             int pageNumber = 1;
 
@@ -105,25 +110,25 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             var items = new List<Items>
-        {
-            new Items
-            {
-                ItemId = 101,
-                Name = "Margherita Pizza",
-                Price = 299
-            }
-        };
+                {
+                    new Items
+                        {
+                            ItemId = 101,
+                            Name = "Margherita Pizza",
+                            Price = 299
+                        }
+                };
 
             _mockRestaurantRepository
-                .Setup(x => x.GetRestaurantByIdAsync(restaurantId ,false))
+                .Setup(x => x.GetRestaurantById(restaurantId ,false))
                 .ReturnsAsync(restaurant);
 
             _mockItemsRepository
-                .Setup(x => x.GetItems(restaurantId ,pageNumber))
+                .Setup(x => x.GetAllItemsByRestaurantId(restaurantId ,It.IsAny<PaginationMetadata>() ,pageNumber))
                 .ReturnsAsync(items);
 
             var result = await _restaurantService
-                .GetItemsAsync(pageNumber ,restaurantId);
+                .GetItemsAsync(restaurantId ,pageNumber);
 
             Assert.That(result ,Is.Not.Null);
             Assert.That(result.Restaurant.RestaurantId ,Is.EqualTo(restaurantId));
@@ -135,15 +140,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             Assert.That(result.items[0].Price ,Is.EqualTo(299));
 
             _mockRestaurantRepository.Verify(
-                x => x.GetRestaurantByIdAsync(restaurantId ,false) ,
+                x => x.GetRestaurantById(restaurantId ,false) ,
                 Times.Once
             );
 
             _mockItemsRepository.Verify(
-                x => x.GetItems(restaurantId ,pageNumber) ,
+                x => x.GetAllItemsByRestaurantId(restaurantId ,It.IsAny<PaginationMetadata>() ,pageNumber) ,
                 Times.Once
             );
         }
+
 
         [Test]
         public void GetItemsAsync_RestaurantDoesNotExist_ThrowsValidationException()
@@ -152,13 +158,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             int pageNumber = 1;
 
             _mockRestaurantRepository
-                .Setup(x => x.GetRestaurantByIdAsync(restaurantId ,false))
+                .Setup(x => x.GetRestaurantById(restaurantId ,false))
                 .ReturnsAsync((Restaurants)null);
 
             var exception = Assert.ThrowsAsync<ValidationException>(
                 async () =>
                     await _restaurantService
-                        .GetItemsAsync(pageNumber ,restaurantId)
+                        .GetItemsAsync(restaurantId ,pageNumber)
             );
 
             Assert.That(
@@ -167,7 +173,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
 
             _mockItemsRepository.Verify(
-                x => x.GetItems(It.IsAny<long>() ,It.IsAny<int>()) ,
+                x => x.GetAllItemsByRestaurantId(It.IsAny<long>() ,It.IsAny<PaginationMetadata>()) ,
                 Times.Never
             );
         }
@@ -185,13 +191,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockRestaurantRepository
-                .Setup(x => x.GetRestaurantByIdAsync(restaurantId ,false))
+                .Setup(x => x.GetRestaurantById(restaurantId ,false))
                 .ReturnsAsync(restaurant);
 
             var exception = Assert.ThrowsAsync<ValidationException>(
                 async () =>
                     await _restaurantService
-                        .GetItemsAsync(pageNumber ,restaurantId)
+                        .GetItemsAsync(restaurantId ,pageNumber)
             );
 
             Assert.That(
@@ -200,7 +206,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
 
             _mockItemsRepository.Verify(
-                x => x.GetItems(It.IsAny<long>() ,It.IsAny<int>()) ,
+                x => x.GetAllItemsByRestaurantId(It.IsAny<long>() ,It.IsAny<PaginationMetadata>()) ,
                 Times.Never
             );
         }

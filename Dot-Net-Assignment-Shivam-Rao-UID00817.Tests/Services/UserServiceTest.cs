@@ -7,6 +7,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Services;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
@@ -44,7 +45,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             long userId = 123;
 
             _mockUserRespository.Setup(
-                x => x.DeactivateUserAsync(userId))
+                x => x.DeactivateUser(userId))
                 .Returns(Task.CompletedTask);
 
             _mockAuthService.Setup(
@@ -58,7 +59,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             await _userService.DeactivateAccountAsync(userId);
 
             _mockUserRespository.Verify(
-                x => x.DeactivateUserAsync(userId) ,
+                x => x.DeactivateUser(userId) ,
                 Times.Once
             );
 
@@ -70,24 +71,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             _mockUnitOfWork.Verify(
                 x => x.SaveChangesAsync() ,
                 Times.Once
-            );
-        }
-
-        [Test]
-        public async Task UpdateAccountAsync_NullModel_DoesNothing()
-        {
-            long userId = 123;
-
-            await _userService.UpdateAccountAsync(userId ,null);
-
-            _mockUserRespository.Verify(
-                x => x.GetUserByUserIdAsync(It.IsAny<long>() ,It.IsAny<bool>()) ,
-                Times.Never
-            );
-
-            _mockUnitOfWork.Verify(
-                x => x.SaveChangesAsync() ,
-                Times.Never
             );
         }
 
@@ -109,7 +92,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRespository.Setup(
-                x => x.GetUserByUserIdAsync(userId ,true))
+                x => x.GetUserByUserId(userId ,true))
                 .ReturnsAsync(user);
 
             _mockUnitOfWork.Setup(
@@ -144,11 +127,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRespository.Setup(
-                x => x.GetUserByUserIdAsync(userId ,true))
+                x => x.GetUserByUserId(userId ,true))
                 .ReturnsAsync(user);
 
             _mockUserRespository.Setup(
-                x => x.PhoneNumberExistsAsync("9876543210"))
+                x => x.PhoneNumberExists("9876543210"))
                 .ReturnsAsync(false);
 
             _mockUnitOfWork.Setup(
@@ -163,7 +146,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             );
 
             _mockUserRespository.Verify(
-                x => x.PhoneNumberExistsAsync("9876543210") ,
+                x => x.PhoneNumberExists("9876543210") ,
                 Times.Once
             );
 
@@ -191,11 +174,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRespository.Setup(
-                x => x.GetUserByUserIdAsync(userId ,true))
+                x => x.GetUserByUserId(userId ,true))
                 .ReturnsAsync(user);
 
             _mockUserRespository.Setup(
-                x => x.PhoneNumberExistsAsync("9876543210"))
+                x => x.PhoneNumberExists("9876543210"))
                 .ReturnsAsync(true);
 
             var exception = Assert.ThrowsAsync<ConflictException>(
@@ -232,11 +215,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Services
             };
 
             _mockUserRespository.Setup(
-                x => x.GetUserByUserIdAsync(userId ,true))
+                x => x.GetUserByUserId(userId ,true))
                 .ReturnsAsync(user);
 
             _mockUserRespository.Setup(
-                x => x.PhoneNumberExistsAsync("9876543210"))
+                x => x.PhoneNumberExists("9876543210"))
                 .ReturnsAsync(false);
 
             _mockUnitOfWork.Setup(

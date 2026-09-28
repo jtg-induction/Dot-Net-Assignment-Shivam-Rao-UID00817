@@ -56,6 +56,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
         {
             long restaurantId = 500;
             int pageNumber = 2;
+            int pageSize = 5;
             string search = "burger";
 
             var sortBy = Enums.SortBy.OrderDateLatest;
@@ -66,20 +67,22 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 .Setup(x => x.GetAllOrdersAsync(
                     101 ,
                     restaurantId ,
-                    pageNumber ,
-                    search ,
-                    sortBy ,
                     filterBy ,
+                    pageNumber ,
+                    pageSize,
+                    search,
+                    sortBy ,
                     filterByCity))
                 .ReturnsAsync(new GetRestaurantOrdersDto());
 
             var response = await _controller.GetRestaurantOrders(
                 restaurantId ,
-                pageNumber ,
-                search ,
-                sortBy ,
-                filterBy ,
-                filterByCity);
+                    pageNumber ,
+                    pageSize ,
+                    search ,
+                    sortBy ,
+                    filterBy ,
+                    filterByCity);
 
             Assert.That(
                 response.StatusCode ,
@@ -89,10 +92,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 x => x.GetAllOrdersAsync(
                     101 ,
                     restaurantId ,
+                    filterBy ,
                     pageNumber ,
+                    pageSize ,
                     search ,
                     sortBy ,
-                    filterBy ,
                     filterByCity) ,
                 Times.Once);
         }
