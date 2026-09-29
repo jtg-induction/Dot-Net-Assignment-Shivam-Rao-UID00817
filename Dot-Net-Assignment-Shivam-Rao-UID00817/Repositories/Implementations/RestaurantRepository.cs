@@ -32,13 +32,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <summary>
         /// Retrieves a paginated list of active restaurants.
         /// </summary>
+        /// <param name="meta">The Pagination MetaData Object.</param>
         /// <param name="pageNumber">The page number to retrieve.</param>
+        /// <param name="pageSize">The page size.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of active restaurants.</returns>
         public async Task<List<Restaurants>> GetActiveRestaurants(PaginationMetadata meta, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
             var data = _db.Restaurants.Where(r => r.IsActive).OrderBy(x => x.RestaurantId);
-            meta.TotalCount = data.Count();
+            meta.TotalCount = await data.CountAsync();
             meta.CurrentPage = pageNumber;
             meta.PageSize = pageSize;
             return await data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);

@@ -4,8 +4,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
     public class RestaurantsList
     {
-        public List<GetRestaurantsResponseDto> Restaurants { get; set; } = new List<GetRestaurantsResponseDto>(); 
         public PaginationMetadata Meta { get; set; }
+        public List<GetRestaurantsResponseDto> Restaurants { get; set; } = new List<GetRestaurantsResponseDto>(); 
     }
     public class GetRestaurantsResponseDto
     {

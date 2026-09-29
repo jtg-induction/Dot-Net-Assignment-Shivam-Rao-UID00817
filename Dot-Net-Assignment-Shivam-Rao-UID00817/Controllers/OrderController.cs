@@ -44,6 +44,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
 
             var result = await _orderService.GetAllOrdersAsync(userId, pageNumber, pageSize);
 
+            if (result.Orders.Count == 0) return Request.CreateResponse(HttpStatusCode.NotFound);
+
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
@@ -59,7 +61,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
-        [HttpPatch, Route("{orderId}")]
+        [HttpDelete, Route("{orderId}")]
         public async Task<HttpResponseMessage> CancelOrder(long orderId)
         {
             var claimsPrincipal = User as ClaimsPrincipal;

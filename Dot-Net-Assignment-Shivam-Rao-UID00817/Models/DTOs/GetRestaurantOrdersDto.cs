@@ -6,8 +6,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
     public class GetRestaurantOrdersDto
     {
-        public List<RestaurantOrderHistoryItems> Orders { get; set; } = new List<RestaurantOrderHistoryItems>();
         public PaginationMetadata Meta { get; set; }
+        public List<RestaurantOrderHistoryItems> Orders { get; set; } = new List<RestaurantOrderHistoryItems>();
     }
     public class RestaurantOrderHistoryItems
     {

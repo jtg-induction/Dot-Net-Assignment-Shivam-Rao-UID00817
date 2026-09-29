@@ -101,7 +101,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         public async Task DeactivateUser(long userId, CancellationToken cancellationToken = default)
         {
-            (await _db.Users.FindAsync(userId, cancellationToken)).IsActive = false;
+            var user = await _db.Users.FindAsync(userId, cancellationToken);
+            user.IsActive = false;
         }
 
         /// <summary>

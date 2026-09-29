@@ -11,29 +11,18 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         public string Status { get; set; }
         public string Instructions { get; set; }
         public decimal TotalAmount { get; set; }
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Pincode { get; set; }
-        public string Country { get; set; }
+        public Address Address { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime UpdatedAt { get; set; }
         public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
-        public GetCustomerOrderDetailsDto(long orderId, string restaurantName, Enums.OrderStatus status, string instructions, decimal totalAmount, string addressLine1, string city, string state, string pincode, string country, DateTime orderDate, DateTime updatedAt, string addressLine2 = "")
+        public GetCustomerOrderDetailsDto(long orderId, string restaurantName, Enums.OrderStatus status, string instructions, decimal totalAmount, DateTime orderDate, DateTime updatedAt)
         {
             this.OrderId = orderId;
             this.RestaurantName = restaurantName;
             this.Status = status.ToString();
             this.TotalAmount = totalAmount;
             this.Instructions = instructions;
-            this.AddressLine1 = addressLine1;
-            this.AddressLine2 = addressLine2;
-            this.City = city;
-            this.State = state;
-            this.Pincode = pincode;
-            this.Country = country;
             this.OrderDate = orderDate;
             this.UpdatedAt = updatedAt;
         }
@@ -43,6 +32,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 
         }
 
+    }
+
+    public class Address
+    {
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Pincode { get; set; }
+        public string Country { get; set; }
     }
     public class OrderItem
     {

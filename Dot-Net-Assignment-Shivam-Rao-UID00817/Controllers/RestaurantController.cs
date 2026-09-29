@@ -24,6 +24,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
             if (pageNumber < 1 || pageSize < 1) return Request.CreateResponse(HttpStatusCode.NotFound);
             var result = await _restaurantService.GetRestaurantsAsync(pageNumber, pageSize);
 
+            if (result.Restaurants.Count == 0) return Request.CreateResponse(HttpStatusCode.NotFound);
+
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
 
@@ -32,6 +34,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         {
             if (pageNumber < 1 || pageSize < 1) return Request.CreateResponse(HttpStatusCode.NotFound);
             var result = await _restaurantService.GetItemsAsync(restaurantId, pageNumber, pageSize);
+
+            if (result.items.Count == 0) return Request.CreateResponse(HttpStatusCode.NotFound);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }

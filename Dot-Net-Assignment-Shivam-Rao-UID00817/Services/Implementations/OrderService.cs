@@ -186,14 +186,15 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <returns>A list of all the orders of the customer.</returns>
         public async Task<GetCustomerOrdersDto> GetAllOrdersAsync(long userId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
-            var orders = await _orderRepository.GetOrdersByUserId(userId, pageNumber, pageSize, cancellationToken);
+            var meta = new PaginationMetadata();
+            var orders = await _orderRepository.GetOrdersByUserId(userId, meta, pageNumber, pageSize, cancellationToken);
             var response = new GetCustomerOrdersDto();
-            foreach (var order in orders)
-            {
-                string restaurantName = (await _restaurantRepository.GetRestaurantById(order.RestaurantId, false, cancellationToken)).Name;
-                response.Orders.Add(new OrderHistoryItems(order.OrderId, restaurantName, order.TotalAmount, order.Status, order.CreatedAt, order.UpdatedAt));
-            }
-
+                foreach (var order in orders)
+                {
+                    string restaurantName = (await _restaurantRepository.GetRestaurantById(order.RestaurantId, false, cancellationToken)).Name;
+                    response.Orders.Add(new OrderHistoryItems(order.OrderId, restaurantName, order.TotalAmount, order.Status, order.CreatedAt, order.UpdatedAt));
+                }
+            response.Meta = meta;
             return response;
         }
 
@@ -212,14 +213,24 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
             string restaurantName = (await _restaurantRepository.GetRestaurantById(order.RestaurantId, false, cancellationToken)).Name;
 
             var response = new GetCustomerOrderDetailsDto(orderId, restaurantName, order.Status, order.Instructions,
-                                                            order.TotalAmount, order.AddressLine1, order.City, order.State, order.Pincode, order.Country,
-                                                            order.CreatedAt, order.UpdatedAt, order.AddressLine2);
+                                                            order.TotalAmount, order.CreatedAt, order.UpdatedAt);
+            var address = new Address
+            {
+                AddressLine1 = order.AddressLine1,
+                AddressLine2 = order.AddressLine2,
+                City = order.City,
+                State = order.State,
+                Pincode = order.Pincode,
+                Country = order.Country,
+            };
             var Items = await _orderRepository.GetOrderItemsByOrderId(orderId, cancellationToken);
 
             foreach (var item in Items)
             {
                 response.Items.Add(new OrderItem(item.Name, item.ItemPrice, item.Quantity));
             }
+
+            response.Address = address;
 
             return response;
         }
@@ -236,7 +247,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
         /// <param name="filterByCity">The parameter to filter the orders by the city.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A list of all the orders belonging to the restaurant based on the searching, sorting and filteing parameters.</returns>
-        public async Task<GetRestaurantOrdersDto> GetAllOrdersAsync(long userId, long restaurantId, Enums.FilterBy filterBy, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", Enums.SortBy sortBy = Enums.SortBy.OrderDateLatest, string filterByCity = "", CancellationToken cancellationToken = default)
+        public async Task<GetRestaurantOrdersDto> GetAllOrdersAsync(long userId, long restaurantId, string status = "", int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", string sortBy = SortBy.UPDATE_DATE, Enums.SortDirection sortDirection = Enums.SortDirection.DESC, string City = "", CancellationToken cancellationToken = default)
         {
             if (await _ownerManagesRestaurantsRepository.GetOwnerIfExists(userId, restaurantId, false, cancellationToken) == null)
             {
@@ -245,37 +256,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
 
             var meta = new PaginationMetadata();
 
-            var orders = await _orderRepository.GetOrdersByRestaurantId(restaurantId, meta,filterBy, pageNumber, pageSize, search, sortBy, filterByCity, cancellationToken);
+            var orders = await _orderRepository.GetOrdersByRestaurantId(restaurantId, meta, status, pageNumber, pageSize, search, sortBy, sortDirection, City, cancellationToken);
 
-
-            var response = new GetRestaurantOrdersDto();
-            foreach (var order in orders)
+            return new GetRestaurantOrdersDto
             {
-                string restaurantName = (await _restaurantRepository.GetRestaurantById(order.RestaurantId, false, cancellationToken)).Name;
-                int itemCount = (await _orderRepository.GetOrderItemsByOrderId(order.OrderId, cancellationToken)).Count;
-                response.Orders.Add(new RestaurantOrderHistoryItems(
-                                                        order.OrderId,
-                                                        restaurantName,
-                                                        order.TotalAmount,
-                                                        order.Status,
-                                                        order.CreatedAt,
-                                                        order.UpdatedAt,
-                                                        order.AddressLine1,
-                                                        order.City,
-                                                        itemCount));
-            }
-
-            if (sortBy == Enums.SortBy.ItemCount)
-            {
-                response.Orders.OrderBy(x => x.ItemCount);
-            }
-            else if (sortBy == Enums.SortBy.ItemCountDesc)
-            {
-                response.Orders.OrderByDescending(x => x.ItemCount);
-            }
-
-            response.Meta = meta;
-            return response;
+                Orders = orders,
+                Meta = meta
+            };
         }
 
         /// <summary>
@@ -307,21 +294,27 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services
                                                 order.Status,
                                                 order.Instructions,
                                                 order.TotalAmount,
-                                                order.AddressLine1,
-                                                order.City,
-                                                order.State,
-                                                order.Pincode,
-                                                order.Country,
                                                 order.CreatedAt,
-                                                order.UpdatedAt,
-                                                order.AddressLine2
+                                                order.UpdatedAt
             );
+
+            var address = new Address
+            {
+                AddressLine1 = order.AddressLine1,
+                AddressLine2 = order.AddressLine2,
+                City = order.City,
+                State = order.State,
+                Pincode = order.Pincode,
+                Country = order.Country
+            };
             var Items = await _orderRepository.GetOrderItemsByOrderId(orderId, cancellationToken);
 
             foreach (var item in Items)
             {
                 response.Items.Add(new RestaurantOrderItem(item.Name, item.ItemPrice, item.Quantity));
             }
+
+            response.Address = address;
 
             return response;
         }
