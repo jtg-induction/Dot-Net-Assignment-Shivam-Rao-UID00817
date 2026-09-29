@@ -70,13 +70,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             SetUser(userId);
 
             _mockUserService
-                .Setup(x => x.UpdateAccountAsync(userId , model))
+                .Setup(x => x.UpdateAccountAsync(userId ,model))
                 .Returns(Task.CompletedTask);
 
             await _controller.Update(model);
-            
+
             _mockUserService.Verify(
-                x => x.UpdateAccountAsync(userId , model) ,
+                x => x.UpdateAccountAsync(userId ,model) ,
                 Times.Once
             );
         }

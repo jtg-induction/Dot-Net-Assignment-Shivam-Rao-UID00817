@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
-    public class BrowseRestaurantsResponseDto
+    public class RestaurantsList
+    {
+        public List<GetRestaurantsResponseDto> Restaurants { get; set; } = new List<GetRestaurantsResponseDto>(); 
+        public PaginationMetadata Meta { get; set; }
+    }
+    public class GetRestaurantsResponseDto
     {
         public long RestaurantId { get; set; }
         public string RestaurantName { get; set; }
@@ -16,7 +18,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
         public string Pincode { get; set; }
         public string Country { get; set; }
 
-        public BrowseRestaurantsResponseDto(long restaurantId, string name, string addressLine1, string city, string state, string pincode, string country, string addressLine2 = "")
+        public GetRestaurantsResponseDto(long restaurantId, string name, string addressLine1, string city, string state, string pincode, string country, string addressLine2 = "")
         {
             this.RestaurantId = restaurantId;
             this.RestaurantName = name;
@@ -28,7 +30,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
             this.Country = country;
         }
 
-        public BrowseRestaurantsResponseDto()
+        public GetRestaurantsResponseDto()
         {
 
         }

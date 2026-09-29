@@ -1,5 +1,6 @@
 ﻿using Dot_Net_Assignment_Shivam_Rao_UID00817.Models;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
@@ -8,7 +9,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories.Interfaces
     {
         void Add(List<Owner_Manages_Restaurants> Owners);
 
-        Task<Owner_Manages_Restaurants> GetOwnerIfExistsAsync(long userId, long restaurantId, bool enableTracking);
+        Task<Owner_Manages_Restaurants> GetOwnerIfExists(long userId, long restaurantId, bool enableTracking, CancellationToken cancellationToken = default);
 
         void Remove(Owner_Manages_Restaurants Entry);
     }

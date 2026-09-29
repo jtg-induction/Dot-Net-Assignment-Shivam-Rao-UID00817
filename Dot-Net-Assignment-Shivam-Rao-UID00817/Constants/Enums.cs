@@ -18,5 +18,30 @@
             Delivered,
             Cancelled
         }
+
+        public enum SortBy
+        {
+            OrderId = 1,
+            OrderIdDesc,
+            Amount,
+            AmountDesc,
+            OrderDateLatest,
+            OrderDateEarliest,
+            LastUpdatedLatest,
+            LastUpdatedEarliest,
+            ItemCount,
+            ItemCountDesc
+        }
+
+        public enum FilterBy
+        {
+            StatusPlaced = 1,
+            StatusAcceptd,
+            StatudRejected,
+            StatusDispatched,
+            StatusDelivered,
+            StatusCancelled,
+            Default
+        }
     }
 }

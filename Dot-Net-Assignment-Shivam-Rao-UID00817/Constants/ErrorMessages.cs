@@ -49,5 +49,11 @@
         public const string ADMIN_EMAIL = "admin@example.com";
 
         public const string CANNNOT_ONBOARD_ADMIN_TO_RESTAURANT = "Cannot onboard admin to restaurant";
+
+        public const string ORDER_DOES_NOT_EXIST = "Order with given order id does not exist";
+
+        public const string CANNOT_CANCEL_ORDER_AFTER_IT_HAS_BEEN_ACCEPTED = "Cannot cancel an order after it has been accepted.";
+
+        public const string INVALID_OPERATION = "Operation is invalid";
     }
 }
