@@ -36,14 +36,16 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Controllers
         }
 
         [HttpGet, Route("{restaurantId}/orders")]
-        public async Task<HttpResponseMessage> GetRestaurantOrders(long restaurantId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", Enums.SortBy sortBy = Enums.SortBy.OrderDateLatest, Enums.FilterBy filterBy = Enums.FilterBy.Default, string filterByCity = "")
+        public async Task<HttpResponseMessage> GetRestaurantOrders(long restaurantId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", string sortBy = SortBy.UPDATE_DATE, Enums.SortDirection sortDirection = Enums.SortDirection.DESC, string status = "", string City = "")
         {
             if (pageNumber < 1 || pageSize < 1) return Request.CreateResponse(HttpStatusCode.NotFound);
             var claimsPrincipal = User as ClaimsPrincipal;
 
             long userId = Convert.ToInt64(claimsPrincipal.FindFirst("userId").Value);
 
-            var result = await _orderService.GetAllOrdersAsync(userId, restaurantId, filterBy, pageNumber, pageSize, search, sortBy, filterByCity);
+            var result = await _orderService.GetAllOrdersAsync(userId, restaurantId, status, pageNumber, pageSize, search, sortBy, sortDirection, City);
+
+            if (result.Orders.Count == 0) return Request.CreateResponse(HttpStatusCode.NotFound);
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }

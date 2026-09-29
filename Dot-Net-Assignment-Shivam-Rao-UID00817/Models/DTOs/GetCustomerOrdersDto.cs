@@ -6,8 +6,8 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
     public class GetCustomerOrdersDto
     {
-        public List<OrderHistoryItems> Orders { get; set; } = new List<OrderHistoryItems>();
         public PaginationMetadata Meta { get; set; }
+        public List<OrderHistoryItems> Orders { get; set; } = new List<OrderHistoryItems>();
     }
 
     public class OrderHistoryItems
@@ -27,6 +27,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
             this.Status = status.ToString();
             this.OrderDate = orderDate;
             this.LastUpdated = lastUpdated;
+        }
+
+        public OrderHistoryItems()
+        {
+
         }
 
     }

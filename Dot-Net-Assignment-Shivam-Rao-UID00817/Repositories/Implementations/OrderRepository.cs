@@ -67,15 +67,21 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// Retrieves orders belonging to a user using pagination.
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
+        /// <param name="meta">The Pagination MetaData Object.</param>
         /// <param name="pageNumber">The page number to retrieve.</param>
+        /// <param name="pageSize">The size of the page.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A paginated list of the user's orders.</returns>
-        public async Task<List<Orders>> GetOrdersByUserId(long userId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
+        public async Task<List<Orders>> GetOrdersByUserId(long userId, PaginationMetadata meta, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default)
         {
-            return await _db.Orders.Where(x => x.UserId == userId).OrderBy(x => x.OrderId)
-                                                                    .Skip((pageNumber - 1) * pageSize)
-                                                                    .Take(pageSize)
-                                                                    .ToListAsync(cancellationToken);
+            var query = _db.Orders.Where(x => x.UserId == userId);
+            meta.CurrentPage = pageNumber;
+            meta.TotalCount = await query.CountAsync();
+            meta.PageSize = pageSize;
+            return await query.OrderBy(x => x.OrderId)
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync(cancellationToken);
         }
 
 
@@ -95,19 +101,21 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
         /// Retrieves a paginated list of restaurant orders with search, sorting, and filtering options
         /// </summary>
         /// <param name="restaurantId">The ID of the restaurant.</param>
-        /// <param name="filterBy">The order status filter.</param>
+        /// <param name="meta">The Pagination MetaData Object.</param>
+        /// <param name="status">The order status filter.</param>
         /// <param name="pageNumber">>The page number to retrieve.</param>
         /// <param name="pageSize">The page size to retrieve.</param>
         /// <param name="search">The search text used to filter orders by address.</param>
         /// <param name="sortBy">The sorting option.</param>
-        /// <param name="filterByCity">The city used to filter orders.</param>
+        /// <param name="sortDirection">The Direction of Sorting.</param>
+        /// <param name="City">The city used to filter orders.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
         /// <returns>A filtered and paginated list of restaurant orders.</returns>
-        public async Task<List<Orders>> GetOrdersByRestaurantId(long restaurantId,PaginationMetadata meta, Enums.FilterBy filterBy, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", Enums.SortBy sortBy = Enums.SortBy.OrderDateLatest, string filterByCity = "", CancellationToken cancellationToken = default)
+        public async Task<List<RestaurantOrderHistoryItems>> GetOrdersByRestaurantId(long restaurantId, PaginationMetadata meta, string status = "", int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", string sortBy = SortBy.UPDATE_DATE, Enums.SortDirection sortDirection = Enums.SortDirection.DESC, string City = "", CancellationToken cancellationToken = default)
         {
             IQueryable<Orders> query = _db.Orders.Where(x => x.RestaurantId == restaurantId);
 
-            // Searching
+            // Search
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -115,66 +123,87 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Repositories
                 query = query.Where(x => x.AddressLine1.Contains(search));
             }
 
-            meta.TotalCount = query.Count();
+            //filter
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                switch (status)
+                {
+                    case Status.PLACED:
+                        query = query.Where(x => x.Status == Enums.OrderStatus.Placed);
+                        break;
+                    case Status.ACCEPTED:
+                        query = query.Where(x => x.Status == Enums.OrderStatus.Accepted);
+                        break;
+                    case Status.REJECTED:
+                        query = query.Where(x => x.Status == Enums.OrderStatus.Rejected);
+                        break;
+                    case Status.CANCELLED:
+                        query = query.Where(x => x.Status == Enums.OrderStatus.Cancelled);
+                        break;
+                    case Status.DISPATCHED:
+                        query = query.Where(x => x.Status == Enums.OrderStatus.Dispatched);
+                        break;
+                    case Status.DELIVERED:
+                        query = query.Where(x => x.Status == Enums.OrderStatus.Delivered);
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(City))
+            {
+                City = City.Trim();
+                query = query.Where(x => x.City.Contains(City));
+            }
+
+
+            meta.TotalCount = await query.CountAsync(cancellationToken);
             meta.CurrentPage = pageNumber;
             meta.PageSize = pageSize;
+
+            var projection = query.Select(x => new RestaurantOrderHistoryItems(
+                x.OrderId,
+                x.Restaurants.Name,
+                x.TotalAmount,
+                x.Status,
+                x.CreatedAt,
+                x.UpdatedAt,
+                x.AddressLine1,
+                x.City,
+                x.OrderItems.Count
+            ));
 
             // Sorting
             switch (sortBy)
             {
-                case Enums.SortBy.OrderId:
-                    query = query.OrderBy(x => x.OrderId);
+                case SortBy.ORDER_ID:
+                    if (sortDirection == Enums.SortDirection.ASC)
+                        projection = projection.OrderBy(x => x.OrderId);
+                    else
+                        projection = projection.OrderByDescending(x => x.OrderId);
                     break;
-                case Enums.SortBy.OrderIdDesc:
-                    query = query.OrderByDescending(x => x.OrderId);
+                case SortBy.AMOUNT:
+                    if (sortDirection == Enums.SortDirection.ASC)
+                        projection = projection.OrderBy(x => x.Amount);
+                    else
+                        projection = projection.OrderByDescending(x => x.Amount);
                     break;
-                case Enums.SortBy.Amount:
-                    query = query.OrderBy(x => x.TotalAmount);
-                    break;
-                case Enums.SortBy.AmountDesc:
-                    query = query.OrderByDescending(x => x.TotalAmount);
-                    break;
-                case Enums.SortBy.OrderDateLatest:
-                    query = query.OrderByDescending(x => x.CreatedAt);
-                    break;
-                case Enums.SortBy.OrderDateEarliest:
-                    query = query.OrderBy(x => x.CreatedAt);
+                case SortBy.ORDER_DATE:
+                    if (sortDirection == Enums.SortDirection.ASC)
+                        projection = projection.OrderBy(x => x.OrderDate);
+                    else
+                        projection = projection.OrderByDescending(x => x.OrderDate);
                     break;
                 default:
-                    query = query.OrderByDescending(x => x.UpdatedAt);
+                    if (sortDirection == Enums.SortDirection.ASC)
+                        projection = projection.OrderBy(x => x.LastUpdated);
+                    else
+                        projection = projection.OrderByDescending(x => x.LastUpdated);
                     break;
-            }
-            //filter
-            switch (filterBy)
-            {
-                case Enums.FilterBy.StatusPlaced:
-                    query = query.Where(x => x.Status == Enums.OrderStatus.Placed);
-                    break;
-                case Enums.FilterBy.StatusAcceptd:
-                    query = query.Where(x => x.Status == Enums.OrderStatus.Accepted);
-                    break;
-                case Enums.FilterBy.StatudRejected:
-                    query = query.Where(x => x.Status == Enums.OrderStatus.Rejected);
-                    break;
-                case Enums.FilterBy.StatusCancelled:
-                    query = query.Where(x => x.Status == Enums.OrderStatus.Cancelled);
-                    break;
-                case Enums.FilterBy.StatusDispatched:
-                    query = query.Where(x => x.Status == Enums.OrderStatus.Dispatched);
-                    break;
-                case Enums.FilterBy.StatusDelivered:
-                    query = query.Where(x => x.Status == Enums.OrderStatus.Delivered);
-                    break;
-            }
-            if (!string.IsNullOrWhiteSpace(filterByCity))
-            {
-                filterByCity = filterByCity.Trim();
-                query = query.Where(x => x.City.Contains(filterByCity));
             }
 
-            return await query.OrderByDescending(x => x.UpdatedAt).Skip((pageNumber - 1) * pageSize)
-                                                                  .Take(pageSize)
-                                                                  .ToListAsync(cancellationToken);
+            return await projection.Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync(cancellationToken);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
         {
             int pageNumber = 1;
             int pageSize = NumberConstants.PAGE_SIZE;
-            var expectedResult = new RestaurantsList();
+            var expectedResult = new RestaurantsList { Restaurants = new List<GetRestaurantsResponseDto> { new GetRestaurantsResponseDto() } };
 
             _restaurantServiceMock
                 .Setup(x => x.GetRestaurantsAsync(pageNumber ,pageSize))
@@ -138,7 +139,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             int pageNumber = 1;
             int pageSize = NumberConstants.PAGE_SIZE;
 
-            var expectedResult = new GetMenuResponseDto();
+            var expectedResult = new GetMenuResponseDto { items = new List<ItemAndPrice> { new ItemAndPrice() } };
 
             _restaurantServiceMock
                 .Setup(x => x.GetItemsAsync(
@@ -150,7 +151,6 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             _controller.Request = new HttpRequestMessage();
             _controller.Configuration = new HttpConfiguration();
 
-            // Act
             var response = await _controller.Menu(
                 restaurantId ,
                 pageNumber ,

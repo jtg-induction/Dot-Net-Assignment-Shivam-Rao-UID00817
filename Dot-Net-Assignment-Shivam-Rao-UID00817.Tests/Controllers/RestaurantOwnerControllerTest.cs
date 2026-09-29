@@ -7,9 +7,11 @@ using Moq;
 using NUnit.Framework;
 using System.Net;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Collections.Generic;
 
 namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 {
@@ -57,23 +59,24 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
             long restaurantId = 500;
             int pageNumber = 2;
             int pageSize = 5;
-            string search = "burger";
-
-            var sortBy = Enums.SortBy.OrderDateLatest;
-            var filterBy = Enums.FilterBy.Default;
-            string filterByCity = "Delhi";
+            string search = "452";
+            string status = Status.ACCEPTED;
+            var sortBy = "order-date";
+            var sortDirection = Enums.SortDirection.DESC;
+            string City = "Delhi";
 
             _mockOrderService
                 .Setup(x => x.GetAllOrdersAsync(
                     101 ,
                     restaurantId ,
-                    filterBy ,
+                    status , 
                     pageNumber ,
                     pageSize,
                     search,
                     sortBy ,
-                    filterByCity))
-                .ReturnsAsync(new GetRestaurantOrdersDto());
+                    sortDirection,
+                    City))
+                .ReturnsAsync(new GetRestaurantOrdersDto { Orders = new List<RestaurantOrderHistoryItems> { new RestaurantOrderHistoryItems() } });
 
             var response = await _controller.GetRestaurantOrders(
                 restaurantId ,
@@ -81,8 +84,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                     pageSize ,
                     search ,
                     sortBy ,
-                    filterBy ,
-                    filterByCity);
+                    sortDirection, 
+                    status ,
+                    City);
 
             Assert.That(
                 response.StatusCode ,
@@ -92,12 +96,13 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
                 x => x.GetAllOrdersAsync(
                     101 ,
                     restaurantId ,
-                    filterBy ,
+                    status,
                     pageNumber ,
                     pageSize ,
                     search ,
                     sortBy ,
-                    filterByCity) ,
+                    sortDirection,
+                    City) ,
                 Times.Once);
         }
 

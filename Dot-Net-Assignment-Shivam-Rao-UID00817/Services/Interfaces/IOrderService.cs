@@ -9,7 +9,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces
     {
         Task<OrderResponseDto> PlaceOrderAsync(long userId, OrderRequestDto order, CancellationToken cancellationToken = default);
         Task<GetCustomerOrdersDto> GetAllOrdersAsync(long userId, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, CancellationToken cancellationToken = default);
-        Task<GetRestaurantOrdersDto> GetAllOrdersAsync(long userId, long restaurantId, Enums.FilterBy filterBy, int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", Enums.SortBy sortBy = Enums.SortBy.OrderDateLatest, string filterByCity = "", CancellationToken cancellationToken = default);
+        Task<GetRestaurantOrdersDto> GetAllOrdersAsync(long userId, long restaurantId, string status = "", int pageNumber = 1, int pageSize = NumberConstants.PAGE_SIZE, string search = "", string sortBy = SortBy.UPDATE_DATE, Enums.SortDirection sortDirection = Enums.SortDirection.DESC, string City = "", CancellationToken cancellationToken = default);
         Task<GetCustomerOrderDetailsDto> GetOrderDetailsAsync(long userId, long orderId, CancellationToken cancellationToken = default);
         Task<GetRestaurantOrderDetailsDto> GetOrderDetailsAsync(long userId, long restaurantId, long orderId, CancellationToken cancellationToken = default);
         Task CancelOrderAsync(long userId, long orderId, CancellationToken cancellationToken = default);

@@ -5,9 +5,9 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
 {
     public class GetMenuResponseDto
     {
+        public PaginationMetadata Meta { get; set; }
         public GetRestaurantsResponseDto Restaurant { get; set; }
         public List<ItemAndPrice> items = new List<ItemAndPrice>();
-        public PaginationMetadata Meta { get; set; }
 
         public GetMenuResponseDto(GetRestaurantsResponseDto restaurant, List<ItemAndPrice> items, PaginationMetadata meta)
         {
@@ -34,6 +34,11 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs
             ItemId = itemId;
             Name = name;
             Price = price;
+        }
+
+        public ItemAndPrice()
+        {
+
         }
     }
 }

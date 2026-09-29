@@ -3,6 +3,7 @@ using Dot_Net_Assignment_Shivam_Rao_UID00817.Models.DTOs;
 using Dot_Net_Assignment_Shivam_Rao_UID00817.Services.Interfaces;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
@@ -89,7 +90,7 @@ namespace Dot_Net_Assignment_Shivam_Rao_UID00817.Tests.Controllers
 
             _mockOrderService
                 .Setup(x => x.GetAllOrdersAsync(userId ,pageNumber))
-                .ReturnsAsync(new GetCustomerOrdersDto());
+                .ReturnsAsync(new GetCustomerOrdersDto { Orders = new List<OrderHistoryItems> { new OrderHistoryItems() } });
 
             var response =
                 await _controller.GetCustomerOrders(pageNumber);
